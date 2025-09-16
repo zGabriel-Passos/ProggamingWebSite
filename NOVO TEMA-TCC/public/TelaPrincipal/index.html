@@ -98,6 +98,13 @@
                             </div>
                         </div>
                         <div class="containerText">
+                            <div id="ranking-container">
+                                <h2>🏆 Top 10 Proggamers</h2>
+                                <ul id="ranking-list">
+                                </ul>
+                            </div>
+                        </div>
+                        <div class="containerText">
                             <div class="section">
                                 <img src="/public/logo-menor.png">
                                 <div class="text-content">
@@ -165,8 +172,9 @@
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
         import { getAuth, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js";
-        import { getFirestore, doc, setDoc, getDoc, updateDoc } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
+        import { getFirestore, doc, setDoc, getDoc, updateDoc, collection, query, orderBy, limit, getDocs } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
 
+        // 🔹 Configuração do Firebase
         const firebaseConfig = {
             apiKey: "AIzaSyClRHfJuTSogkbWLaaUKsSBGN1KiT5xuUc",
             authDomain: "proggamingpage.firebaseapp.com",
@@ -181,6 +189,7 @@
         const auth = getAuth(app);
         const db = getFirestore(app);
 
+        // 🔹 Seletores de Elementos da UI
         const perfilSpan = document.getElementById('perfil');
         const logoutBtnMobile = document.getElementById('logoutBtnMobile');
         const logoutBtn = document.getElementById('logoutBtn');
@@ -195,8 +204,9 @@
         const avatarList = document.getElementById("avatar-list");
         const saveButton = document.getElementById("save-avatar-button");
         const userAvatar = document.getElementById("user-avatar");
+        const rankingList = document.getElementById("ranking-list");
 
-        // Lista de avatares disponíveis
+        // 🔹 Lista de Avatares Disponíveis
         const availableAvatars = [
             "/public/assets/avatars/avatar.jpg",
             "/public/assets/avatars/avatar2.jpg",
@@ -208,7 +218,7 @@
         let userDocRef;
         let selectedAvatarPath = "";
 
-
+        // 🔹 Funções de UI
         function renderAvatars() {
             avatarList.innerHTML = '';
             availableAvatars.forEach(path => {
@@ -240,28 +250,23 @@
             }
         }
 
-        // 🔹 Configuração dos Event Listeners
+        // 🔹 Funções de Event Listeners
         function setupEventListeners() {
             if (btnAlterarUsername) {
                 btnAlterarUsername.addEventListener("click", () => updateApelido(inputUsername.value.trim()));
             }
-
             if (logoutBtn) {
                 logoutBtn.addEventListener('click', () => signOut(auth).then(() => window.location.href = "/public/index.html").catch(alert));
             }
-
             if (logoutBtnMobile) {
                 logoutBtnMobile.addEventListener('click', () => signOut(auth).then(() => window.location.href = "/public/index.html").catch(alert));
             }
-
             if (editProfileButton) {
                 editProfileButton.addEventListener("click", () => {
                     renderAvatars();
                     avatarModal.style.display = "flex";
-
                     const currentAvatarPath = userAvatar.dataset.path;
                     selectedAvatarPath = currentAvatarPath;
-
                     document.querySelectorAll(".avatar-option").forEach(img => img.classList.remove("selected"));
                     const currentAvatar = document.querySelector(`.avatar-option[data-path="${currentAvatarPath}"]`);
                     if (currentAvatar) {
@@ -269,17 +274,14 @@
                     }
                 });
             }
-
             if (closeButton) {
                 closeButton.addEventListener("click", () => avatarModal.style.display = "none");
             }
-
             window.addEventListener("click", (event) => {
                 if (event.target === avatarModal) {
                     avatarModal.style.display = "none";
                 }
             });
-
             if (avatarList) {
                 avatarList.addEventListener("click", (e) => {
                     if (e.target.classList.contains("avatar-option")) {
@@ -289,7 +291,6 @@
                     }
                 });
             }
-
             if (saveButton) {
                 saveButton.addEventListener("click", async () => {
                     if (!selectedAvatarPath) {
@@ -310,25 +311,55 @@
             }
         }
 
-        // 🔹 Inicialização da UI baseada no estado de autenticação
+        // 🔹 Função para carregar o ranking
+        async function carregarRanking() {
+            const rankingList = document.getElementById("ranking-list");
+            rankingList.innerHTML = ''; // Limpa a lista antes de carregar
+
+            try {
+                const q = query(collection(db, "usuarios"), orderBy("xp", "desc"), limit(10));
+                const querySnapshot = await getDocs(q);
+
+                if (querySnapshot.empty) {
+                    rankingList.innerHTML = '<li>Nenhum dado de ranking encontrado.</li>';
+                    return;
+                }
+
+                querySnapshot.forEach((doc, index) => {
+                    // 🚩 Linha de depuração adicionada:
+                    console.log(`Debug - Documento: ${doc.id}, Posição: ${index}`);
+
+                    const userData = doc.data();
+                    const rankingItem = document.createElement("li");
+
+                    rankingItem.innerHTML = `
+                <img src="${userData.avatarUrl || '/public/assets/avatars/avatar.jpg'}" alt="Avatar do usuário" class="ranking-avatar">
+                <span class="ranking-nickname">${userData.apelido || userData.email}</span>
+                <span class="ranking-xp">${userData.xp || 0} XP</span>
+            `;
+                    rankingList.appendChild(rankingItem);
+                });
+            } catch (error) {
+                console.error("Erro ao carregar o ranking:", error);
+                rankingList.innerHTML = '<li>Erro ao carregar ranking.</li>';
+            }
+        }
+
+        // 🔹 Início do Script: O estado de autenticação determina o que fazer
         onAuthStateChanged(auth, async (user) => {
+            // 🚩 Lógica para usuários logados
             if (user) {
                 userDocRef = doc(db, "usuarios", user.uid);
                 const docSnap = await getDoc(userDocRef);
-
-                // Apenas esta linha foi alterada para voltar a usar o e-mail
                 welcomeText.textContent = `Olá, ${user.email} 👋`;
-
                 if (docSnap.exists()) {
                     const dados = docSnap.data();
                     perfilSpan.innerText = dados.apelido;
                     perfilSpan.dataset.email = user.email;
                     xpSpan.textContent = `XP: ${dados.xp || 0}`;
-
                     const savedAvatarUrl = dados.avatarUrl || availableAvatars[0];
                     userAvatar.src = savedAvatarUrl;
                     userAvatar.dataset.path = savedAvatarUrl;
-
                 } else {
                     const apelidoAleatorio = "user" + Math.floor(Math.random() * 10000);
                     await setDoc(userDocRef, {
@@ -343,15 +374,19 @@
                     userAvatar.src = availableAvatars[0];
                     userAvatar.dataset.path = availableAvatars[0];
                 }
-
                 perfilSpan.addEventListener('click', () => {
                     alert("Você está logado como:\n" + perfilSpan.dataset.email);
                 });
-
                 setupEventListeners();
             } else {
-                window.location.href = "/public/index.html";
+                // 🚩 Lógica para usuários não logados
+                // Redireciona para a página inicial (se necessário)
+                // window.location.href = "/public/index.html"; 
             }
+
+            // 🚩 A chamada para carregar o ranking é feita aqui, garantindo que rode para todos,
+            // apenas depois que o Firebase está pronto.
+            carregarRanking();
         });
     </script>
 </body>

@@ -882,3 +882,79 @@ body.loaded .site-content {
     padding: 8px 15px;
   }
 }
+
+#ranking-container {
+  background: #0d1a49;
+  border: 2px solid #3366ff;
+  border-radius: 15px;
+  padding: 20px;
+  margin: 20px;
+  box-shadow: 0 8px 16px rgba(0, 0, 0, 0.4);
+  font-family: 'Press Start 2P', cursive;
+  color: #e0e0e0;
+}
+
+#ranking-container h2 {
+  text-align: center;
+  color: #ffd700;
+  margin-bottom: 25px;
+  font-size: 18px;
+  text-shadow: 2px 2px #000;
+}
+
+#ranking-list {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+#ranking-list li {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 10px 15px;
+  margin-bottom: 15px;
+  border-radius: 10px;
+  background: linear-gradient(to right, #e74c3c, #c0392b 20%, transparent 60%);
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+#ranking-list li:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 6px 12px rgba(0, 0, 0, 0.3);
+}
+
+.ranking-position {
+  font-size: 16px;
+  font-weight: bold;
+  color: #ffd700;
+  width: 30px;
+  text-align: center;
+}
+
+.ranking-avatar {
+  width: 45px;
+  height: 45px;
+  border-radius: 50%;
+  border: 2px solid #fff;
+  object-fit: cover;
+  margin: 0 15px;
+}
+
+.ranking-nickname {
+  flex-grow: 1;
+  font-size: 14px;
+  font-weight: 500;
+  color: #fff;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.ranking-xp {
+  font-size: 14px;
+  font-weight: bold;
+  color: #33ff99;
+  text-shadow: 1px 1px #000;
+}

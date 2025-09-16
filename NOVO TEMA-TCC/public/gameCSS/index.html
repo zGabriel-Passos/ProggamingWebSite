@@ -20,7 +20,8 @@
     <div id="reboot-overlay" class="reboot-overlay" style="display: none;">
         <div class="reboot-content">
             <h2>Reiniciar Progresso</h2>
-            <p>Tem certeza que deseja apagar todo o seu progresso? Esta ação não pode ser desfeita.</p>
+            <p>Tem certeza que deseja apagar todo o seu progresso? Esta ação não pode ser desfeita. Mas seu XP
+                continuara para você poder farmar refazendo as fases.</p>
             <div class="reboot-buttons">
                 <button class="reboot-confirm" onclick="restartProgress()">Sim</button>
                 <button class="reboot-cancel" onclick="cancelRestart()">Não</button>
@@ -143,9 +144,10 @@
                     const apelidoAleatorio = "user" + Math.floor(Math.random() * 10000);
                     await setDoc(userRef, {
                         apelido: apelidoAleatorio,
+                        nivelAtual: 0,
                         email: user.email,
                         avatarUrl: '/public/avatares/avatar.jpg',
-                        xp: 0,
+                        fasesCSS: deleteField(),
                         fasesCSS: {
                             fase1: { status: "disponivel" },
                             fase2: { status: "bloqueada" },
@@ -255,12 +257,12 @@
             const user = auth.currentUser;
             if (user) {
                 const userRef = doc(db, "usuarios", user.uid);
-                
+
                 await updateDoc(userRef, {
                     fasesCSS: fasesIniciais,
                     nivelAtual: 0,
                 });
-                
+
                 console.log("Progresso do usuário reiniciado com sucesso.");
                 window.location.reload();
             }
