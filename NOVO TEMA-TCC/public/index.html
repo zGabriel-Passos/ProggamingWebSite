@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+
+<head>
+    <meta charset="UTF-8" />
+    <link href='https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css' rel='stylesheet'>
+    <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap" rel="stylesheet">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Proggaming | Login</title>
+    <link rel="apple-touch-icon" href="icon_512x512.png">
+    <link rel="icon" type="image/png" href="icon_512x512.png">
+    <link rel="stylesheet" href="style.css">
+    <meta name="mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="default">
+</head>
+
+<body>
+    <div class="overlay">
+        <img src="/public/logo_rotating.gif">
+    </div>
+
+    <div id="overlay-aviso">
+        <div id="aviso">
+            <div class="container-aviso">
+                <div>
+                    <img src="/public/avatares/prota-dançando.gif">
+                </div>
+                <div>
+                    <span style="font-weight: bold; margin-bottom: 10px;">Bem-Vindo(a) ao Proggaming ;)!</span>
+                    <span class="desc">
+                        Aqui você terá a possibilidade de aprender todo início da programação (HTML, CSS e JS)
+                        com minigames e lições divertidas de fazer e ter conhecimento sobre o básico do FrontEnd.
+                    </span>
+                </div>
+            </div>
+            <button id="btn-fechar">Fechar</button>
+        </div>
+    </div>
+
+    <div class="container">
+        <div class="logo">
+            <img src="/public/icon_512x512.png" alt="">
+            <span>Proggaming</span>
+        </div>
+        <hr>
+        <h2 id="form-title">Login</h2>
+        <div id="error" class="error"></div>
+        <span
+            style="text-align: center; font-size: 12px; font-family: Arial, Helvetica, sans-serif; color: rgb(189, 189, 189);">*Coloque
+            um email verdadeiro, para receber a verificação no email*</span>
+        <input type="email" id="email" placeholder="E-mail" />
+        <input type="password" id="password" placeholder="Senha" />
+        <button id="reset-password" class="reset-password">Esqueci minha senha</button>
+        <button id="auth-button">Entrar</button>
+        <button id="google-login" class="google-btn">Entrar com Google <i class='bx bxl-google'></i></button>
+
+        <div class="toggle" id="toggle">Não tem uma conta? Cadastre-se</div>
+    </div>
+
+
+
+    <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-auth-compat.js"></script>
+    <script src="script.js"></script>
+</body>
+
+</html

@@ -1,0 +1,350 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css">
+    <link rel="apple-touch-icon" href="/public/icon_512x512.png">
+    <link rel="icon" type="image/png" href="/public/icon_512x512.png">
+    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap">
+    <title>Proggaming | Fase 4 HTML</title>
+</head>
+
+<body>
+
+    <h1 id="quiz-title">Quiz: Imagens e Multimídia</h1>
+    <p id="quiz-description">Teste seus conhecimentos sobre como inserir e configurar elementos multimídia em HTML.
+        <span>O resultado sairá no final do teste. Então não se preocupe se errar</span>
+    </p>
+
+    <div class="progress-bar-container">
+        <div id="progress-bar">0%</div>
+    </div>
+
+    <div id="teoria-container" class="quiz-container">
+        <img src="/public/avatares/prota-lendo.png">
+        <div id="teoria-content"></div>
+        <div class="quiz-buttons">
+            <button id="continue-button">Continuar</button>
+        </div>
+    </div>
+
+    <div id="quiz-container" class="quiz-container" style="display: none;">
+        <div id="quiz-content" class="question-content">
+        </div>
+        <div id="quiz-buttons" class="quiz-buttons">
+            <button id="back-to-theory-button">Voltar para Teoria</button>
+            <button id="next-button" style="display: none;">Próxima</button>
+            <button id="submit-button" style="display: none;">Ver Pontuação</button>
+        </div>
+    </div>
+
+    <div id="results" style="display: none;"></div>
+    <div id="result-buttons" style="display: none;">
+        <button id="reiniciar" class="result-button">Refazer Fase</button>
+        <button id="voltar-menu" class="result-button"
+            onclick="window.location.href='/public/gameHTML/index.html'">Voltar ao Menu</button>
+    </div>
+
+    <script type="module">
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
+        import { getFirestore, doc, getDoc, updateDoc } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
+        import { getAuth, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js";
+
+        // 🔹 Config Firebase
+        const firebaseConfig = {
+            apiKey: "AIzaSyClRHfJuTSogkbWLaaUKsSBGN1KiT5xuUc",
+            authDomain: "proggamingpage.firebaseapp.com",
+            projectId: "proggamingpage",
+            storageBucket: "proggamingpage.firebasestorage.app",
+            messagingSenderId: "911283259283",
+            appId: "1:911283259283:web:0b9be83ed5e07391360a66",
+            measurementId: "G-TQP4LNPYQ1"
+        };
+
+        const app = initializeApp(firebaseConfig);
+        const db = getFirestore(app);
+        const auth = getAuth();
+
+        // 🔹 Quiz Data (perguntas e teorias)
+        const quizData = [
+            {
+                teoria: "A tag <code>&lt;img&gt;</code> é fundamental para incluir imagens em uma página web. Ela é uma tag de fechamento automático, ou seja, não precisa de uma tag de fechamento (<code>&lt;/img&gt;</code>). Os dois atributos mais importantes são: <code>src</code> (source), que define o caminho da imagem, e <code>alt</code> (alternative text), que descreve a imagem para fins de acessibilidade e aparece se a imagem não carregar.",
+                question: "1. Qual tag é usada para inserir uma imagem em uma página HTML?",
+                options: [
+                    { text: "<code>&lt;picture&gt;</code>", correct: false },
+                    { text: "<code>&lt;image&gt;</code>", correct: false },
+                    { text: "<code>&lt;img&gt;</code>", correct: true }
+                ]
+            },
+            {
+                teoria: "O atributo <code>alt</code> é essencial para a acessibilidade. Ele fornece um texto alternativo para a imagem, que é lido por leitores de tela para usuários com deficiência visual. Além disso, ele é exibido se a imagem por algum motivo não puder ser carregada.",
+                question: "2. Qual atributo da tag <code>&lt;img&gt;</code> é crucial para acessibilidade e aparece se a imagem não carregar?",
+                options: [
+                    { text: "<code>src</code>", correct: false },
+                    { text: "<code>href</code>", correct: false },
+                    { text: "<code>alt</code>", correct: true }
+                ]
+            },
+            {
+                teoria: "Existem duas formas principais de referenciar um arquivo: **Caminho Relativo** (aponta para um arquivo local na mesma estrutura de pastas) e **Caminho Absoluto** (aponta para um URL completo na web, como <code>https://www.site.com/imagem.png</code>).",
+                question: "3. Qual é a principal diferença entre um caminho de arquivo relativo e um absoluto?",
+                options: [
+                    { text: "Absoluto aponta para um arquivo local; Relativo aponta para um site externo.", correct: false },
+                    { text: "Relativo aponta para um arquivo local na mesma estrutura de pasta; Absoluto aponta para um URL completo na web.", correct: true },
+                    { text: "Absoluto é para imagens, Relativo é para áudio e vídeo.", correct: false }
+                ]
+            },
+            {
+                teoria: "Para inserir arquivos de áudio, usamos a tag <code>&lt;audio&gt;</code>. Assim como a tag de vídeo, ela precisa do atributo `src` para o caminho do arquivo e pode ter o atributo `controls` para mostrar os botões de reprodução.",
+                question: "4. Para inserir um arquivo de áudio em HTML, a tag correta é:",
+                options: [
+                    { text: "<code>&lt;media&gt;</code>", correct: false },
+                    { text: "<code>&lt;audio&gt;</code>", correct: true },
+                    { text: "<code>&lt;sound&gt;</code>", correct: false }
+                ]
+            },
+            {
+                teoria: "O atributo `controls` é um atributo booleano (ou seja, basta colocá-lo na tag para ativá-lo). Ele adiciona os controles de reprodução padrão do navegador, como o botão de play/pause, volume e a barra de progresso, tanto para `&lt;audio&gt;` quanto para `&lt;video&gt;`.",
+                question: "5. Qual atributo é necessário para mostrar os controles de reprodução (play, pause, volume) em uma tag de vídeo ou áudio?",
+                options: [
+                    { text: "<code>autoplay</code>", correct: false },
+                    { text: "<code>playcontrols</code>", correct: false },
+                    { text: "<code>controls</code>", correct: true }
+                ]
+            },
+            {
+                teoria: "Para uma estrutura mais semântica e acessível, a tag <code>&lt;figure&gt;</code> é usada para envolver uma imagem, um vídeo, ou outro conteúdo e sua respectiva legenda. A legenda é definida dentro da tag <code>&lt;figcaption&gt;</code>, que deve ser colocada dentro da <code>&lt;figure&gt;</code>.",
+                question: "6. A tag <code>&lt;figure&gt;</code> é usada para agrupar conteúdo (como uma imagem) com uma legenda. Qual tag é usada para a legenda em si?",
+                options: [
+                    { text: "<code>&lt;caption&gt;</code>", correct: false },
+                    { text: "<code>&lt;legend&gt;</code>", correct: false },
+                    { text: "<code>&lt;figcaption&gt;</code>", correct: true }
+                ]
+            },
+            {
+                teoria: "A tag <code>&lt;source&gt;</code> é usada dentro das tags <code>&lt;audio&gt;</code> e <code>&lt;video&gt;</code> para oferecer múltiplos formatos de arquivo. Isso garante que o conteúdo de áudio/vídeo funcione em diferentes navegadores, já que nem todos suportam os mesmos formatos. O navegador tentará carregar a primeira `source` que ele suportar.",
+                question: "7. O que a tag <code>&lt;source&gt;</code> faz dentro de <code>&lt;video&gt;</code> ou <code>&lt;audio&gt;</code>?",
+                options: [
+                    { text: "Define a origem do vídeo de um serviço de streaming.", correct: false },
+                    { text: "Permite fornecer arquivos de mídia em múltiplos formatos para compatibilidade com diferentes navegadores.", correct: true },
+                    { text: "Especifica o link para download do arquivo de mídia.", correct: false }
+                ]
+            }
+        ];
+
+        // 🔹 Variáveis de estado
+        let userDocRef;
+        let xpTotal = 0;
+        let currentQuestionIndex = 0;
+        let userScore = 0;
+
+        // 🔹 Referências do DOM
+        const teoriaContainer = document.getElementById("teoria-container");
+        const teoriaContent = document.getElementById("teoria-content");
+        const continueButton = document.getElementById("continue-button");
+
+        const quizContainer = document.getElementById("quiz-container");
+        const quizContent = document.getElementById("quiz-content");
+        const progressBar = document.getElementById("progress-bar");
+        const nextButton = document.getElementById("next-button");
+        const submitButton = document.getElementById("submit-button");
+        const backToTheoryButton = document.getElementById("back-to-theory-button");
+
+        const resultsDiv = document.getElementById("results");
+        const restartButton = document.getElementById("reiniciar");
+        const resultButtonsDiv = document.getElementById("result-buttons");
+
+        // 🔹 Funções do Quiz
+        function updateProgress() {
+            const progress = (currentQuestionIndex / quizData.length) * 100;
+            progressBar.style.width = progress + "%";
+            progressBar.textContent = `${Math.round(progress)}%`;
+        }
+
+        function showTheory(index) {
+            teoriaContainer.style.display = 'block';
+            quizContainer.style.display = 'none';
+            const teoria = quizData[index].teoria;
+            teoriaContent.innerHTML = `<p>${teoria}</p>`;
+        }
+
+        function showQuestion(index) {
+            teoriaContainer.style.display = 'none';
+            quizContainer.style.display = 'block';
+
+            quizContent.innerHTML = '';
+            const questionData = quizData[index];
+            const questionText = document.createElement('p');
+            questionText.innerHTML = `<b>${questionData.question}</b>`;
+            quizContent.appendChild(questionText);
+
+            questionData.options.forEach(option => {
+                const label = document.createElement('label');
+                const input = document.createElement('input');
+                input.type = 'radio';
+                input.name = 'q' + index;
+                input.dataset.correct = option.correct;
+                label.appendChild(input);
+                label.innerHTML += ' ' + option.text;
+                quizContent.appendChild(label);
+            });
+
+            if (index < quizData.length - 1) {
+                nextButton.style.display = 'block';
+                submitButton.style.display = 'none';
+                backToTheoryButton.style.display = 'block';
+            } else {
+                nextButton.style.display = 'none';
+                submitButton.style.display = 'block';
+                backToTheoryButton.style.display = 'block';
+            }
+        }
+
+        function handleContinue() {
+            showQuestion(currentQuestionIndex);
+        }
+
+        function handleBackToTheory() {
+            showTheory(currentQuestionIndex);
+        }
+
+        async function handleNextQuestion() {
+            const selectedOption = quizContent.querySelector('input[type="radio"]:checked');
+            if (!selectedOption) {
+                alert("Selecione uma opção!");
+                return;
+            }
+            if (selectedOption.dataset.correct === "true") {
+                userScore++;
+            }
+            currentQuestionIndex++;
+
+            // 🔹 Salva o progresso no Firestore
+            try {
+                if (userDocRef) {
+                    await updateDoc(userDocRef, {
+                        "fasesHTML.fase4.progresso": currentQuestionIndex,
+                        "fasesHTML.fase4.pontuacao": userScore
+                    });
+                }
+            } catch (err) {
+                console.error("Erro ao salvar o progresso:", err);
+            }
+
+            updateProgress();
+            if (currentQuestionIndex < quizData.length) {
+                showTheory(currentQuestionIndex);
+            }
+        }
+
+        async function handleSubmit() {
+            const selectedOption = quizContent.querySelector('input[type="radio"]:checked');
+            if (selectedOption && selectedOption.dataset.correct === "true") {
+                userScore++;
+            }
+
+            nextButton.style.display = 'none';
+            submitButton.style.display = 'none';
+
+            resultsDiv.style.display = 'block';
+            resultsDiv.innerHTML = `Sua pontuação é ${userScore} de ${quizData.length}.`;
+            resultButtonsDiv.style.display = 'flex';
+
+            try {
+                if (userDocRef) {
+                    await updateDoc(userDocRef, {
+                        fase4Concluida: true,
+                        "fasesHTML.fase4.status": "concluida",
+                        "fasesHTML.fase4.pontuacao": userScore,
+                        "fasesHTML.fase4.total": quizData.length,
+                        // Reseta o progresso da fase para 0 quando for concluída
+                        "fasesHTML.fase4.progresso": 0,
+                        xp: xpTotal + 60
+                    });
+                    resultsDiv.innerHTML += "<br>+60XP pela conclusão!";
+                } else {
+                    resultsDiv.innerHTML += "<br>Erro ao salvar no banco de dados. Referência do usuário não encontrada.";
+                    console.error("Erro: userDocRef não definido.");
+                }
+            } catch (err) {
+                console.error("Erro ao salvar no Firestore:", err);
+                resultsDiv.innerHTML += "<br>Erro ao salvar no banco de dados.";
+            }
+        }
+
+        async function restartQuiz() {
+            currentQuestionIndex = 0;
+            userScore = 0;
+            resultsDiv.style.display = 'none';
+            resultButtonsDiv.style.display = 'none';
+            updateProgress();
+            showTheory(currentQuestionIndex);
+            // Zera o progresso no banco de dados ao reiniciar o quiz
+            try {
+                if (userDocRef) {
+                    await updateDoc(userDocRef, {
+                        "fasesHTML.fase4.progresso": 0,
+                        "fasesHTML.fase4.pontuacao": 0
+                    });
+                }
+            } catch (err) {
+                console.error("Erro ao resetar o progresso:", err);
+            }
+        }
+
+        // 🔹 Inicialização
+        async function initializePhase(user) {
+            userDocRef = doc(db, "usuarios", user.uid);
+            const snap = await getDoc(userDocRef);
+
+            if (!snap.exists()) {
+                alert("Usuário não encontrado!");
+                location.href = "/public/gameHTML/index.html";
+                return;
+            }
+
+            const data = snap.data();
+
+            if (!data.fase3Concluida) {
+                alert("Você precisa concluir a Fase 3 antes!");
+                location.href = "/public/gameHTML/index.html";
+                return;
+            }
+
+            if (data.fase4Concluida) {
+                alert("⚠️ Você já concluiu esta fase.");
+                location.href = "/public/gameHTML/index.html";
+                return;
+            }
+
+            xpTotal = data.xp || 0;
+
+            // 🔹 Carrega o progresso salvo, se existir
+            currentQuestionIndex = data.fasesHTML?.fase4?.progresso || 0;
+            userScore = data.fasesHTML?.fase4?.pontuacao || 0;
+
+            updateProgress();
+            showTheory(currentQuestionIndex);
+
+            continueButton.addEventListener('click', handleContinue);
+            backToTheoryButton.addEventListener('click', handleBackToTheory);
+            nextButton.addEventListener('click', handleNextQuestion);
+            submitButton.addEventListener('click', handleSubmit);
+            restartButton.addEventListener('click', restartQuiz);
+        }
+
+        // 🔹 Verifica autenticação e inicia a fase
+        onAuthStateChanged(auth, user => {
+            if (!user) {
+                location.href = "/public/login.html";
+                return;
+            }
+            initializePhase(user);
+        });
+    </script>
+</body>
+
+</html>

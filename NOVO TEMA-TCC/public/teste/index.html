@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <link rel="stylesheet" href="style.css">
+  <title>Proggaming Game</title>
+</head>
+
+<body>
+  <div
+    style="display: flex; justify-content: space-between; align-items: center; padding: 10px 0px 15px 0px; width: 100%;">
+    <div style="color: white;">
+      <img src="ddd" alt="">
+      FOTO
+    </div>
+    <div style="width: 400px; height: 30px; background-color: black; border-radius: 40px; border: 3px solid white;">
+      <div style="width: 300px; height: 30px; background-color: #104f8a; border-radius: 40px;"></div>
+    </div>
+    <div style="color: white;">
+      ☰ MENU
+    </div>
+  </div>
+
+
+  <div id="container">
+    <!-- Alvo fixo -->
+    <div id="target" class="box">Alinhe o quadrado cinza aqui</div>
+
+    <!-- Área onde comandos flexbox serão aplicados -->
+    <div id="playerWrapper">
+      <div id="player" class="box"></div>
+    </div>
+  </div>
+
+  <div class="controls">
+    <div
+      style="background-color: rgb(0, 0, 0); border-radius: 10px; width: 200px; color: white; padding: 30px; text-align: center; border: 1px solid white;">
+      <span>Como inicio, coloque o quadrado cinza na orientação verde, usando o <strong>align-items:
+          center;</strong></span>
+    </div>
+    <div style="display: flex; align-items: center;">
+      <textarea id="cssInput" placeholder="justify-content: flex-end;">justify-content: flex-end;</textarea>
+      <br />
+      <button onclick="aplicarCSS()">Aplicar</button>
+    </div>
+  </div>
+
+  <div id="feedback"></div>
+
+  <script src="script.js"></script>
+</body>
+
+</html>

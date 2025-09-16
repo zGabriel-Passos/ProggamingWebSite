@@ -1,0 +1,274 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css">
+    <link rel="apple-touch-icon" href="/public/icon_512x512.png">
+    <link rel="icon" type="image/png" href="/public/icon_512x512.png">
+    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap">
+    <title>Proggaming | Fase 8 HTML</title>
+</head>
+
+<body>
+    <div class="navbar">
+        <button onclick="mostrarTela('bloco-teoria')">Teoria</button>
+        <button onclick="mostrarTela('resultado')">Resultado</button>
+        <button onclick="mostrarTela('editor-container')">Editor</button>
+    </div>
+
+    <div class="progresso">
+        <div class="barra" id="barra-progresso"></div>
+    </div>
+
+    <div class="container-nivel">
+        <div class="bloco-teoria">
+            <div style="display: flex; flex-direction: row; align-items: center; justify-content: space-between;">
+                <h3>Teoria - Fase 8</h3>
+                <button class="botao-som" id="botao-som" onclick="toggleSom()">🔊</button>
+            </div>
+            <p id="texto-teoria"></p>
+            <div id="extra-teoria" style="margin-top:10px; font-weight: 600; font-size:14px; color:#ddd;"></div>
+            <h2 id="titulo-nivel">Nível 1/6</h2>
+            <p id="descricao-nivel">Qual o conceito de HTML semântico?</p>
+            <hr>
+            <span id="xp-total" style="font-family: 'Press Start 2P', cursive; font-weight: 600; color: #c7860e;">XP:
+                0</span>
+            <a href="/public/gameHTML/index.html" style="float: right; margin: 10px;">
+                <button class="voltar">
+                    <i class='bx bx-arrow-back'></i>
+                    <span style="font-size: 12px;">Voltar</span>
+                </button>
+            </a>
+        </div>
+
+        <div class="resultado" id="preview">A visualização aparecerá aqui.</div>
+
+        <div class="editor-container">
+            <div class="editor-header">
+                <span class="dot red"></span>
+                <span class="dot yellow"></span>
+                <span class="dot green"></span>
+                <span class="editor-title">index.html</span>
+            </div>
+            <textarea id="entrada-codigo" class="code-editor" spellcheck="false"
+                placeholder="Digite o código HTML aqui..." style="height: 90%;"></textarea>
+            <button onclick="verificarNivel()">Testar Código</button>
+        </div>
+    </div>
+
+    <audio id="audio-sucesso" src="/public/Green Screen + Efeito Sonoro (Acerto).mp3"></audio>
+
+    <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-auth-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore-compat.js"></script>
+
+    <script>
+        let somAtivo = true;
+
+        function toggleSom() {
+            somAtivo = !somAtivo;
+            const botaoSom = document.getElementById("botao-som");
+            botaoSom.innerText = somAtivo ? "🔊" : "🔇";
+        }
+
+        const firebaseConfig = {
+            apiKey: "AIzaSyClRHfJuTSogkbWLaaUKsSBGN1KiT5xuUc",
+            authDomain: "proggamingpage.firebaseapp.com",
+            projectId: "proggamingpage",
+            storageBucket: "proggamingpage.firebasestorage.app",
+            messagingSenderId: "911283259283",
+            appId: "1:911283259283:web:0b9be83ed5e07391360a66",
+            measurementId: "G-TQP4LNPYQ1"
+        };
+
+        firebase.initializeApp(firebaseConfig);
+        const auth = firebase.auth();
+        const db = firebase.firestore();
+
+        let userDocRef;
+        let nivelAtual = 0;
+        let xpTotal = 0;
+
+        function mostrarTela(id) {
+            document.querySelectorAll('.bloco-teoria, .resultado, .editor-container')
+                .forEach(el => el.classList.remove('active'));
+            document.querySelector('.' + id).classList.add('active');
+        }
+        mostrarTela('bloco-teoria');
+
+        const entradaCodigo = document.getElementById("entrada-codigo");
+        const preview = document.getElementById("preview");
+        const barraProgresso = document.getElementById("barra-progresso");
+        const extraTeoria = document.getElementById("extra-teoria");
+        const xpSpan = document.getElementById("xp-total");
+
+        // =================== FASE 8: ESTRUTURA SEMÂNTICA ===================
+        const niveis = [
+            {
+                titulo: "Nível 1/6 (Quiz)",
+                descricao: "O que é 'semântica' no HTML?",
+                teoria: "HTML Semântico é o uso de tags HTML para dar significado e estrutura ao conteúdo, tornando-o mais compreensível para navegadores e leitores de tela. Em vez de usar apenas `<div>`, usamos `<header>`, `<main>`, `<nav>`, etc.",
+                extra: "Digite a palavra que melhor define a função do HTML semântico. Dica: Começa com 'S'.",
+                respostaEsperada: /^\s*significado\s*$/i
+            },
+            {
+                titulo: "Nível 2/6",
+                descricao: "Crie a estrutura de um site com `<header>` e `<footer>`.",
+                teoria: "A tag `<header>` representa a parte superior do site, como um banner ou logo. A tag `<footer>` representa a parte inferior, como informações de contato ou direitos autorais.",
+                extra: "Exemplo: <code>&lt;header&gt;&lt;/header&gt; &lt;footer&gt;&lt;/footer&gt;</code>",
+                respostaEsperada: /<header>[\s\S]*<\/header>[\s\S]*<footer>[\s\S]*<\/footer>/i
+            },
+            {
+                titulo: "Nível 3/6",
+                descricao: "Adicione uma área principal (`<main>`) e uma barra lateral (`<aside>`).",
+                teoria: "A tag `<main>` indica o conteúdo principal e único de uma página. A tag `<aside>` representa conteúdo secundário, como uma barra lateral ou caixa de 'relacionados'.",
+                extra: "Exemplo: <code>&lt;main&gt;&lt;/main&gt; &lt;aside&gt;&lt;/aside&gt;</code>",
+                respostaEsperada: /<main>[\s\S]*<\/main>[\s\S]*<aside>[\s\S]*<\/aside>/i
+            },
+            {
+                titulo: "Nível 4/6",
+                descricao: "Use as tags `<section>` e `<article>` dentro de `<main>`.",
+                teoria: "A tag `<section>` agrupa conteúdo tematicamente relacionado. A tag `<article>` é para conteúdo independente e auto-contido, como uma postagem de blog.",
+                extra: "Exemplo: <code>&lt;main&gt;&lt;section&gt;&lt;/section&gt;&lt;article&gt;&lt;/article&gt;&lt;/main&gt;</code>",
+                respostaEsperada: /<main[\s\S]*><section[\s\S]*><\/section>[\s\S]*<article[\s\S]*><\/article>[\s\S]*<\/main>/i
+            },
+            {
+                titulo: "Nível 5/6",
+                descricao: "Estrutura básica de navegação. Crie um `<nav>` com um link (`<a>`).",
+                teoria: "A tag `<nav>` é usada para agrupar links de navegação. É uma forma semântica de indicar que o conteúdo é um menu.",
+                extra: "Exemplo: <code>&lt;nav&gt;&lt;a href='#'&gt;Home&lt;/a&gt;&lt;/nav&gt;</code>",
+                respostaEsperada: /<nav[\s\S]*><a[\s\S]*>[\s\S]*<\/a>[\s\S]*<\/nav>/i
+            },
+            {
+                titulo: "Nível 6/6 (Desafio)",
+                descricao: "Desafio: Monte a estrutura completa de uma página usando `<header>`, `<nav>`, `<main>`, `<article>` e `<footer>`.",
+                teoria: "Coloque `<nav>` dentro de `<header>`. Dentro de `<main>`, inclua pelo menos um `<article>`. Por fim, adicione o `<footer>`.",
+                extra: "Sua página deve conter todas as tags semânticas mencionadas, na ordem correta, aninhadas adequadamente.",
+                respostaEsperada: /<header[\s\S]*><nav[\s\S]*>[\s\S]*<\/nav>[\s\S]*<\/header>[\s\S]*<main[\s\S]*><article[\s\S]*>[\s\S]*<\/article>[\s\S]*<\/main>[\s\S]*<footer>[\s\S]*<\/footer>/i
+            }
+        ];
+
+        // =================== AUTENTICAÇÃO & PROGRESSO ===================
+        auth.onAuthStateChanged(async user => {
+            if (user) {
+                userDocRef = db.collection("usuarios").doc(user.uid);
+                const doc = await userDocRef.get();
+
+                if (!doc.exists) {
+                    alert("Usuário não encontrado!");
+                    location.href = "/public/gameHTML/index.html";
+                    return;
+                }
+
+                const data = doc.data();
+
+                // Precisa da fase 7 concluída para liberar
+                if (!data.fasesHTML || data.fasesHTML.fase7?.status !== "concluida") {
+                    alert("Você precisa concluir a Fase 7 antes!");
+                    location.href = "/public/gameHTML/index.html";
+                    return;
+                }
+
+                // Se fase 8 já concluída
+                if (data.fasesHTML?.fase8?.status === "concluida") {
+                    alert("⚠️ Você já concluiu esta fase.");
+                    window.location.href = "/public/gameHTML/index.html";
+                    return;
+                }
+
+                nivelAtual = data.fasesHTML?.fase8?.nivelAtual || 0;
+                xpTotal = data.xp || 0;
+                entradaCodigo.value = data.fasesHTML?.fase8?.codigoAtual || "";
+                xpSpan.textContent = `XP: ${xpTotal}`;
+
+                if (entradaCodigo.value) {
+                    preview.innerHTML = entradaCodigo.value;
+                }
+
+                atualizarNivel();
+
+                entradaCodigo.addEventListener("input", () => {
+                    const input = entradaCodigo.value
+                        .replace(/<script.*?>.*?<\/script>/gi, "")
+                        .replace(/on\w+=".*?"/gi, "");
+                    preview.innerHTML = input || "A visualização aparecerá aqui.";
+
+                    userDocRef.update({
+                        "fasesHTML.fase8.codigoAtual": entradaCodigo.value
+                    });
+                });
+            } else {
+                location.href = "/public/login.html";
+            }
+        });
+
+        function verificarNivel() {
+            const entrada = entradaCodigo.value.trim();
+            const audio = document.getElementById("audio-sucesso");
+            const regex = niveis[nivelAtual].respostaEsperada;
+
+            if (regex.test(entrada)) {
+                if (somAtivo) {
+                    audio.play();
+                }
+
+                nivelAtual++;
+                xpTotal += 10;
+                xpSpan.textContent = `XP: ${xpTotal}`;
+
+                userDocRef.update({
+                    "fasesHTML.fase8.nivelAtual": nivelAtual,
+                    "fasesHTML.fase8.codigoAtual": entradaCodigo.value,
+                    xp: xpTotal
+                });
+
+                if (nivelAtual < niveis.length) {
+                    atualizarNivel();
+                } else {
+                    concluirFase();
+                }
+            } else {
+                alert("Resposta incorreta! Tente novamente.");
+            }
+        }
+
+        function atualizarNivel() {
+            if (nivelAtual >= niveis.length) return;
+            const nivel = niveis[nivelAtual];
+            document.getElementById("titulo-nivel").textContent = nivel.titulo;
+            document.getElementById("descricao-nivel").textContent = nivel.descricao;
+            document.getElementById("texto-teoria").textContent = nivel.teoria;
+            extraTeoria.innerHTML = nivel.extra;
+            entradaCodigo.value = "";
+            preview.innerHTML = "A visualização aparecerá aqui.";
+            barraProgresso.style.width = `${((nivelAtual + 1) / niveis.length) * 100}%`;
+        }
+
+        async function concluirFase() {
+            try {
+                await userDocRef.update({
+                    "fasesHTML.fase8.status": "concluida",
+                    "fasesHTML.fase8.codigoAtual": entradaCodigo.value,
+                    "fasesHTML.fase8.nivelAtual": nivelAtual,
+                    fase8Concluida: true,
+                    xp: firebase.firestore.FieldValue.increment(60),
+                    nivelAtual: firebase.firestore.FieldValue.increment(6)
+                });
+
+                document.querySelector(".resultado").innerHTML = `
+        <h2>Parabéns!</h2>
+        <p>Você concluiu a Fase 8 de HTML! +60XP</p>
+        <button onclick="location.href='/public/gameHTML/index.html'">Concluir a fase</button>
+    `;
+            } catch (e) {
+                console.error("Erro ao salvar fase 8:", e);
+                alert("Erro ao salvar progresso. Tente novamente!");
+            }
+        }
+    </script>
+</body>
+
+</html>

@@ -1,0 +1,297 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="stylesheet" href="https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css">
+  <link rel="apple-touch-icon" href="/public/icon_512x512.png">
+  <link rel="icon" type="image/png" href="/public/icon_512x512.png">
+  <link rel="stylesheet" href="/public/TelaPrincipal/style.css">
+  <link rel="stylesheet" href="style.css">
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap">
+  <title>Proggaming | Fase 1 HTML</title>
+</head>
+
+<body>
+  <div class="navbar">
+    <button onclick="mostrarTela('bloco-teoria')">Teoria</button>
+    <button onclick="mostrarTela('resultado')">Resultado</button>
+    <button onclick="mostrarTela('editor-container')">Editor</button>
+  </div>
+
+  <div class="progresso">
+    <div class="barra" id="barra-progresso"></div>
+  </div>
+
+  <div class="container-nivel">
+    <div class="bloco-teoria">
+      <div style="display: flex; flex-direction: row; align-items: center; justify-content: space-between;">
+        <h3>Teoria - Fase 1</h3>
+        <button class="botao-som" id="botao-som" onclick="toggleSom()">🔊</button>
+      </div>
+      <p id="texto-teoria"></p>
+      <div id="extra-teoria" style="margin-top:10px; font-weight: 600; font-size:14px; color:#ddd;"></div>
+      <h2 id="titulo-nivel">Nível 1/6</h2>
+      <p id="descricao-nivel">Digite a tag HTML que representa um título principal.</p>
+      <hr>
+      <div style="margin: 10px 0px 10px 0px;">
+        <span id="xp-total" style="font-family: 'Press Start 2P', cursive; font-weight: 600; color: #c7860e;">XP:
+          0</span>
+      </div>
+      <a href="/public/gameHTML/index.html" style="float: right; margin: 10px;">
+        <button class="voltar">
+          <i class='bx bx-arrow-back'></i>
+          <span style="font-size: 12px;">Voltar</span>
+        </button>
+      </a>
+    </div>
+
+    <div class="resultado" id="preview">A visualização aparecerá aqui.</div>
+
+    <div class="editor-container">
+      <div class="editor-header">
+        <span class="dot red"></span>
+        <span class="dot yellow"></span>
+        <span class="dot green"></span>
+        <span class="editor-title">index.html</span>
+      </div>
+      <textarea id="entrada-codigo" class="code-editor" spellcheck="false" placeholder="Digite o código HTML aqui..."
+        style="height: 90%;"></textarea>
+      <button onclick="verificarNivel()">Testar Código</button>
+    </div>
+  </div>
+
+  <audio id="audio-sucesso" src="/public/Green Screen + Efeito Sonoro (Acerto).mp3"></audio>
+
+  <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-auth-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore-compat.js"></script>
+  <script>
+    let somAtivo = true;
+
+
+    function toggleSom() {
+      somAtivo = !somAtivo;
+      const botaoSom = document.getElementById("botao-som");
+      botaoSom.innerText = somAtivo ? "🔊" : "🔇";
+    }
+
+    function mostrarTela(id) {
+      document.querySelectorAll('.bloco-teoria, .resultado, .editor-container')
+        .forEach(el => el.classList.remove('active'));
+
+      document.querySelector('.' + id).classList.add('active');
+    }
+
+    mostrarTela('bloco-teoria');
+
+    const firebaseConfig = {
+      apiKey: "AIzaSyClRHfJuTSogkbWLaaUKsSBGN1KiT5xuUc",
+      authDomain: "proggamingpage.firebaseapp.com",
+      projectId: "proggamingpage",
+      storageBucket: "proggamingpage.firebasestorage.app",
+      messagingSenderId: "911283259283",
+      appId: "1:911283259283:web:0b9be83ed5e07391360a66",
+      measurementId: "G-TQP4LNPYQ1"
+    };
+    firebase.initializeApp(firebaseConfig);
+    const auth = firebase.auth();
+    const db = firebase.firestore();
+
+    let nivelAtual = 0;
+    let faseJaConcluida = false;
+
+    const entradaCodigo = document.getElementById("entrada-codigo");
+    const preview = document.getElementById("preview");
+    const barraProgresso = document.getElementById("barra-progresso");
+    const xpTotalSpan = document.getElementById("xp-total");
+    const extraTeoria = document.getElementById("extra-teoria");
+
+    const niveis = [
+      {
+        titulo: "Nível 1/6",
+        descricao: "Digite a tag HTML que representa um título principal. (Escreva o código no editor)",
+        teoria: "A tag <h1> é usada para criar o título principal de uma página HTML. Os títulos vão de <h1> até <h6>, sendo <h1> o mais importante e <h6> o menos importante. É uma boa prática usar apenas um <h1> por página, pois ele ajuda mecanismos de busca (SEO) e leitores de tela a entenderem a hierarquia do conteúdo.",
+        extra: "Exemplo: <code>&lt;h1&gt;Meu título&lt;/h1&gt;</code>",
+        respostaEsperada: /<h1>.*<\/h1>/i
+      },
+      {
+        titulo: "Nível 2/6",
+        descricao: "Use a tag para criar um parágrafo com qualquer texto. (Escreva o código no editor)",
+        teoria: "A tag <p> define um parágrafo em HTML. É usada para agrupar blocos de texto. O navegador automaticamente adiciona um espaço antes e depois de cada parágrafo. Dentro de <p>, podem existir outras tags de texto, como <b>, <i> ou links <a>.",
+        extra: "Exemplo: <code>&lt;p&gt;Olá, mundo!&lt;/p&gt;</code>",
+        respostaEsperada: /<p>.*<\/p>/i
+      },
+      {
+        titulo: "Nível 3/6",
+        descricao: "Use a tag de negrito para escrever 'Olá Mundo'. (Escreva o código no editor)",
+        teoria: "A tag <b> deixa o texto em negrito, mas apenas visualmente. Para dar ênfase semântica (quando o conteúdo é realmente importante), recomenda-se usar <strong>. Já <b> é mais usada para estilização simples.",
+        extra: "Exemplo: <code>&lt;b&gt;Olá Mundo&lt;/b&gt;</code>",
+        respostaEsperada: /<b>\s*olá mundo\s*<\/b>/i
+      },
+      {
+        titulo: "Nível 4/6",
+        descricao: "Insira um título de aba usando a tag correta. (Escreva o código no editor)",
+        teoria: "A tag <title> define o título que aparece na aba do navegador e nos resultados de pesquisa do Google. Essa tag deve ficar sempre dentro do <head>. É importante escolher um título claro e objetivo, pois ajuda na experiência do usuário e no SEO (otimização para mecanismos de busca).",
+        extra: "Exemplo: <code>&lt;title&gt;Minha Página&lt;/title&gt;</code>",
+        respostaEsperada: /<title>.*<\/title>/i
+      },
+      {
+        titulo: "Nível 5/6",
+        descricao: "Use a tag <i> para deixar 'Importante' em itálico. (Escreva o código no editor)",
+        teoria: "A tag <i> deixa o texto em itálico, mas assim como <b>, é apenas uma formatação visual. Para dar ênfase semântica, recomenda-se usar <em> (ênfase). A diferença é que <em> comunica ao navegador e leitores de tela que o texto é realmente importante.",
+        extra: "Exemplo: <code>&lt;i&gt;Importante&lt;/i&gt;</code>",
+        respostaEsperada: /<i>\s*importante\s*<\/i>/i
+      },
+      {
+        titulo: "Nível 6/6",
+        descricao: "Monte a estrutura básica com html, head e body. (Escreva o código no editor)",
+        teoria: "Todo documento HTML deve começar com <!DOCTYPE html>, que informa ao navegador que o documento segue o padrão HTML5. Depois, temos a estrutura básica:<html>: raiz do documento;<head>: contém informações sobre a página (título, metadados, links de CSS, scripts);<body>: onde fica o conteúdo visível (textos, imagens, botões, etc.). É fundamental entender essa estrutura, pois todos os sites são construídos a partir dela.",
+        extra: "Exemplo:<br><code>&lt;!DOCTYPE html&gt;<br>&lt;html&gt;<br>&lt;head&gt;&lt;/head&gt;<br>&lt;body&gt;&lt;/body&gt;<br>&lt;/html&gt;</code>",
+        respostaEsperada: /<html>[\s\S]*<head>[\s\S]*<\/head>[\s\S]*<body>[\s\S]*<\/body>[\s\S]*<\/html>/i
+      }
+    ];
+
+
+    auth.onAuthStateChanged(user => {
+      if (!user) window.location.href = "/public/index.html";
+      else carregarProgresso(user);
+    });
+
+    function carregarProgresso(user) {
+      const ref = db.collection("usuarios").doc(user.uid);
+      ref.get().then(docSnap => {
+        if (docSnap.exists) {
+          const data = docSnap.data();
+          const xp = data.xp || 0;
+          nivelAtual = data.nivelAtual || 0;
+          faseJaConcluida = data.fase1Concluida || false;
+          xpTotalSpan.textContent = `XP: ${xp}`;
+          atualizarNivel();
+          if (data.codigoAtual) {
+            entradaCodigo.value = data.codigoAtual;
+            preview.innerHTML = data.codigoAtual;
+          }
+
+          if (faseJaConcluida) {
+            alert("⚠️ Você já concluiu esta fase.");
+            history.back()
+          }
+        } else {
+          atualizarNivel();
+        }
+      });
+    }
+
+    entradaCodigo.addEventListener("input", () => {
+      const input = entradaCodigo.value
+        .replace(/<script.*?>.*?<\/script>/gi, "")
+        .replace(/on\w+=".*?"/gi, "");
+      preview.innerHTML = input || "A visualização aparecerá aqui.";
+      salvarCodigo(entradaCodigo.value);
+    });
+
+    function verificarNivel() {
+      const entrada = entradaCodigo.value.trim();
+      const audio = document.getElementById("audio-sucesso");
+      const regex = niveis[nivelAtual].respostaEsperada;
+
+      if (regex.test(entrada)) {
+        if (somAtivo) {
+          audio.play();
+        }
+
+        if (!faseJaConcluida) {
+          adicionarXP(10);
+        }
+
+        nivelAtual++;
+        salvarProgresso(nivelAtual);
+
+        if (nivelAtual < niveis.length) {
+          atualizarNivel();
+        } else {
+          document.querySelector(".resultado").innerHTML = `
+        <h2>Parabéns!</h2>
+        <p>Você concluiu a Fase 1 de HTML! ${faseJaConcluida ? "Pode refazer, mas não ganhará XP extra." : "+60XP"}</p>
+        <button onclick="concluirFase1()">Concluir a fase</button>
+      `;
+        }
+      } else {
+        alert("Resposta incorreta! Tente novamente.");
+      }
+    }
+
+    function concluirFase1() {
+      const user = auth.currentUser;
+      if (!user) return;
+      const ref = db.collection("usuarios").doc(user.uid);
+
+      if (!faseJaConcluida) {
+        ref.get().then(docSnap => {
+          if (docSnap.exists) {
+            const data = docSnap.data();
+            const fases = data.fasesHTML || {};
+
+            fases.fase1 = { status: "concluida" };
+            fases.fase2 = { status: "disponivel" };
+
+            ref.set({
+              fasesHTML: fases,
+              xp: firebase.firestore.FieldValue.increment(60),
+              fase1Concluida: true
+            }, { merge: true }).then(() => {
+              faseJaConcluida = true;
+              alert("✅ Fase 1 concluída! Fase 2 desbloqueada.");
+              window.location.href = "/public/gameHTML/index.html";
+            });
+          }
+        });
+      } else {
+        alert("⚠️ Você já concluiu esta fase. Pode revisar, mas não ganha XP.");
+        window.location.href = "/public/gameHTML/index.html";
+      }
+    }
+
+    function atualizarNivel() {
+      if (nivelAtual >= niveis.length) return;
+      const nivel = niveis[nivelAtual];
+      document.getElementById("titulo-nivel").textContent = nivel.titulo;
+      document.getElementById("descricao-nivel").textContent = nivel.descricao;
+      document.getElementById("texto-teoria").textContent = nivel.teoria;
+      extraTeoria.innerHTML = nivel.extra;
+      entradaCodigo.value = "";
+      preview.innerHTML = "A visualização aparecerá aqui.";
+      barraProgresso.style.width = `${(nivelAtual / niveis.length) * 100}%`;
+    }
+
+    function adicionarXP(qtd) {
+      const user = auth.currentUser;
+      if (!user) return;
+      const ref = db.collection("usuarios").doc(user.uid);
+      db.runTransaction(async t => {
+        const docSnap = await t.get(ref);
+        const xpAtual = docSnap.exists ? (docSnap.data().xp || 0) : 0;
+        t.set(ref, { xp: xpAtual + qtd }, { merge: true });
+        xpTotalSpan.textContent = `XP: ${xpAtual + qtd}`;
+      });
+    }
+
+    function salvarProgresso(nivel) {
+      const user = auth.currentUser;
+      if (!user) return;
+      const ref = db.collection("usuarios").doc(user.uid);
+      ref.set({ nivelAtual: nivel }, { merge: true });
+    }
+
+    function salvarCodigo(codigo) {
+      const user = auth.currentUser;
+      if (!user) return;
+      const ref = db.collection("usuarios").doc(user.uid);
+      ref.set({ codigoAtual: codigo }, { merge: true });
+    }
+  </script>
+</body>
+
+</html>

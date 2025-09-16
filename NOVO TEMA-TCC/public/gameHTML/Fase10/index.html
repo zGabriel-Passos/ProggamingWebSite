@@ -1,0 +1,264 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css">
+    <link rel="apple-touch-icon" href="/public/icon_512x512.png">
+    <link rel="icon" type="image/png" href="/public/icon_512x512.png">
+    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap">
+    <title>Proggaming | Fase 10 HTML</title>
+</head>
+
+<body>
+    <div class="navbar">
+        <button onclick="mostrarTela('bloco-teoria')">Teoria</button>
+        <button onclick="mostrarTela('resultado')">Resultado</button>
+        <button onclick="mostrarTela('editor-container')">Editor</button>
+    </div>
+
+    <div class="progresso">
+        <div class="barra" id="barra-progresso"></div>
+    </div>
+
+    <div class="container-nivel">
+        <div class="bloco-teoria">
+            <div style="display: flex; flex-direction: row; align-items: center; justify-content: space-between;">
+                <h3>Teoria - Fase 10</h3>
+                <button class="botao-som" id="botao-som" onclick="toggleSom()">🔊</button>
+            </div>
+            <p id="texto-teoria"></p>
+            <div id="extra-teoria" style="margin-top:10px; font-weight: 600; font-size:14px; color:#ddd;"></div>
+            <h2 id="titulo-nivel">Nível 1/6</h2>
+            <p id="descricao-nivel">Inicie a estrutura básica do projeto.</p>
+            <hr>
+            <span id="xp-total" style="font-family: 'Press Start 2P', cursive; font-weight: 600; color: #c7860e;">XP:
+                0</span>
+            <a href="/public/gameHTML/index.html" style="float: right; margin: 10px;">
+                <button class="voltar">
+                    <i class='bx bx-arrow-back'></i>
+                    <span style="font-size: 12px;">Voltar</span>
+                </button>
+            </a>
+        </div>
+
+        <div class="resultado" id="preview">A visualização aparecerá aqui.</div>
+
+        <div class="editor-container">
+            <div class="editor-header">
+                <span class="dot red"></span>
+                <span class="dot yellow"></span>
+                <span class="dot green"></span>
+                <span class="editor-title">index.html</span>
+            </div>
+            <textarea id="entrada-codigo" class="code-editor" spellcheck="false"
+                placeholder="Digite o código HTML aqui..." style="height: 90%;"></textarea>
+            <button onclick="verificarNivel()">Testar Código</button>
+        </div>
+    </div>
+
+    <audio id="audio-sucesso" src="/public/Green Screen + Efeito Sonoro (Acerto).mp3"></audio>
+
+    <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-auth-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore-compat.js"></script>
+
+    <script>
+        let somAtivo = true;
+
+        function toggleSom() {
+            somAtivo = !somAtivo;
+            const botaoSom = document.getElementById("botao-som");
+            botaoSom.innerText = somAtivo ? "🔊" : "🔇";
+        }
+
+        const firebaseConfig = {
+            apiKey: "AIzaSyClRHfJuTSogkbWLaaUKsSBGN1KiT5xuUc",
+            authDomain: "proggamingpage.firebaseapp.com",
+            projectId: "proggamingpage",
+            storageBucket: "proggamingpage.firebasestorage.app",
+            messagingSenderId: "911283259283",
+            appId: "1:911283259283:web:0b9be83ed5e07391360a66",
+            measurementId: "G-TQP4LNPYQ1"
+        };
+
+        firebase.initializeApp(firebaseConfig);
+        const auth = firebase.auth();
+        const db = firebase.firestore();
+
+        let userDocRef;
+        let nivelAtual = 0;
+        let xpTotal = 0;
+
+        function mostrarTela(id) {
+            document.querySelectorAll('.bloco-teoria, .resultado, .editor-container')
+                .forEach(el => el.classList.remove('active'));
+            document.querySelector('.' + id).classList.add('active');
+        }
+        mostrarTela('bloco-teoria');
+
+        const entradaCodigo = document.getElementById("entrada-codigo");
+        const preview = document.getElementById("preview");
+        const barraProgresso = document.getElementById("barra-progresso");
+        const extraTeoria = document.getElementById("extra-teoria");
+        const xpSpan = document.getElementById("xp-total");
+
+        const niveis = [
+            {
+                titulo: "Nível 1/5 (Briefing)",
+                descricao: "Seu projeto final é criar um 'Portfólio Pessoal'. Ele deve ter seções para 'Sobre Mim', 'Projetos' e 'Contato'.",
+                teoria: "Pense na estrutura semântica que você vai usar para organizar o conteúdo. O projeto será construído passo a passo nos próximos níveis.",
+                extra: "Objetivo: Criar um portfólio pessoal simples e funcional usando tudo o que você aprendeu.",
+                respostaEsperada: /.*/i // Qualquer coisa para avançar no briefing
+            },
+            {
+                titulo: "Nível 2/5 (Estrutura)",
+                descricao: "Crie a estrutura básica da sua página usando `<header>`, `<main>` e `<footer>`.",
+                teoria: "A organização semântica é a base do seu projeto. O `<header>` vai conter o título, o `<main>` o conteúdo principal e o `<footer>` informações de contato.",
+                extra: "",
+                respostaEsperada: /<header[\s\S]*><\/header>[\s\S]*<main[\s\S]*><\/main>[\s\S]*<footer[\s\S]*><\/footer>/i
+            },
+            {
+                titulo: "Nível 3/5 (Conteúdo)",
+                descricao: "Preencha a estrutura com títulos, parágrafos e uma imagem.",
+                teoria: "Dentro do `<main>`, adicione uma seção 'Sobre Mim' com um `<h2>` e um `<p>`. Use uma imagem com o atributo `alt` para sua foto.",
+                extra: "",
+                respostaEsperada: /<main[\s\S]*><h2[\s\S]*>[\s\S]*<\/h2>[\s\S]*<p[\s\S]*>[\s\S]*<\/p>[\s\S]*<img[\s\S]*alt\s*=\s*['"][^'"]+['"][\s\S]*>[\s\S]*<\/main>/i
+            },
+            {
+                titulo: "Nível 4/5 (Links e Navegação)",
+                descricao: "Adicione navegação com `<nav>` e links (`<a>`) para as seções 'Projetos' e 'Contato'.",
+                teoria: "A tag `<nav>` é ideal para menus. Crie uma lista de links dentro dela. No rodapé, inclua um link de e-mail.",
+                extra: "",
+                respostaEsperada: /<nav[\s\S]*>(<a[\s\S]*href\s*=\s*['"][^'"]*['"][\s\S]*>[\s\S]*<\/a>){2,}[\s\S]*<\/nav>[\s\S]*<footer>[\s\S]*<a[\s\S]*href\s*=\s*['"]mailto:[^'"]*['"][\s\S]*>[\s\S]*<\/a>[\s\S]*<\/footer>/i
+
+            },
+            {
+                titulo: "Nível 5/5 (Boas Práticas e Validação)",
+                descricao: "Revise todo o seu código. Certifique-se de que ele tem um `<title>`, a tag `alt` nas imagens e está bem identado. A validação final será menos rígida.",
+                teoria: "Um bom código é fácil de ler e acessível. A indentação e o uso de atributos como `alt` e `aria` são essenciais.",
+                extra: "Seu código deve incluir `<title>`, `<header>`, `<main>`, `<footer>` e `<img>` com o atributo `alt`.",
+                respostaEsperada: /<head[\s\S]*><title[\s\S]*>[\s\S]*<\/title>[\s\S]*<\/head>[\s\S]*<body>[\s\S]*<header[\s\S]*>[\s\S]*<\/header>[\s\S]*<main[\s\S]*>[\s\S]*<\/main>[\s\S]*<footer[\s\S]*>[\s\S]*<\/footer>[\s\S]*<img[\s\S]*alt\s*=\s*['"][^'"]+['"][\s\S]*>/i
+            }
+        ];
+
+        auth.onAuthStateChanged(async user => {
+            if (user) {
+                userDocRef = db.collection("usuarios").doc(user.uid);
+                const doc = await userDocRef.get();
+
+                if (!doc.exists) {
+                    alert("Usuário não encontrado!");
+                    location.href = "/public/gameHTML/index.html";
+                    return;
+                }
+
+                const data = doc.data();
+
+                if (!data.fasesHTML || data.fasesHTML.fase9?.status !== "concluida") {
+                    alert("Você precisa concluir a Fase 9 antes!");
+                    location.href = "/public/gameHTML/index.html";
+                    return;
+                }
+
+                if (data.fasesHTML?.fase10?.status === "concluida") {
+                    alert("⚠️ Você já concluiu esta fase.");
+                    window.location.href = "/public/gameHTML/index.html";
+                    return;
+                }
+
+                nivelAtual = data.fasesHTML?.fase10?.nivelAtual || 0;
+                xpTotal = data.xp || 0;
+                entradaCodigo.value = data.fasesHTML?.fase10?.codigoAtual || "";
+                xpSpan.textContent = `XP: ${xpTotal}`;
+
+                if (entradaCodigo.value) {
+                    preview.innerHTML = entradaCodigo.value;
+                }
+
+                atualizarNivel();
+
+                entradaCodigo.addEventListener("input", () => {
+                    const input = entradaCodigo.value
+                        .replace(/<script.*?>.*?<\/script>/gi, "")
+                        .replace(/on\w+=".*?"/gi, "");
+                    preview.innerHTML = input || "A visualização aparecerá aqui.";
+
+                    userDocRef.update({
+                        "fasesHTML.fase10.codigoAtual": entradaCodigo.value
+                    });
+                });
+            } else {
+                location.href = "/public/login.html";
+            }
+        });
+
+        function verificarNivel() {
+            const entrada = entradaCodigo.value.trim();
+            const audio = document.getElementById("audio-sucesso");
+            const regex = niveis[nivelAtual].respostaEsperada;
+
+            if (regex.test(entrada)) {
+                if (somAtivo) {
+                    audio.play();
+                }
+
+                nivelAtual++;
+                xpTotal += 10;
+                xpSpan.textContent = `XP: ${xpTotal}`;
+
+                userDocRef.update({
+                    "fasesHTML.fase10.nivelAtual": nivelAtual,
+                    "fasesHTML.fase10.codigoAtual": entradaCodigo.value,
+                    xp: xpTotal
+                });
+
+                if (nivelAtual < niveis.length) {
+                    atualizarNivel();
+                } else {
+                    concluirFase();
+                }
+            } else {
+                alert("Resposta incorreta! Tente novamente.");
+            }
+        }
+
+        function atualizarNivel() {
+            if (nivelAtual >= niveis.length) return;
+            const nivel = niveis[nivelAtual];
+            document.getElementById("titulo-nivel").textContent = nivel.titulo;
+            document.getElementById("descricao-nivel").textContent = nivel.descricao;
+            document.getElementById("texto-teoria").textContent = nivel.teoria;
+            extraTeoria.innerHTML = nivel.extra;
+            entradaCodigo.value = "";
+            preview.innerHTML = "A visualização aparecerá aqui.";
+            barraProgresso.style.width = `${((nivelAtual + 1) / niveis.length) * 100}%`;
+        }
+
+        async function concluirFase() {
+            try {
+                await userDocRef.update({
+                    "fasesHTML.fase10.status": "concluida",
+                    "fasesHTML.fase10.codigoAtual": entradaCodigo.value,
+                    "fasesHTML.fase10.nivelAtual": nivelAtual,
+                    fase10Concluida: true,
+                    xp: firebase.firestore.FieldValue.increment(60),
+                    nivelAtual: firebase.firestore.FieldValue.increment(6)
+                });
+
+                document.querySelector(".resultado").innerHTML = `
+        <h2>Parabéns!</h2>
+        <p>Você concluiu a Fase 10 de HTML e todo o módulo! +60XP</p>
+        <button onclick="location.href='/public/gameHTML/index.html'">Finalizar Módulo</button>
+    `;
+            } catch (e) {
+                console.error("Erro ao salvar fase 10:", e);
+                alert("Erro ao salvar progresso. Tente novamente!");
+            }
+        }
+    </script>
+</body>
+
+</html>

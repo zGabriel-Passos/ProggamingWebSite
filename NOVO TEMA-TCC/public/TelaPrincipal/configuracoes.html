@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Configurações</title>
+    <link rel="apple-touch-icon" href="icon_512x512.png">
+    <link rel="icon" type="image/png" href="icon_512x512.png">
+    <style>
+        #botaoTema {
+            position: relative;
+            width: 50px;
+            height: 26px;
+            background-color: #ccc;
+            border: none;
+            border-radius: 34px;
+            cursor: pointer;
+            outline: none;
+            transition: background-color 0.4s;
+            padding: 0;
+        }
+
+        #botaoTema::before {
+            content: "";
+            position: absolute;
+            height: 18px;
+            width: 18px;
+            left: 4px;
+            bottom: 4px;
+            background-color: white;
+            border-radius: 50%;
+            transition: transform 0.4s;
+        }
+
+        .tema-escuro #botaoTema {
+            background-color: #2196F3;
+        }
+
+        .tema-escuro #botaoTema::before {
+            transform: translateX(24px);
+        }
+
+        .container .item {
+            padding: 10px;
+            display: flex;
+            justify-content: space-between;
+            border: 2px solid #e2e2e248;
+            box-shadow: 2px 2px 5px 2px #00000048;
+            margin: 10px 10px 0px 0px;
+            border-radius: 5px;
+        }
+
+        .container .item a {
+            text-decoration: none;
+            color: #2196F3;
+        }
+
+        .container .item a:hover {
+            color: #fffff019;
+        }
+    </style>
+</head>
+
+<body>
+    <div>
+        <h2>Configurações</h2>
+        <div class="container">
+            <div style="margin-top: 30px;">
+                <div class="item">
+                    <span>Tema</span>
+                    <button id="botaoTema" onclick="trocarTemaComBotao()"></button>
+                </div>
+                <div class="item">
+                    <span>Excluir Conta? (Cuidado)</span>
+                    <a href="/public/excluir-conta/index.html">Quero excluir minha conta</a>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+
+</html>

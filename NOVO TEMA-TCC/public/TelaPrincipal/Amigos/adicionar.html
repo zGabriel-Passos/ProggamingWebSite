@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap" rel="stylesheet">
+    <link href='https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css' rel='stylesheet'>
+    <link rel="apple-touch-icon" href="/public/icon_512x512.png">
+    <link rel="icon" type="image/png" href="/public/icon_512x512.png">
+    <link rel="stylesheet" href="style.css">
+    <meta name="mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="default">
+    <title>Amigos • Pesquisar e Solicitações</title>
+</head>
+
+<body>
+    <div class="overlay">
+        <img src="/public/logo_rotating.gif">
+    </div>
+    <button onclick="window.location.href='/public/TelaPrincipal/index.html'">Voltar</button>
+    <div class="wrap">
+        <section class="card" id="sec-add">
+            <h2>Adicionar amigos</h2>
+            <div class="body">
+                <div class="row">
+                    <input id="apelidoInput" type="text" placeholder="Digite o apelido exato…" />
+                    <button id="btnPesquisar">Pesquisar</button>
+                </div>
+                <div class="hint">Dica: pessoas podem ter o mesmo apelido. Use o e-mail para diferenciar.</div>
+
+                <div class="divider"></div>
+                <h3 style="margin:0 0 8px 0">🔔 Solicitações recebidas</h3>
+                <div id="listaSolicitacoes" class="list"></div>
+
+                <div class="divider"></div>
+                <h3 style="margin:0 0 8px 0">🔎 Resultados da pesquisa</h3>
+                <div id="resultadosPesquisa" class="list"></div>
+            </div>
+            <div class="footer-note" id="meHeader">—</div>
+        </section>
+
+        <section class="card" id="sec-friends">
+            <h2>Seus amigos</h2>
+            <div class="body">
+                <div id="listaAmigos" class="list"></div>
+            </div>
+        </section>
+    </div>
+
+
+    <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-auth-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore-compat.js"></script>
+    <script type="module" src="script.js"></script>
+</body>
+
+</html>

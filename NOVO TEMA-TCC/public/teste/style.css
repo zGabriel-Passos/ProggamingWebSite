@@ -1,0 +1,98 @@
+@import url('https://fonts.googleapis.com/css2?family=Open+Sans:ital,wght@0,300..800;1,300..800&family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&family=Roboto:ital,wght@0,100..900;1,100..900&display=swap');
+
+body {
+    margin: 0;
+    font-family: "Poppins", sans-serif;
+    background: linear-gradient(90deg, #0A1931, #1A3D63, #073A69);
+    height: 100vh;
+    padding: 10px;
+}
+
+#container {
+    display: flex;
+    justify-content: flex-start;
+    align-items: flex-start;
+    border: 1px solid #ffffff46;
+    border-radius: 10px;
+    height: 400px;
+    padding: 0 30px;
+    position: relative;
+    transition: all 0.3s ease;
+    box-shadow: 0px 4px 25px 8px rgba(0, 0, 0, 0.46);
+    -webkit-box-shadow: 0px 4px 25px 8px rgba(0, 0, 0, 0.46);
+    -moz-box-shadow: 0px 4px 25px 8px rgba(0, 0, 0, 0.46);
+    background-color: #ffffff0c;
+    margin: 10px;
+}
+
+#playerWrapper {
+    display: flex;
+    width: 100%;
+    height: 100%;
+    transition: all 0.3s ease;
+}
+
+.box {
+    width: 200px;
+    height: 200px;
+    border: 3px dashed #ffffff;
+    display: flex;
+    text-align: center;
+    justify-content: center;
+    align-items: center;
+    font-size: 14px;
+}
+
+#player {
+    background-color: gray;
+    z-index: 2;
+}
+
+#target {
+    border: 3px dashed green;
+    color: rgb(255, 255, 255);
+    z-index: 1;
+    position: absolute;
+    top: 100px;
+    left: calc(100% - 230px);
+}
+
+.controls {
+    display: flex;
+    padding: 20px;
+    justify-content: space-around;
+    align-items: center;
+    background: linear-gradient(90deg, #000, #0A1931, #032346, #010b1b);
+    margin-top: 10px;
+    border-radius: 10px;
+    border: 1px solid #ffffff46;
+}
+
+textarea {
+    width: 250px;
+    height: 100px;
+    font-family: monospace;
+    background-color: transparent;
+    color: white;
+    padding: 20px;
+    border-radius: 5px;
+    font-size: 16px;
+}
+
+#feedback {
+    text-align: center;
+    font-weight: bold;
+    color: green;
+    margin-top: 10px;
+}
+
+button {
+    font-family: "Poppins", sans-serif;
+    padding: 10px 20px;
+    margin-left: 10px;
+    cursor: pointer;
+    background-color: #000000;
+    border: 2px solid #ffffff91;
+    color: #246eb3;
+    font-weight: 600;
+}

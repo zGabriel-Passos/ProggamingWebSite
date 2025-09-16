@@ -1,0 +1,274 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css">
+    <link rel="apple-touch-icon" href="/public/icon_512x512.png">
+    <link rel="icon" type="image/png" href="/public/icon_512x512.png">
+    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap">
+    <title>Proggaming | Fase 5 HTML</title>
+</head>
+
+<body>
+    <div class="navbar">
+        <button onclick="mostrarTela('bloco-teoria')">Teoria</button>
+        <button onclick="mostrarTela('resultado')">Resultado</button>
+        <button onclick="mostrarTela('editor-container')">Editor</button>
+    </div>
+
+    <div class="progresso">
+        <div class="barra" id="barra-progresso"></div>
+    </div>
+
+    <div class="container-nivel">
+        <div class="bloco-teoria">
+            <div style="display: flex; flex-direction: row; align-items: center; justify-content: space-between;">
+                <h3>Teoria - Fase 5</h3>
+                <button class="botao-som" id="botao-som" onclick="toggleSom()">🔊</button>
+            </div>
+            <p id="texto-teoria"></p>
+            <div id="extra-teoria" style="margin-top:10px; font-weight: 600; font-size:14px; color:#ddd;"></div>
+            <h2 id="titulo-nivel">Nível 1/6</h2>
+            <p id="descricao-nivel">Crie uma lista não ordenada.</p>
+            <hr>
+            <span id="xp-total" style="font-family: 'Press Start 2P', cursive; font-weight: 600; color: #c7860e;">XP:
+                0</span>
+            <a href="/public/gameHTML/index.html" style="float: right; margin: 10px;">
+                <button class="voltar">
+                    <i class='bx bx-arrow-back'></i>
+                    <span style="font-size: 12px;">Voltar</span>
+                </button>
+            </a>
+        </div>
+
+        <div class="resultado" id="preview">A visualização aparecerá aqui.</div>
+
+        <div class="editor-container">
+            <div class="editor-header">
+                <span class="dot red"></span>
+                <span class="dot yellow"></span>
+                <span class="dot green"></span>
+                <span class="editor-title">index.html</span>
+            </div>
+            <textarea id="entrada-codigo" class="code-editor" spellcheck="false"
+                placeholder="Digite o código HTML aqui..." style="height: 90%;"></textarea>
+            <button onclick="verificarNivel()">Testar Código</button>
+        </div>
+    </div>
+
+    <audio id="audio-sucesso" src="/public/Green Screen + Efeito Sonoro (Acerto).mp3"></audio>
+
+    <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-auth-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore-compat.js"></script>
+
+    <script>
+        let somAtivo = true;
+
+        function toggleSom() {
+            somAtivo = !somAtivo;
+            const botaoSom = document.getElementById("botao-som");
+            botaoSom.innerText = somAtivo ? "🔊" : "🔇";
+        }
+
+        const firebaseConfig = {
+            apiKey: "AIzaSyClRHfJuTSogkbWLaaUKsSBGN1KiT5xuUc",
+            authDomain: "proggamingpage.firebaseapp.com",
+            projectId: "proggamingpage",
+            storageBucket: "proggamingpage.firebasestorage.app",
+            messagingSenderId: "911283259283",
+            appId: "1:911283259283:web:0b9be83ed5e07391360a66",
+            measurementId: "G-TQP4LNPYQ1"
+        };
+
+        firebase.initializeApp(firebaseConfig);
+        const auth = firebase.auth();
+        const db = firebase.firestore();
+
+        let userDocRef;
+        let nivelAtual = 0;
+        let xpTotal = 0;
+
+        function mostrarTela(id) {
+            document.querySelectorAll('.bloco-teoria, .resultado, .editor-container')
+                .forEach(el => el.classList.remove('active'));
+            document.querySelector('.' + id).classList.add('active');
+        }
+        mostrarTela('bloco-teoria');
+
+        const entradaCodigo = document.getElementById("entrada-codigo");
+        const preview = document.getElementById("preview");
+        const barraProgresso = document.getElementById("barra-progresso");
+        const extraTeoria = document.getElementById("extra-teoria");
+        const xpSpan = document.getElementById("xp-total");
+
+        // =================== FASE 5: LISTAS ===================
+        const niveis = [
+            {
+                titulo: "Nível 1/6",
+                descricao: "Crie uma lista não ordenada com pelo menos 2 itens. Use as tags <ul> e <li>.",
+                teoria: "A tag `<ul>` define uma lista não ordenada (unordered list) e a tag `<li>` (list item) define cada item da lista.",
+                extra: "Exemplo: <code>&lt;ul&gt; &lt;li&gt;Item 1&lt;/li&gt; &lt;/ul&gt;</code>",
+                respostaEsperada: /<ul>[\s\S]*<li>[\s\S]*<\/li>[\s\S]*<li>[\s\S]*<\/li>[\s\S]*<\/ul>/i
+            },
+            {
+                titulo: "Nível 2/6",
+                descricao: "Agora, crie uma lista ordenada com pelo menos 2 itens. Use as tags <ol> e <li>.",
+                teoria: "A tag `<ol>` define uma lista ordenada (ordered list). O navegador numera os itens automaticamente.",
+                extra: "Exemplo: <code>&lt;ol&gt; &lt;li&gt;Passo 1&lt;/li&gt; &lt;/ol&gt;</code>",
+                respostaEsperada: /<ol>[\s\S]*<li>[\s\S]*<\/li>[\s\S]*<li>[\s\S]*<\/li>[\s\S]*<\/ol>/i
+            },
+            {
+                titulo: "Nível 3/6",
+                descricao: "Crie uma lista aninhada: uma lista não ordenada com pelo menos um item que contenha uma sub-lista ordenada de 2 itens.",
+                teoria: "Uma lista aninhada é uma lista dentro de um item (`<li>`) de outra lista. A sub-lista deve ficar DENTRO do `<li>` do item pai.",
+                extra: "Exemplo: <code>&lt;ul&gt; &lt;li&gt;Item Pai &lt;ol&gt; &lt;li&gt;Filho 1&lt;/li&gt; &lt;/ol&gt; &lt;/li&gt; &lt;/ul&gt;</code>",
+                respostaEsperada: /<ul>[\s\S]*<li>[\s\S]*<ol>[\s\S]*<li>[\s\S]*<\/li>[\s\S]*<li>[\s\S]*<\/li>[\s\S]*<\/ol>[\s\S]*<\/li>[\s\S]*<\/ul>/i
+            },
+            {
+                titulo: "Nível 4/6",
+                descricao: "Use as tags <dl>, <dt> e <dd> para criar uma lista de definição com um termo e sua descrição.",
+                teoria: "A tag `<dl>` define a lista. `<dt>` define o termo (term), e `<dd>` define a descrição (description) do termo.",
+                extra: "Exemplo: <code>&lt;dl&gt; &lt;dt&gt;Termo&lt;/dt&gt; &lt;dd&gt;Descrição&lt;/dd&gt; &lt;/dl&gt;</code>",
+                respostaEsperada: /<dl>[\s\S]*<dt>[\s\S]*<\/dt>[\s\S]*<dd>[\s\S]*<\/dd>[\s\S]*<\/dl>/i
+            },
+            {
+                titulo: "Nível 5/6 (Quiz)",
+                descricao: "Quiz: Qual tag é usada para definir um item de lista, seja ela ordenada ou não?",
+                teoria: "A tag `<li>` (list item) é a tag universal para definir um item de uma lista, independentemente de ela ser `<ol>` ou `<ul>`.",
+                extra: "Digite apenas a tag de abertura e fechamento. Ex: <code>&lt;li&gt;&lt;/li&gt;</code>",
+                respostaEsperada: /<li>\s*<\/li>/i
+            },
+            {
+                titulo: "Nível 6/6 (Desafio)",
+                descricao: "Desafio: Crie uma lista de compras formatada. Use uma lista ordenada principal para as categorias (ex: 'Mercado', 'Farmácia') e listas não ordenadas aninhadas para os itens de cada categoria.",
+                teoria: "Combine as tags `<ol>`, `<ul>` e `<li>` para criar uma hierarquia clara e organizada.",
+                extra: "Ex: <code>&lt;ol&gt;&lt;li&gt;Mercado&lt;ul&gt;...&lt;/ul&gt;&lt;/li&gt;&lt;/ol&gt;</code>",
+                respostaEsperada: /<ol>[\s\S]*<li>[\s\S]*<ul>[\s\S]*<li>[\s\S]*<\/li>[\s\S]*<\/ul>[\s\S]*<\/li>[\s\S]*<\/ol>/i
+            }
+        ];
+
+        // =================== AUTENTICAÇÃO & PROGRESSO ===================
+        auth.onAuthStateChanged(async user => {
+            if (user) {
+                userDocRef = db.collection("usuarios").doc(user.uid);
+                const doc = await userDocRef.get();
+
+                if (!doc.exists) {
+                    alert("Usuário não encontrado!");
+                    location.href = "/public/gameHTML/index.html";
+                    return;
+                }
+
+                const data = doc.data();
+
+                // Precisa da fase 4 concluída para liberar
+                if (!data.fasesHTML || data.fasesHTML.fase4?.status !== "concluida") {
+                    alert("Você precisa concluir a Fase 4 antes!");
+                    location.href = "/public/gameHTML/index.html";
+                    return;
+                }
+
+                // Se fase 5 já concluída
+                if (data.fasesHTML?.fase5?.status === "concluida") {
+                    alert("⚠️ Você já concluiu esta fase.");
+                    window.location.href = "/public/gameHTML/index.html";
+                    return;
+                }
+
+                nivelAtual = data.fasesHTML?.fase5?.nivelAtual || 0;
+                xpTotal = data.xp || 0;
+                entradaCodigo.value = data.fasesHTML?.fase5?.codigoAtual || "";
+                xpSpan.textContent = `XP: ${xpTotal}`;
+
+                if (entradaCodigo.value) {
+                    preview.innerHTML = entradaCodigo.value;
+                }
+
+                atualizarNivel();
+
+                entradaCodigo.addEventListener("input", () => {
+                    const input = entradaCodigo.value
+                        .replace(/<script.*?>.*?<\/script>/gi, "")
+                        .replace(/on\w+=".*?"/gi, "");
+                    preview.innerHTML = input || "A visualização aparecerá aqui.";
+
+                    userDocRef.update({
+                        "fasesHTML.fase5.codigoAtual": entradaCodigo.value
+                    });
+                });
+            } else {
+                location.href = "/public/login.html";
+            }
+        });
+
+        function verificarNivel() {
+            const entrada = entradaCodigo.value.trim();
+            const audio = document.getElementById("audio-sucesso");
+            const regex = niveis[nivelAtual].respostaEsperada;
+
+            if (regex.test(entrada)) {
+                if (somAtivo) {
+                    audio.play();
+                }
+
+                nivelAtual++;
+                xpTotal += 10;
+                xpSpan.textContent = `XP: ${xpTotal}`;
+
+                userDocRef.update({
+                    "fasesHTML.fase5.nivelAtual": nivelAtual,
+                    "fasesHTML.fase5.codigoAtual": entradaCodigo.value,
+                    xp: xpTotal
+                });
+
+                if (nivelAtual < niveis.length) {
+                    atualizarNivel();
+                } else {
+                    concluirFase();
+                }
+            } else {
+                alert("Resposta incorreta! Tente novamente.");
+            }
+        }
+
+        function atualizarNivel() {
+            if (nivelAtual >= niveis.length) return;
+            const nivel = niveis[nivelAtual];
+            document.getElementById("titulo-nivel").textContent = nivel.titulo;
+            document.getElementById("descricao-nivel").textContent = nivel.descricao;
+            document.getElementById("texto-teoria").textContent = nivel.teoria;
+            extraTeoria.innerHTML = nivel.extra;
+            entradaCodigo.value = "";
+            preview.innerHTML = "A visualização aparecerá aqui.";
+            barraProgresso.style.width = `${((nivelAtual + 1) / niveis.length) * 100}%`;
+        }
+
+        async function concluirFase() {
+            try {
+                await userDocRef.update({
+                    "fasesHTML.fase5.status": "concluida",
+                    "fasesHTML.fase5.codigoAtual": entradaCodigo.value,
+                    "fasesHTML.fase5.nivelAtual": nivelAtual,
+                    fase5Concluida: true,
+                    xp: firebase.firestore.FieldValue.increment(60),
+                    nivelAtual: firebase.firestore.FieldValue.increment(6)
+                });
+
+                document.querySelector(".resultado").innerHTML = `
+        <h2>Parabéns!</h2>
+        <p>Você concluiu a Fase 5 de HTML! +60XP</p>
+        <button onclick="location.href='/public/gameHTML/index.html'">Concluir a fase</button>
+    `;
+            } catch (e) {
+                console.error("Erro ao salvar fase 5:", e);
+                alert("Erro ao salvar progresso. Tente novamente!");
+            }
+        }
+    </script>
+</body>
+
+</html>

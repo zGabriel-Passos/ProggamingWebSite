@@ -1,0 +1,147 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="apple-touch-icon" href="icon_512x512.png">
+    <link rel="icon" type="image/png" href="icon_512x512.png">
+    <meta name="mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <link rel="stylesheet" href="style.css">
+    <meta name="apple-mobile-web-app-status-bar-style" content="default">
+    <title>Configurações da Conta</title>
+</head>
+
+<body>
+    <div class="card">
+        <h2>Excluir Conta</h2>
+        <div class="body">
+            <p>Esta ação é irreversível e apagará todos os seus dados. Confirme para continuar.</p>
+
+            <div id="confirmacaoSenha" style="display: none">
+                <div class="row" style="flex-direction: column; align-items: flex-start">
+                    <label for="senha">Confirme sua senha:</label>
+                    <input id="senhaConfirmacao" type="password" placeholder="Digite sua senha" style="width: 100%" />
+                </div>
+            </div>
+
+            <button id="btnExcluirConta" class="danger">Excluir Minha Conta</button>
+        </div>
+    </div>
+    <script type="module">
+        import {
+            initializeApp
+        } from 'https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js';
+        import {
+            getAuth,
+            onAuthStateChanged,
+            EmailAuthProvider,
+            reauthenticateWithCredential,
+            deleteUser
+        } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js";
+        import {
+            getFirestore,
+            doc,
+            deleteDoc
+        } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
+
+        const firebaseConfig = {
+            apiKey: "AIzaSyClRHfJuTSogkbWLaaUKsSBGN1KiT5xuUc",
+            authDomain: "proggamingpage.firebaseapp.com",
+            projectId: "proggamingpage",
+            storageBucket: "proggamingpage.firebasestorage.app",
+            messagingSenderId: "911283259283",
+            appId: "1:911283259283:web:0b9be83ed5e07391360a66",
+            measurementId: "G-TQP4LNPYQ1"
+        };
+
+        const app = initializeApp(firebaseConfig);
+        const auth = getAuth(app);
+        const db = getFirestore(app);
+
+        function configurarExclusaoDeConta(user) {
+            const btnExcluirConta = document.getElementById("btnExcluirConta");
+            const confirmacaoSenhaDiv = document.getElementById("confirmacaoSenha");
+            const senhaInput = document.getElementById("senhaConfirmacao");
+
+            const isGoogleLogin = user.providerData.some(
+                (provider) => provider.providerId === "google.com"
+            );
+
+            if (!isGoogleLogin) {
+                if (confirmacaoSenhaDiv) {
+                    confirmacaoSenhaDiv.style.display = "block";
+                }
+            }
+
+            if (btnExcluirConta) {
+                btnExcluirConta.addEventListener("click", async () => {
+                    const confirmacao = confirm(
+                        "Esta ação é irreversível e apagará todos os seus dados. Deseja continuar?"
+                    );
+                    if (!confirmacao) {
+                        return;
+                    }
+
+                    if (isGoogleLogin) {
+                        const confirmacaoSimples = confirm(
+                            `Esta é uma conta Google. A exclusão será imediata.
+                    \nTem certeza de que deseja apagar sua conta?`
+                        );
+
+                        if (confirmacaoSimples) {
+                            try {
+                                await deleteDoc(doc(db, "usuarios", user.uid));
+                                await deleteUser(user);
+
+                                alert("Sua conta foi excluída com sucesso!");
+                                window.location.href = "/public/index.html";
+                            } catch (error) {
+                                console.error("Erro ao excluir conta:", error);
+                                alert("Erro ao excluir sua conta. Por favor, tente novamente.");
+                            }
+                        }
+                    } else {
+                        const senha = senhaInput.value;
+                        if (!senha) {
+                            alert("Por favor, digite sua senha para confirmar.");
+                            return;
+                        }
+
+                        try {
+                            const credencial = EmailAuthProvider.credential(user.email, senha);
+                            await reauthenticateWithCredential(user, credencial);
+
+                            await deleteDoc(doc(db, "usuarios", user.uid));
+                            await deleteUser(user);
+
+                            alert("Sua conta foi excluída com sucesso!");
+                            window.location.href = "/public/index.html";
+                        } catch (error) {
+                            console.error("Erro ao excluir conta:", error);
+                            let errorMessage = "Ocorreu um erro ao excluir sua conta. Tente novamente.";
+                            if (error.code === "auth/wrong-password") {
+                                errorMessage = "Senha incorreta. Por favor, tente novamente.";
+                            } else if (error.code === "auth/requires-recent-login") {
+                                errorMessage = "Sua sessão expirou. Por favor, saia e entre novamente para excluir sua conta.";
+                            }
+                            alert(errorMessage);
+                        }
+                    }
+                });
+            }
+        }
+
+        onAuthStateChanged(auth, (user) => {
+            if (user) {
+                configurarExclusaoDeConta(user);
+            } else {
+                console.log("Nenhum usuário logado.");
+                window.location.href = "/public/index.html";
+            }
+        });
+    </script>
+</body>
+
+</html>

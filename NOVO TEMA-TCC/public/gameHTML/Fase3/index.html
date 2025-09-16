@@ -1,0 +1,281 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css">
+    <link rel="apple-touch-icon" href="/public/icon_512x512.png">
+    <link rel="icon" type="image/png" href="/public/icon_512x512.png">
+    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap">
+    <title>Proggaming | Fase 3 HTML</title>
+</head>
+
+<body>
+    <div class="navbar">
+        <button onclick="mostrarTela('bloco-teoria')">Teoria</button>
+        <button onclick="mostrarTela('resultado')">Resultado</button>
+        <button onclick="mostrarTela('editor-container')">Editor</button>
+    </div>
+
+    <div class="progresso">
+        <div class="barra" id="barra-progresso"></div>
+    </div>
+
+    <div class="container-nivel">
+        <div class="bloco-teoria">
+            <div style="display: flex; flex-direction: row; align-items: center; justify-content: space-between;">
+                <h3>Teoria - Fase 3</h3>
+                <button class="botao-som" id="botao-som" onclick="toggleSom()">🔊</button>
+            </div>
+            <p id="texto-teoria"></p>
+            <div id="extra-teoria" style="margin-top:10px; font-weight: 600; font-size:14px; color:#ddd;"></div>
+            <h2 id="titulo-nivel">Nível 1/6</h2>
+            <p id="descricao-nivel">Digite a tag HTML que deixa o texto em negrito.</p>
+            <hr>
+            <span id="xp-total" style="font-family: 'Press Start 2P', cursive; font-weight: 600; color: #c7860e;">XP:
+                0</span>
+            <a href="/public/gameHTML/index.html" style="float: right; margin: 10px;">
+                <button class="voltar">
+                    <i class='bx bx-arrow-back'></i>
+                    <span style="font-size: 12px;">Voltar</span>
+                </button>
+            </a>
+        </div>
+
+        <div class="resultado" id="preview">A visualização aparecerá aqui.</div>
+
+        <div class="editor-container">
+            <div class="editor-header">
+                <span class="dot red"></span>
+                <span class="dot yellow"></span>
+                <span class="dot green"></span>
+                <span class="editor-title">index.html</span>
+            </div>
+            <textarea id="entrada-codigo" class="code-editor" spellcheck="false"
+                placeholder="Digite o código HTML aqui..." style="height: 90%;"></textarea>
+            <button onclick="verificarNivel()">Testar Código</button>
+        </div>
+    </div>
+
+    <audio id="audio-sucesso" src="/public/Green Screen + Efeito Sonoro (Acerto).mp3"></audio>
+
+    <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-auth-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore-compat.js"></script>
+
+    <script>
+        let somAtivo = true;
+
+        function toggleSom() {
+            somAtivo = !somAtivo;
+            const botaoSom = document.getElementById("botao-som");
+            botaoSom.innerText = somAtivo ? "🔊" : "🔇";
+        }
+
+        const firebaseConfig = {
+            apiKey: "AIzaSyClRHfJuTSogkbWLaaUKsSBGN1KiT5xuUc",
+            authDomain: "proggamingpage.firebaseapp.com",
+            projectId: "proggamingpage",
+            storageBucket: "proggamingpage.firebasestorage.app",
+            messagingSenderId: "911283259283",
+            appId: "1:911283259283:web:0b9be83ed5e07391360a66",
+            measurementId: "G-TQP4LNPYQ1"
+        };
+
+        firebase.initializeApp(firebaseConfig);
+        const auth = firebase.auth();
+        const db = firebase.firestore();
+
+        let userDocRef;
+        let nivelAtual = 0;
+        let xpTotal = 0;
+
+        function mostrarTela(id) {
+            document.querySelectorAll('.bloco-teoria, .resultado, .editor-container')
+                .forEach(el => el.classList.remove('active'));
+            document.querySelector('.' + id).classList.add('active');
+        }
+        mostrarTela('bloco-teoria');
+
+        const entradaCodigo = document.getElementById("entrada-codigo");
+        const preview = document.getElementById("preview");
+        const barraProgresso = document.getElementById("barra-progresso");
+        const extraTeoria = document.getElementById("extra-teoria");
+        const xpSpan = document.getElementById("xp-total");
+
+        // =================== FASE 3 ===================
+        const niveis = [
+            {
+                titulo: "Nível 1/7",
+                descricao: "Crie um link simples usando <a href='...'>.",
+                teoria: "A tag `<a>` (âncora) é usada para criar links. O atributo `href` define o destino do link. O texto entre `<a>` e `</a>` é o que será exibido para o usuário.",
+                extra: "Exemplo: <code>&lt;a href='https://www.exemplo.com'&gt;Clique aqui&lt;/a&gt;</code>",
+                respostaEsperada: /<a\b[^>]*\bhref\s*=\s*(['"])[\s\S]*?\1[^>]*>[\s\S]*?<\/a>/i
+            },
+            {
+                titulo: "Nível 2/7",
+                descricao: "Use os atributos target, title e download no link.",
+                teoria: "O atributo `target='_blank'` abre o link em uma nova aba. O `title` mostra uma dica quando o usuário passa o mouse. O `download` força baixar o arquivo.",
+                extra: "Exemplo: <code>&lt;a href='arquivo.pdf' target='_blank' title='Baixar PDF' download&gt;Baixar&lt;/a&gt;</code>",
+                respostaEsperada: /<a\b(?=[^>]*\bhref\s*=\s*(['"])[\s\S]*?\1)(?=[^>]*\btarget\s*=\s*(['"])_blank\2)(?=[^>]*\btitle\s*=\s*(['"])[\s\S]*?\3)(?=[^>]*\bdownload(?:\s*=\s*(['"])[\s\S]*?\4)?)[^>]*>[\s\S]*?<\/a>/i
+            },
+            {
+                titulo: "Nível 3/7",
+                descricao: "Crie um link interno (âncora) que leve até uma seção com id.",
+                teoria: "Para navegar na mesma página: `href='#id'` e no destino `id='id'`.",
+                extra: "Exemplo: <code>&lt;a href='#secao'&gt;Ir&lt;/a&gt; ... &lt;div id='secao'&gt;Conteúdo&lt;/div&gt;</code>",
+                respostaEsperada: /^(?=[\s\S]*<a\b[^>]*\bhref\s*=\s*(['"])#[^'"]+\1[^>]*>[\s\S]*?<\/a>)(?=[\s\S]*\bid\s*=\s*(['"])[^'"]+\2)[\s\S]*$/i
+            },
+            {
+                titulo: "Nível 4/7",
+                descricao: "Crie um menu de navegação simples com 3 links.",
+                teoria: "Use `<nav>` com múltiplos `<a>`. Normalmente organizados em listas.",
+                extra: "Ex.: <code>&lt;nav&gt;...&lt;a href='#'&gt;1&lt;/a&gt;...&lt;/nav&gt;</code>",
+                respostaEsperada: /<nav\b[^>]*>[\s\S]*?(?:<a\b[^>]*>[\s\S]*?<\/a>){3,}[\s\S]*?<\/nav>/i
+            },
+            {
+                titulo: "Nível 5/7",
+                descricao: "Quiz: Qual atributo usamos para abrir um link em nova aba?",
+                teoria: "O atributo correto é `target='_blank'`.",
+                extra: "Digite exatamente: <code>target=\"_blank\"</code>",
+                respostaEsperada: /\btarget\s*=\s*(['"])_blank\1/i
+            },
+            {
+                titulo: "Nível 6/7",
+                descricao: "Desafio: Crie um menu com 3 links funcionando (internos ou externos).",
+                teoria: "Combine tudo: `<nav>` + pelo menos 3 `<a>` (internos #id ou externos https://).",
+                extra: "Ex.: <code>&lt;nav&gt;&lt;a href='https://google.com'&gt;Google&lt;/a&gt;...&lt;/nav&gt;</code>",
+                respostaEsperada: /<nav\b[^>]*>[\s\S]*?(?:<a\b[^>]*>[\s\S]*?<\/a>){3,}[\s\S]*?<\/nav>/i
+            },
+            {
+                titulo: "Nível 7/7 (Extra)",
+                descricao: "Desafio: Adicione uma imagem com um link de sua escolha.",
+                teoria: "A tag `<img>` é usada para inserir imagens. O atributo `src` (source) aponta para o caminho da imagem. Pode ser um link ou um caminho relativo.",
+                extra: "Exemplo: <code>&lt;img src='https://via.placeholder.com/150' alt='Uma imagem de exemplo'&gt;</code>",
+                respostaEsperada: /<img\b[^>]*\bsrc\s*=\s*(['"])(https?:\/\/[^'"]+)\1[^>]*>/i
+            }
+        ];
+
+        // =================== AUTENTICAÇÃO & PROGRESSO ===================
+        auth.onAuthStateChanged(async user => {
+            if (user) {
+                userDocRef = db.collection("usuarios").doc(user.uid);
+                const doc = await userDocRef.get();
+
+                if (!doc.exists) {
+                    alert("Usuário não encontrado!");
+                    location.href = "/public/gameHTML/index.html";
+                    return;
+                }
+
+                const data = doc.data();
+
+                // Precisa da fase 2 concluída para liberar
+                if (!data.fasesHTML || data.fasesHTML.fase2?.status !== "concluida") {
+                    alert("Você precisa concluir a Fase 2 antes!");
+                    location.href = "/public/gameHTML/index.html";
+                    return;
+                }
+
+                // Se fase 3 já concluída
+                if (data.fasesHTML?.fase3?.status === "concluida") {
+                    alert("⚠️ Você já concluiu esta fase.");
+                    window.location.href = "/public/gameHTML/index.html";
+                    return;
+                }
+
+                nivelAtual = data.fasesHTML?.fase3?.nivelAtual || 0;
+                xpTotal = data.xp || 0;
+                entradaCodigo.value = data.fasesHTML?.fase3?.codigoAtual || "";
+                xpSpan.textContent = `XP: ${xpTotal}`;
+
+                if (entradaCodigo.value) {
+                    preview.innerHTML = entradaCodigo.value;
+                }
+
+                atualizarNivel();
+
+                entradaCodigo.addEventListener("input", () => {
+                    const input = entradaCodigo.value
+                        .replace(/<script.*?>.*?<\/script>/gi, "")
+                        .replace(/on\w+=".*?"/gi, "");
+                    preview.innerHTML = input || "A visualização aparecerá aqui.";
+
+                    userDocRef.update({
+                        "fasesHTML.fase3.codigoAtual": entradaCodigo.value
+                    });
+                });
+            } else {
+                location.href = "/public/login.html";
+            }
+        });
+
+        function verificarNivel() {
+            const entrada = entradaCodigo.value.trim();
+            const audio = document.getElementById("audio-sucesso");
+            const regex = niveis[nivelAtual].respostaEsperada;
+
+            if (regex.test(entrada)) {
+                if (somAtivo) {
+                    audio.play();
+                }
+
+                nivelAtual++;
+                xpTotal += 10;
+                xpSpan.textContent = `XP: ${xpTotal}`;
+
+                userDocRef.update({
+                    "fasesHTML.fase3.nivelAtual": nivelAtual,
+                    "fasesHTML.fase3.codigoAtual": entradaCodigo.value,
+                    xp: xpTotal
+                });
+
+                if (nivelAtual < niveis.length) {
+                    atualizarNivel();
+                } else {
+                    concluirFase();
+                }
+            } else {
+                alert("Resposta incorreta! Tente novamente.");
+            }
+        }
+
+        function atualizarNivel() {
+            if (nivelAtual >= niveis.length) return;
+            const nivel = niveis[nivelAtual];
+            document.getElementById("titulo-nivel").textContent = nivel.titulo;
+            document.getElementById("descricao-nivel").textContent = nivel.descricao;
+            document.getElementById("texto-teoria").textContent = nivel.teoria;
+            extraTeoria.innerHTML = nivel.extra;
+            entradaCodigo.value = "";
+            preview.innerHTML = "A visualização aparecerá aqui.";
+            barraProgresso.style.width = `${(nivelAtual / niveis.length) * 100}%`;
+        }
+
+        async function concluirFase() {
+            try {
+                await userDocRef.update({
+                    "fasesHTML.fase3.status": "concluida",
+                    "fasesHTML.fase3.codigoAtual": entradaCodigo.value,
+                    "fasesHTML.fase3.nivelAtual": nivelAtual,
+                    fase3Concluida: true,
+                    xp: firebase.firestore.FieldValue.increment(60),
+                    nivelAtual: firebase.firestore.FieldValue.increment(7)
+                });
+
+                document.querySelector(".resultado").innerHTML = `
+        <h2>Parabéns!</h2>
+        <p>Você concluiu a Fase 3 de HTML! +60XP</p>
+        <button onclick="location.href='/public/gameHTML/index.html'">Concluir a fase</button>
+    `;
+            } catch (e) {
+                console.error("Erro ao salvar fase 3:", e);
+                alert("Erro ao salvar progresso. Tente novamente!");
+            }
+        }
+    </script>
+</body>
+
+</html>

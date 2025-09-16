@@ -1,0 +1,300 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="style.css">
+    <link href='https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css' rel='stylesheet'>
+    <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap" rel="stylesheet">
+    <link rel="apple-touch-icon" href="icon_512x512.png">
+    <link rel="icon" type="image/png" href="icon_512x512.png">
+    <title>Proggaming | Fases HMTL game</title>
+</head>
+
+<body>
+    <div class="overlay">
+        <img src="../logo_rotating.gif">
+    </div>
+
+    <div id="reboot-overlay" class="reboot-overlay" style="display: none;">
+        <div class="reboot-content">
+            <h2>Reiniciar Progresso</h2>
+            <p>Tem certeza que deseja apagar todo o seu progresso? Esta ação não pode ser desfeita.</p>
+            <div class="reboot-buttons">
+                <button class="reboot-confirm" onclick="restartProgress()">Sim</button>
+                <button class="reboot-cancel" onclick="cancelRestart()">Não</button>
+            </div>
+        </div>
+    </div>
+
+    <div class="header">
+        <a href="../TelaPrincipal/index.html">
+            <button class="voltar">
+                <i class='bx bx-arrow-back'></i>
+                <span>Voltar</span>
+            </button>
+        </a>
+        <span class="logo">Proggaming - HTML games</span>
+        <div class="conta" onclick="toggleInfo()"><img id="user-avatar" src=""></div>
+        <div class="info-div" id="popupInfo">
+            <div class="info-content">
+                <h2>Informações da Conta:</h2>
+                <hr style="opacity: 0.6; margin: 20px 0px 20px 0px;" color="gray">
+                <p
+                    style="font-size: 14px; margin-top: 20px; display: flex; flex-direction: column; gap: 10px; font-family: 'Poppins';">
+                    <span>
+                        Username:
+                        <span id="perfil" class="span-perfil"></span>
+                    </span>
+                    <span id="welcome"></span>
+                </p>
+                <button class="close-button" onclick="toggleInfo()">Fechar</button>
+            </div>
+        </div>
+    </div>
+
+    <div class="container">
+        <h1>Fases de HTML</h1>
+        <button id="restart-button" onclick="showRestartConfirmation()" class="btn">Reiniciar Progresso</button>
+        <div id="fasesContainer" class="games"></div>
+    </div>
+
+    <footer style="display: flex; justify-content: center; margin: 10px;">
+        <span>&copy; 2025 by Proggaming, Inc.</span>
+    </footer>
+
+    <script>
+        window.addEventListener("DOMContentLoaded", () => {
+            setTimeout(() => {
+                document.body.classList.add("loaded");
+                setTimeout(() => {
+                    document.body.style.overflow = "auto";
+                }, 300);
+            }, 300);
+        });
+
+        function toggleInfo() {
+            var infoDiv = document.getElementById("popupInfo");
+            if (infoDiv.style.display === "none" || infoDiv.style.display === "") {
+                infoDiv.style.display = "flex";
+            } else {
+                infoDiv.style.display = "none";
+            }
+            window.addEventListener("keydown", (e) => {
+                if (e.key === "Escape") {
+                    popupInfo.style.display = "none";
+                }
+            });
+        }
+
+        function showRestartConfirmation() {
+            document.getElementById("reboot-overlay").style.display = "flex";
+        }
+
+        function cancelRestart() {
+            document.getElementById("reboot-overlay").style.display = "none";
+        }
+    </script>
+
+    <script type="module">
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
+        import { getAuth, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js";
+        import { getFirestore, doc, setDoc, getDoc, updateDoc, deleteField } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
+
+        const firebaseConfig = {
+            apiKey: "AIzaSyClRHfJuTSogkbWLaaUKsSBGN1KiT5xuUc",
+            authDomain: "proggamingpage.firebaseapp.com",
+            projectId: "proggamingpage",
+            storageBucket: "proggamingpage.firebasestorage.app",
+            messagingSenderId: "911283259283",
+            appId: "1:911283259283:web:0b9be83ed5e07391360a66",
+            measurementId: "G-TQP4LNPYQ1"
+        };
+
+        const app = initializeApp(firebaseConfig);
+        const auth = getAuth(app);
+        const perfilSpan = document.getElementById('perfil');
+        const userAvatar = document.getElementById("user-avatar");
+        const db = getFirestore(app);
+        const welcomeText = document.getElementById("welcome");
+        const fasesContainer = document.getElementById("fasesContainer");
+
+        onAuthStateChanged(auth, (user) => {
+            if (user) {
+                document.getElementById("welcome").textContent = `Email logado: ${user.email}`;
+            } else {
+                window.location.href = "/public/index.html";
+            }
+        });
+
+        onAuthStateChanged(auth, async (user) => {
+            if (user) {
+                const uid = user.uid;
+                const userRef = doc(db, "usuarios", uid);
+                const docSnap = await getDoc(userRef);
+
+                if (docSnap.exists()) {
+                    const dados = docSnap.data();
+                    perfilSpan.innerText = dados.apelido;
+                    perfilSpan.dataset.email = dados.email;
+                    const avatarUrl = dados.avatarUrl || '/public/avatares/avatar.jpg';
+                    userAvatar.src = avatarUrl;
+                } else {
+                    const apelidoAleatorio = "user" + Math.floor(Math.random() * 10000);
+                    await setDoc(userRef, {
+                        apelido: apelidoAleatorio,
+                        email: user.email,
+                        avatarUrl: '/public/avatares/avatar.jpg',
+                        xp: 0,
+                        fasesHTML: {
+                            fase1: { status: "disponivel" },
+                            fase2: { status: "bloqueada" },
+                            fase3: { status: "bloqueada" },
+                            fase4: { status: "bloqueada" },
+                            fase5: { status: "bloqueada" },
+                            fase6: { status: "bloqueada" },
+                            fase7: { status: "bloqueada" },
+                            fase8: { status: "bloqueada" },
+                            fase9: { status: "bloqueada" },
+                            fase10: { status: "bloqueada" },
+                        }
+                    });
+                    perfilSpan.innerText = apelidoAleatorio;
+                    perfilSpan.dataset.email = user.email;
+                    userAvatar.src = '/public/avatares/avatar.jpg';
+                }
+
+                perfilSpan.addEventListener('click', () => {
+                    alert("Você está logado como:\n" + perfilSpan.dataset.email);
+                });
+
+            } else {
+                window.location.href = "/public/index.html";
+            }
+        });
+
+        const fasesIniciais = {
+            fase1: { status: "disponivel" },
+            fase2: { status: "bloqueada" },
+            fase3: { status: "bloqueada" },
+            fase4: { status: "bloqueada" },
+            fase5: { status: "bloqueada" },
+            fase6: { status: "bloqueada" },
+            fase7: { status: "bloqueada" },
+            fase8: { status: "bloqueada" },
+            fase9: { status: "bloqueada" },
+            fase10: { status: "bloqueada" },
+        };
+
+        async function renderFases(user) {
+            const userRef = doc(db, "usuarios", user.uid);
+            const snap = await getDoc(userRef);
+
+            let dados = {};
+            if (snap.exists()) {
+                dados = snap.data();
+            } else {
+                await setDoc(userRef, { fasesHTML: fasesIniciais, xp: 0 }, { merge: true });
+                dados = { fasesHTML: fasesIniciais, xp: 0 };
+            }
+
+            const fases = { ...fasesIniciais, ...(dados.fasesHTML || {}) };
+            const xpTotal = dados.xp || 0;
+
+            if (dados.fase1Concluida) {
+                fases.fase2.status = fases.fase2.status === "concluida" ? "concluida" : "disponivel";
+            }
+            if (dados.fase2Concluida) {
+                fases.fase3.status = fases.fase3.status === "concluida" ? "concluida" : "disponivel";
+            }
+            if (dados.fase3Concluida) {
+                fases.fase4.status = fases.fase4.status === "concluida" ? "concluida" : "disponivel";
+            }
+            if (dados.fase4Concluida) {
+                fases.fase5.status = fases.fase5.status === "concluida" ? "concluida" : "disponivel";
+            }
+            if (dados.fase5Concluida) {
+                fases.fase6.status = fases.fase6.status === "concluida" ? "concluida" : "disponivel";
+            }
+            if (dados.fase6Concluida) {
+                fases.fase7.status = fases.fase7.status === "concluida" ? "concluida" : "disponivel";
+            }
+            if (dados.fase7Concluida) {
+                fases.fase8.status = fases.fase8.status === "concluida" ? "concluida" : "disponivel";
+            }
+            if (dados.fase8Concluida) {
+                fases.fase9.status = fases.fase9.status === "concluida" ? "concluida" : "disponivel";
+            }
+            if (dados.fase9Concluida) {
+                fases.fase10.status = fases.fase10.status === "concluida" ? "concluida" : "disponivel";
+            }
+
+            fasesContainer.innerHTML = `<h2 style="color: orange;">XP Total: ${xpTotal}</h2>`;
+
+            Object.entries(fases).forEach(([faseId, fase]) => {
+                const div = document.createElement("div");
+                div.classList.add("game");
+
+                if (fase.status === "bloqueada") div.style.opacity = "0.5";
+
+                const numeroFase = faseId.replace("fase", "");
+
+                let progresso = "0%";
+                if (fase.status === "disponivel") progresso = "10%";
+                if (fase.status === "concluida") progresso = "100%";
+
+                div.innerHTML = `
+                <span class="title">HTML - Fase ${numeroFase}</span>
+                <span class="desc">Introdução à linguagem</span>
+                <div class="progress">
+                    <div class="progress-bar" style="width:${progresso}"></div>
+                </div>
+                ${fase.status === "bloqueada"
+                        ? `<button class="btn" disabled>Bloqueada</button>`
+                        : `<button class="btn" onclick="window.location.href='/public/gameHTML/Fase${numeroFase}/index.html'">Acessar lições</button>`}
+            `;
+
+                fasesContainer.appendChild(div);
+            });
+        }
+
+        async function restartProgress() {
+            const user = auth.currentUser;
+            if (user) {
+                const userRef = doc(db, "usuarios", user.uid);
+                const dadosIniciais = {
+                    fasesHTML: deleteField(),
+                    nivelAtual: 0, // Adicionado para zerar o nível
+                    codigoAtual: '',
+                    fase1Concluida: deleteField(),
+                    fase2Concluida: deleteField(),
+                    fase3Concluida: deleteField(),
+                    fase4Concluida: deleteField(),
+                    fase5Concluida: deleteField(),
+                    fase6Concluida: deleteField(),
+                    fase7Concluida: deleteField(),
+                    fase8Concluida: deleteField(),
+                    fase9Concluida: deleteField(),
+                    fase10Concluida: deleteField()
+                };
+
+                await updateDoc(userRef, dadosIniciais);
+                console.log("Progresso do usuário reiniciado com sucesso.");
+                window.location.reload();
+            }
+        }
+
+        window.restartProgress = restartProgress;
+
+        onAuthStateChanged(auth, (user) => {
+            if (user) {
+                renderFases(user);
+            } else {
+                window.location.href = "/public/index.html";
+            }
+        });
+    </script>
+</body>
+
+</html>

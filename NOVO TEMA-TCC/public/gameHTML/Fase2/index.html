@@ -1,0 +1,275 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css">
+    <link rel="apple-touch-icon" href="/public/icon_512x512.png">
+    <link rel="icon" type="image/png" href="/public/icon_512x512.png">
+    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap">
+    <title>Proggaming | Fase 2 HTML</title>
+</head>
+
+<body>
+    <div class="navbar">
+        <button onclick="mostrarTela('bloco-teoria')">Teoria</button>
+        <button onclick="mostrarTela('resultado')">Resultado</button>
+        <button onclick="mostrarTela('editor-container')">Editor</button>
+    </div>
+
+    <div class="progresso">
+        <div class="barra" id="barra-progresso"></div>
+    </div>
+
+    <div class="container-nivel">
+        <div class="bloco-teoria">
+            <div style="display: flex; flex-direction: row; align-items: center; justify-content: space-between;">
+                <h3>Teoria - Fase 2</h3>
+                <button class="botao-som" id="botao-som" onclick="toggleSom()">🔊</button>
+            </div>
+            <p id="texto-teoria"></p>
+            <div id="extra-teoria" style="margin-top:10px; font-weight: 600; font-size:14px; color:#ddd;"></div>
+            <h2 id="titulo-nivel">Nível 1/6</h2>
+            <p id="descricao-nivel">Digite a tag HTML que deixa o texto em negrito.</p>
+            <hr>
+            <span id="xp-total" style="font-family: 'Press Start 2P', cursive; font-weight: 600; color: #c7860e;">XP:
+                0</span>
+            <a href="/public/gameHTML/index.html" style="float: right; margin: 10px;">
+                <button class="voltar">
+                    <i class='bx bx-arrow-back'></i>
+                    <span style="font-size: 12px;">Voltar</span>
+                </button>
+            </a>
+        </div>
+
+        <div class="resultado" id="preview">A visualização aparecerá aqui.</div>
+
+        <div class="editor-container">
+            <div class="editor-header">
+                <span class="dot red"></span>
+                <span class="dot yellow"></span>
+                <span class="dot green"></span>
+                <span class="editor-title">index.html</span>
+            </div>
+            <textarea id="entrada-codigo" class="code-editor" spellcheck="false"
+                placeholder="Digite o código HTML aqui..." style="height: 90%;"></textarea>
+            <button onclick="verificarNivel()">Testar Código</button>
+        </div>
+    </div>
+
+    <audio id="audio-sucesso" src="/public/Green Screen + Efeito Sonoro (Acerto).mp3"></audio>
+
+    <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-auth-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore-compat.js"></script>
+
+    <script>
+        let somAtivo = true;
+
+        function toggleSom() {
+            somAtivo = !somAtivo;
+            const botaoSom = document.getElementById("botao-som");
+            botaoSom.innerText = somAtivo ? "🔊" : "🔇";
+        }
+
+        const firebaseConfig = {
+            apiKey: "AIzaSyClRHfJuTSogkbWLaaUKsSBGN1KiT5xuUc",
+            authDomain: "proggamingpage.firebaseapp.com",
+            projectId: "proggamingpage",
+            storageBucket: "proggamingpage.firebasestorage.app",
+            messagingSenderId: "911283259283",
+            appId: "1:911283259283:web:0b9be83ed5e07391360a66",
+            measurementId: "G-TQP4LNPYQ1"
+        };
+
+        firebase.initializeApp(firebaseConfig);
+        const auth = firebase.auth();
+        const db = firebase.firestore();
+
+        let userDocRef;
+        let nivelAtual = 0;
+        let faseJaConcluida = false;
+        let xpTotal = 0;
+
+        function mostrarTela(id) {
+            document.querySelectorAll('.bloco-teoria, .resultado, .editor-container')
+                .forEach(el => el.classList.remove('active'));
+            document.querySelector('.' + id).classList.add('active');
+        }
+        mostrarTela('bloco-teoria');
+
+        const entradaCodigo = document.getElementById("entrada-codigo");
+        const preview = document.getElementById("preview");
+        const barraProgresso = document.getElementById("barra-progresso");
+        const extraTeoria = document.getElementById("extra-teoria");
+        const xpSpan = document.getElementById("xp-total");
+
+        const niveis = [
+            {
+                titulo: "Nível 1/6",
+                descricao: "Crie uma lista não ordenada de itens.",
+                teoria: "As listas não ordenadas são ótimas para agrupar itens sem uma sequência específica, como uma lista de compras ou de tarefas. Elas usam a tag-mãe `<ul>` (unordered list), que funciona como um 'container' para os itens da lista. Cada item individualmente é inserido dentro de sua própria tag-filha `<li>` (list item).",
+                extra: "Exemplo: <code>&lt;ul&gt;&lt;li&gt;Item 1&lt;/li&gt;&lt;li&gt;Item 2&lt;/li&gt;&lt;/ul&gt;</code>",
+                respostaEsperada: /<ul>.*<li>.*<\/li>.*<\/ul>/i
+            },
+            {
+                titulo: "Nível 2/6",
+                descricao: "Crie um link para a página 'https://www.google.com'.",
+                teoria: "A tag `<a>` (anchor) é a espinha dorsal da internet, usada para conectar páginas entre si. O endereço para onde o link aponta é colocado no atributo `href`, que significa 'Hypertext Reference'. Lembre-se, o texto visível e clicável para o usuário deve ficar entre a abertura `<a>` e o fechamento `</a>` da tag.",
+                extra: "Exemplo: <code>&lt;a href=\"https://www.google.com\"&gt;Google&lt;/a&gt;</code>",
+                respostaEsperada: /<a href="https:\/\/www\.google\.com".*<\/a>/i
+            },
+            {
+                titulo: "Nível 3/6",
+                descricao: "Digite a tag HTML que sublinha um texto.",
+                teoria: "A tag `<u>` (underline) foi historicamente usada para sublinhar textos. Embora ainda funcione, hoje em dia ela é pouco usada para esse fim, pois o sublinhado é geralmente associado a links. Em vez disso, é mais comum estilizar textos com sublinhado usando CSS. O `<u>` é usado semânticamente para indicar um texto que tem uma anotação não textual, como um nome próprio.",
+                extra: "Exemplo: <code>&lt;u&gt;Texto&lt;/u&gt;</code>",
+                respostaEsperada: /<u>.*<\/u>/i
+            },
+            {
+                titulo: "Nível 4/6",
+                descricao: "Use a tag <strong> para enfatizar um texto.",
+                teoria: "As tags `<b>` e `<strong>` podem parecer iguais visualmente, mas elas têm propósitos diferentes. A tag `<b>` (bold) é puramente de formatação, enquanto `<strong>` é uma tag semântica. Ela indica que o conteúdo é de grande importância, urgência ou relevância, e por isso é exibida em negrito pelos navegadores. Para pessoas com deficiência visual que usam leitores de tela, a tag `<strong>` sinaliza para o dispositivo 'dar mais força' à pronúncia do texto.",
+                extra: "Exemplo: <code>&lt;strong&gt;Importante&lt;/strong&gt;</code>",
+                respostaEsperada: /<strong>.*<\/strong>/i
+            },
+            {
+                titulo: "Nível 5/6",
+                descricao: "Use a tag <em> para enfatizar um texto semanticamente.",
+                teoria: "Da mesma forma que `<strong>` é a versão semântica de `<b>`, a tag `<em>` (emphasis) é a versão semântica de `<i>` (italic). Ela indica que o texto deve ser enfatizado de forma a alterar o seu significado, como em uma frase falada. Por exemplo, em 'Eu *amo* HTML!', o `<em>` muda a ênfase para a palavra 'amo'. Os navegadores costumam exibi-la em itálico.",
+                extra: "Exemplo: <code>&lt;em&gt;Ênfase&lt;/em&gt;</code>",
+                respostaEsperada: /<em>.*<\/em>/i
+            },
+            {
+                titulo: "Nível 6/6",
+                descricao: "Crie um bloco de citação usando <blockquote> e uma abreviação <abbr>.",
+                teoria: "O `<blockquote>` é uma tag usada para agrupar e formatar citações longas que foram retiradas de outra fonte. Já a tag `<abbr>` (abbreviation) é usada para definir uma abreviação ou sigla, como 'HTML' para 'HyperText Markup Language'. Ao passar o mouse sobre a abreviação, a descrição completa pode ser exibida, tornando o conteúdo mais acessível.",
+                extra: "Exemplo: <code>&lt;blockquote&gt;Citação &lt;abbr&gt;HTML&lt;/abbr&gt;&lt;/blockquote&gt;</code>",
+                respostaEsperada: /<blockquote>.*<abbr>.*<\/abbr>.*<\/blockquote>/i
+            }
+        ];
+
+        auth.onAuthStateChanged(async user => {
+            if (user) {
+                userDocRef = db.collection("usuarios").doc(user.uid);
+                const doc = await userDocRef.get();
+
+                if (!doc.exists) {
+                    alert("Usuário não encontrado!");
+                    location.href = "/public/gameHTML/index.html";
+                    return;
+                }
+
+                const data = doc.data();
+
+                if (!data.fasesHTML || data.fasesHTML.fase1?.status !== "concluida") {
+                    alert("Você precisa concluir a Fase 1 antes!");
+                    location.href = "/public/gameHTML/index.html";
+                    return;
+                }
+
+                // AQUI ESTÁ A CHECAGEM PRINCIPAL.
+                // Se a fase 2 já estiver concluída no banco de dados,
+                if (data.fasesHTML?.fase2?.status === "concluida") {
+                    alert("⚠️ Você já concluiu esta fase.");
+                    window.location.href = "/public/gameHTML/index.html";
+                    return; // Impede que o resto do código da função seja executado
+                }
+
+                // O código abaixo só é executado se a fase NÃO estiver concluída.
+                nivelAtual = data.fasesHTML?.fase2?.nivelAtual || 0;
+                xpTotal = data.xp || 0;
+                entradaCodigo.value = data.fasesHTML?.fase2?.codigoAtual || "";
+                xpSpan.textContent = `XP: ${xpTotal}`;
+
+                if (entradaCodigo.value) {
+                    preview.innerHTML = entradaCodigo.value;
+                }
+
+                atualizarNivel();
+
+                entradaCodigo.addEventListener("input", () => {
+                    const input = entradaCodigo.value
+                        .replace(/<script.*?>.*?<\/script>/gi, "")
+                        .replace(/on\w+=".*?"/gi, "");
+                    preview.innerHTML = input || "A visualização aparecerá aqui.";
+
+                    userDocRef.update({
+                        "fasesHTML.fase2.codigoAtual": entradaCodigo.value
+                    });
+                });
+            } else {
+                location.href = "/public/login.html";
+            }
+        });
+
+        function verificarNivel() {
+            const entrada = entradaCodigo.value.trim();
+            const audio = document.getElementById("audio-sucesso");
+            const regex = niveis[nivelAtual].respostaEsperada;
+
+            if (regex.test(entrada)) {
+                if (somAtivo) {
+                    audio.play();
+                }
+
+                nivelAtual++;
+                xpTotal += 10;
+                xpSpan.textContent = `XP: ${xpTotal}`;
+
+                userDocRef.update({
+                    "fasesHTML.fase2.nivelAtual": nivelAtual,
+                    "fasesHTML.fase2.codigoAtual": entradaCodigo.value,
+                    xp: xpTotal
+                });
+
+                if (nivelAtual < niveis.length) {
+                    atualizarNivel();
+                } else {
+                    concluirFase();
+                }
+            } else {
+                alert("Resposta incorreta! Tente novamente.");
+            }
+        }
+
+
+        function atualizarNivel() {
+            if (nivelAtual >= niveis.length) return;
+            const nivel = niveis[nivelAtual];
+            document.getElementById("titulo-nivel").textContent = nivel.titulo;
+            document.getElementById("descricao-nivel").textContent = nivel.descricao;
+            document.getElementById("texto-teoria").textContent = nivel.teoria;
+            extraTeoria.innerHTML = nivel.extra;
+            entradaCodigo.value = "";
+            preview.innerHTML = "A visualização aparecerá aqui.";
+            barraProgresso.style.width = `${(nivelAtual / niveis.length) * 100}%`;
+        }
+
+        async function concluirFase() {
+            try {
+                await userDocRef.update({
+                    "fasesHTML.fase2.status": "concluida",
+                    "fasesHTML.fase2.codigoAtual": entradaCodigo.value, // salva o código final
+                    "fasesHTML.fase2.nivelAtual": nivelAtual,
+                    fase2Concluida: true, // 👈 novo campo fora de fasesHTML
+                    xp: firebase.firestore.FieldValue.increment(60),
+                    nivelAtual: firebase.firestore.FieldValue.increment(6)
+                });
+
+                document.querySelector(".resultado").innerHTML = `
+            <h2>Parabéns!</h2>
+            <p>Você concluiu a Fase 2 de HTML! +60XP</p>
+            <button onclick="location.href='/public/gameHTML/index.html'">Concluir a fase</button>
+        `;
+            } catch (e) {
+                console.error("Erro ao salvar fase 2:", e);
+                alert("Erro ao salvar progresso. Tente novamente!");
+            }
+        }
+    </script>
+</body>
+
+</html>

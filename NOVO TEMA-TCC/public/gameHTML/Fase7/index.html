@@ -1,0 +1,274 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css">
+    <link rel="apple-touch-icon" href="/public/icon_512x512.png">
+    <link rel="icon" type="image/png" href="/public/icon_512x512.png">
+    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap">
+    <title>Proggaming | Fase 7 HTML</title>
+</head>
+
+<body>
+    <div class="navbar">
+        <button onclick="mostrarTela('bloco-teoria')">Teoria</button>
+        <button onclick="mostrarTela('resultado')">Resultado</button>
+        <button onclick="mostrarTela('editor-container')">Editor</button>
+    </div>
+
+    <div class="progresso">
+        <div class="barra" id="barra-progresso"></div>
+    </div>
+
+    <div class="container-nivel">
+        <div class="bloco-teoria">
+            <div style="display: flex; flex-direction: row; align-items: center; justify-content: space-between;">
+                <h3>Teoria - Fase 7</h3>
+                <button class="botao-som" id="botao-som" onclick="toggleSom()">🔊</button>
+            </div>
+            <p id="texto-teoria"></p>
+            <div id="extra-teoria" style="margin-top:10px; font-weight: 600; font-size:14px; color:#ddd;"></div>
+            <h2 id="titulo-nivel">Nível 1/6</h2>
+            <p id="descricao-nivel">Crie a estrutura básica de um formulário.</p>
+            <hr>
+            <span id="xp-total" style="font-family: 'Press Start 2P', cursive; font-weight: 600; color: #c7860e;">XP:
+                0</span>
+            <a href="/public/gameHTML/index.html" style="float: right; margin: 10px;">
+                <button class="voltar">
+                    <i class='bx bx-arrow-back'></i>
+                    <span style="font-size: 12px;">Voltar</span>
+                </button>
+            </a>
+        </div>
+
+        <div class="resultado" id="preview">A visualização aparecerá aqui.</div>
+
+        <div class="editor-container">
+            <div class="editor-header">
+                <span class="dot red"></span>
+                <span class="dot yellow"></span>
+                <span class="dot green"></span>
+                <span class="editor-title">index.html</span>
+            </div>
+            <textarea id="entrada-codigo" class="code-editor" spellcheck="false"
+                placeholder="Digite o código HTML aqui..." style="height: 90%;"></textarea>
+            <button onclick="verificarNivel()">Testar Código</button>
+        </div>
+    </div>
+
+    <audio id="audio-sucesso" src="/public/Green Screen + Efeito Sonoro (Acerto).mp3"></audio>
+
+    <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-auth-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore-compat.js"></script>
+
+    <script>
+        let somAtivo = true;
+
+        function toggleSom() {
+            somAtivo = !somAtivo;
+            const botaoSom = document.getElementById("botao-som");
+            botaoSom.innerText = somAtivo ? "🔊" : "🔇";
+        }
+
+        const firebaseConfig = {
+            apiKey: "AIzaSyClRHfJuTSogkbWLaaUKsSBGN1KiT5xuUc",
+            authDomain: "proggamingpage.firebaseapp.com",
+            projectId: "proggamingpage",
+            storageBucket: "proggamingpage.firebasestorage.app",
+            messagingSenderId: "911283259283",
+            appId: "1:911283259283:web:0b9be83ed5e07391360a66",
+            measurementId: "G-TQP4LNPYQ1"
+        };
+
+        firebase.initializeApp(firebaseConfig);
+        const auth = firebase.auth();
+        const db = firebase.firestore();
+
+        let userDocRef;
+        let nivelAtual = 0;
+        let xpTotal = 0;
+
+        function mostrarTela(id) {
+            document.querySelectorAll('.bloco-teoria, .resultado, .editor-container')
+                .forEach(el => el.classList.remove('active'));
+            document.querySelector('.' + id).classList.add('active');
+        }
+        mostrarTela('bloco-teoria');
+
+        const entradaCodigo = document.getElementById("entrada-codigo");
+        const preview = document.getElementById("preview");
+        const barraProgresso = document.getElementById("barra-progresso");
+        const extraTeoria = document.getElementById("extra-teoria");
+        const xpSpan = document.getElementById("xp-total");
+
+        // =================== FASE 7: FORMULÁRIOS ===================
+        const niveis = [
+            {
+                titulo: "Nível 1/6",
+                descricao: "Crie a estrutura básica de um formulário com um campo de texto e um botão de envio.",
+                teoria: "A tag `<form>` agrupa os elementos do formulário. `<input>` cria campos de entrada de dados, e `<button>` cria um botão.",
+                extra: "Exemplo: <code>&lt;form&gt; &lt;input type='text'&gt; &lt;button type='submit'&gt;Enviar&lt;/button&gt; &lt;/form&gt;</code>",
+                respostaEsperada: /<form[\s\S]*><input[\s\S]*><button[\s\S]*>[\s\S]*<\/button>[\s\S]*<\/form>/i
+            },
+            {
+                titulo: "Nível 2/6",
+                descricao: "Adicione um label para o campo de texto. Use a tag <label> e o atributo `for`.",
+                teoria: "A tag `<label>` descreve o campo. O atributo `for` da label deve ter o mesmo valor do `id` do input para associá-los.",
+                extra: "Exemplo: <code>&lt;label for='nome'&gt;Nome:&lt;/label&gt; &lt;input type='text' id='nome'&gt;</code>",
+                respostaEsperada: /<label\s+for\s*=\s*['"][^'"]+['"]>[\s\S]*?<\/label>[\s\S]*<input\s+[^>]*id\s*=\s*['"][^'"]+['"]/i
+            },
+            {
+                titulo: "Nível 3/6",
+                descricao: "Crie um campo de senha e um de e-mail. Use os tipos `password` e `email`.",
+                teoria: "O atributo `type` do `<input>` define o tipo de dados. `password` esconde o texto. `email` valida se o formato é de e-mail.",
+                extra: "Exemplo: <code>&lt;input type='password'&gt; &lt;input type='email'&gt;</code>",
+                respostaEsperada: /<input\s+[^>]*type\s*=\s*['"]password['"][\s\S]*>[\s\S]*<input\s+[^>]*type\s*=\s*['"]email['"]/i
+            },
+            {
+                titulo: "Nível 4/6",
+                descricao: "Adicione campos de múltipla escolha. Crie um `checkbox` e um `radio`.",
+                teoria: "Use `type='checkbox'` para seleção múltipla e `type='radio'` para seleção única (os radios com o mesmo `name` formam um grupo).",
+                extra: "Exemplo: <code>&lt;input type='checkbox'&gt; &lt;input type='radio' name='opcao'&gt;</code>",
+                respostaEsperada: /<input\s+[^>]*type\s*=\s*['"]checkbox['"][\s\S]*>[\s\S]*<input\s+[^>]*type\s*=\s*['"]radio['"]/i
+            },
+            {
+                titulo: "Nível 5/6 (Quiz)",
+                descricao: "Quiz: Qual atributo usamos em um `<input>` para definir o tipo de campo?",
+                teoria: "O atributo `type` é usado para definir se o campo é de texto, senha, email, etc.",
+                extra: "Digite apenas o nome do atributo. Ex: <code>type</code>",
+                respostaEsperada: /^\s*type\s*$/i
+            },
+            {
+                titulo: "Nível 6/6 (Desafio)",
+                descricao: "Desafio: Crie um formulário de contato completo. Ele precisa ter campos para nome, e-mail, uma área de texto para a mensagem e um botão para enviar.",
+                teoria: "Combine as tags `<form>`, `<input>`, `<textarea>` e `<button>` para montar o seu formulário.",
+                extra: "Exemplo: <code>&lt;form&gt;...&lt;input type='text'&gt;...&lt;input type='email'&gt;...&lt;textarea&gt;...&lt;button&gt;Enviar&lt;/button&gt;...&lt;/form&gt;</code>",
+                respostaEsperada: /<form[\s\S]*(?:<label[\s\S]*>)?[\s\S]*<input[\s\S]*type\s*=\s*['"]text['"][\s\S]*(?:<label[\s\S]*>)?[\s\S]*<input[\s\S]*type\s*=\s*['"]email['"][\s\S]*(?:<label[\s\S]*>)?[\s\S]*<textarea[\s\S]*>[\s\S]*<\/textarea>[\s\S]*(?:<label[\s\S]*>)?[\s\S]*<button[\s\S]*>[\s\S]*<\/button>[\s\S]*<\/form>/i
+            }
+        ];
+
+        // =================== AUTENTICAÇÃO & PROGRESSO ===================
+        auth.onAuthStateChanged(async user => {
+            if (user) {
+                userDocRef = db.collection("usuarios").doc(user.uid);
+                const doc = await userDocRef.get();
+
+                if (!doc.exists) {
+                    alert("Usuário não encontrado!");
+                    location.href = "/public/gameHTML/index.html";
+                    return;
+                }
+
+                const data = doc.data();
+
+                // Precisa da fase 6 concluída para liberar
+                if (!data.fasesHTML || data.fasesHTML.fase6?.status !== "concluida") {
+                    alert("Você precisa concluir a Fase 6 antes!");
+                    location.href = "/public/gameHTML/index.html";
+                    return;
+                }
+
+                // Se fase 7 já concluída
+                if (data.fasesHTML?.fase7?.status === "concluida") {
+                    alert("⚠️ Você já concluiu esta fase.");
+                    window.location.href = "/public/gameHTML/index.html";
+                    return;
+                }
+
+                nivelAtual = data.fasesHTML?.fase7?.nivelAtual || 0;
+                xpTotal = data.xp || 0;
+                entradaCodigo.value = data.fasesHTML?.fase7?.codigoAtual || "";
+                xpSpan.textContent = `XP: ${xpTotal}`;
+
+                if (entradaCodigo.value) {
+                    preview.innerHTML = entradaCodigo.value;
+                }
+
+                atualizarNivel();
+
+                entradaCodigo.addEventListener("input", () => {
+                    const input = entradaCodigo.value
+                        .replace(/<script.*?>.*?<\/script>/gi, "")
+                        .replace(/on\w+=".*?"/gi, "");
+                    preview.innerHTML = input || "A visualização aparecerá aqui.";
+
+                    userDocRef.update({
+                        "fasesHTML.fase7.codigoAtual": entradaCodigo.value
+                    });
+                });
+            } else {
+                location.href = "/public/login.html";
+            }
+        });
+
+        function verificarNivel() {
+            const entrada = entradaCodigo.value.trim();
+            const audio = document.getElementById("audio-sucesso");
+            const regex = niveis[nivelAtual].respostaEsperada;
+
+            if (regex.test(entrada)) {
+                if (somAtivo) {
+                    audio.play();
+                }
+
+                nivelAtual++;
+                xpTotal += 10;
+                xpSpan.textContent = `XP: ${xpTotal}`;
+
+                userDocRef.update({
+                    "fasesHTML.fase7.nivelAtual": nivelAtual,
+                    "fasesHTML.fase7.codigoAtual": entradaCodigo.value,
+                    xp: xpTotal
+                });
+
+                if (nivelAtual < niveis.length) {
+                    atualizarNivel();
+                } else {
+                    concluirFase();
+                }
+            } else {
+                alert("Resposta incorreta! Tente novamente.");
+            }
+        }
+
+        function atualizarNivel() {
+            if (nivelAtual >= niveis.length) return;
+            const nivel = niveis[nivelAtual];
+            document.getElementById("titulo-nivel").textContent = nivel.titulo;
+            document.getElementById("descricao-nivel").textContent = nivel.descricao;
+            document.getElementById("texto-teoria").textContent = nivel.teoria;
+            extraTeoria.innerHTML = nivel.extra;
+            entradaCodigo.value = "";
+            preview.innerHTML = "A visualização aparecerá aqui.";
+            barraProgresso.style.width = `${((nivelAtual + 1) / niveis.length) * 100}%`;
+        }
+
+        async function concluirFase() {
+            try {
+                await userDocRef.update({
+                    "fasesHTML.fase7.status": "concluida",
+                    "fasesHTML.fase7.codigoAtual": entradaCodigo.value,
+                    "fasesHTML.fase7.nivelAtual": nivelAtual,
+                    fase7Concluida: true,
+                    xp: firebase.firestore.FieldValue.increment(60),
+                    nivelAtual: firebase.firestore.FieldValue.increment(6)
+                });
+
+                document.querySelector(".resultado").innerHTML = `
+        <h2>Parabéns!</h2>
+        <p>Você concluiu a Fase 7 de HTML! +60XP</p>
+        <button onclick="location.href='/public/gameHTML/index.html'">Concluir a fase</button>
+    `;
+            } catch (e) {
+                console.error("Erro ao salvar fase 7:", e);
+                alert("Erro ao salvar progresso. Tente novamente!");
+            }
+        }
+    </script>
+</body>
+
+</html>
