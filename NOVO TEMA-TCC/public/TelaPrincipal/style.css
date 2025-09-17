@@ -906,16 +906,35 @@ body.loaded .site-content {
   list-style: none;
   padding: 0;
   margin: 0;
+  max-height: 500px;
+  overflow-y: auto;
+  scrollbar-width: thin;
+  scrollbar-color: #ffd700 #0d1a49;
+}
+
+#ranking-list::-webkit-scrollbar {
+  width: 8px;
+}
+
+#ranking-list::-webkit-scrollbar-track {
+  background: #0d1a49;
+  border-radius: 10px;
+}
+
+#ranking-list::-webkit-scrollbar-thumb {
+  background-color: #ffd700;
+  border-radius: 10px;
+  border: 2px solid #0d1a49;
 }
 
 #ranking-list li {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  padding: 10px 15px;
+  padding: 7px 10px;
   margin-bottom: 15px;
+  background: linear-gradient(220deg, #092b61, #09437a, #112a53);
   border-radius: 10px;
-  background: linear-gradient(to right, #e74c3c, #c0392b 20%, transparent 60%);
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
   transition: transform 0.2s ease, box-shadow 0.2s ease;
 }
