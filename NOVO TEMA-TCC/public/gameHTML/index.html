@@ -261,9 +261,37 @@
         }
 
         async function restartProgress() {
+            const auth = getAuth();
+            const db = getFirestore();
             const user = auth.currentUser;
-            if (user) {
-                const userRef = doc(db, "usuarios", user.uid);
+
+            if (!user) {
+                alert("Você precisa estar logado para reiniciar o progresso.");
+                return;
+            }
+
+            const userRef = doc(db, "usuarios", user.uid);
+
+            try {
+                const docSnap = await getDoc(userRef);
+
+                if (!docSnap.exists()) {
+                    alert("Erro: Dados do usuário não encontrados.");
+                    return;
+                }
+
+                const userData = docSnap.data();
+
+                if (!userData.fase10Concluida) {
+                    alert("Você precisa completar a fase 10 para poder reiniciar seu progresso.");
+                    return;
+                }
+
+                const confirmar = confirm("Tem certeza que deseja reiniciar seu progresso? Esta ação apagará todas as suas conquistas.");
+                if (!confirmar) {
+                    return;
+                }
+
                 const dadosIniciais = {
                     fasesHTML: deleteField(),
                     nivelAtual: 0,
@@ -282,8 +310,17 @@
 
                 await updateDoc(userRef, dadosIniciais);
                 console.log("Progresso do usuário reiniciado com sucesso.");
+                alert("Seu progresso foi reiniciado com sucesso!");
                 window.location.reload();
+            } catch (error) {
+                console.error("Erro ao reiniciar o progresso:", error);
+                alert("Ocorreu um erro ao tentar reiniciar o progresso.");
             }
+        }
+
+        const resetButton = document.getElementById("resetProgressBtn");
+        if (resetButton) {
+            resetButton.addEventListener("click", restartProgress);
         }
 
         window.restartProgress = restartProgress;
