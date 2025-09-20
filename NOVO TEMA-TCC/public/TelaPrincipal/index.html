@@ -50,14 +50,13 @@
         <div class="esquerda">
             <div class="menu">
                 <div class="logo">
-                    <img src="/public/logo-menor-removebg-preview.png">
+                    <img src="../logo-menor-removebg-preview.png">
                 </div>
                 <hr>
                 <a href="#/Início" onclick="mostrarSecao('home')"><span>Início</span> <i class='bx bx-home'></i></a>
                 <a href="#/Aprender" onclick="carregarPagina('menu.html')"><span>Aprender</span><i
                         class='bx bx-book-open'></i></a>
-                <a href="/public/TelaPrincipal/Amigos/adicionar.html"><span>Amigos</span><i
-                        class='bx bx-user-plus'></i></a>
+                <a href="../Amigos/" target="_blank"><span>Amigos</span><i class='bx bx-user-plus'></i></a>
                 <a href="#/Configurações" onclick="carregarPagina('configuracoes.html')"><span>Configurações</span><i
                         class='bx bx-cog'></i></a>
             </div>
@@ -82,13 +81,13 @@
                 <section id="home" class="page active">
                     <div class="blog">
                         <div class="welcome">
-                            <img src="/public/avatares/prota.gif">
+                            <img src="../avatares/prota.gif">
                             <span id="welcome"></span>
                         </div>
                         <div class="containerText">
                             <div class="conta">
                                 <div style="display: flex; align-items: center;">
-                                    <img id="user-avatar" src="/public/avatares/avatar.jpg">
+                                    <img id="user-avatar" src="../assets/avatars/avatar.jpg">
                                     <span id="perfil" class="span-perfil"></span>
                                 </div>
                                 <div>
@@ -106,7 +105,7 @@
                         </div>
                         <div class="containerText">
                             <div class="section">
-                                <img src="/public/logo-menor.png">
+                                <img src="../logo-menor.png">
                                 <div class="text-content">
                                     <h2>Lançamento de Proggaming.</h2>
                                     <p>
@@ -122,7 +121,7 @@
                         <div class="containerText">
                             <div
                                 style="display: flex; flex-direction: column; align-items: center; text-align: center;">
-                                <img src="/public/avatares/prota-login.gif"
+                                <img src="../avatares/prota-login.gif"
                                     style="width: 70px; margin-bottom: 10px; border-radius: 50%; border: 2px solid #fffff034;">
                                 <span style="font-family:'Roboto';">Quer ter o nosso site como um app? Instale e
                                     tenha
@@ -159,7 +158,7 @@
         <div class="navbar-mobile">
             <a href="#/Início" onclick="mostrarSecao('home')"><i class='bx bx-home'></i></a>
             <a href="#/Aprender" onclick="carregarPagina('menu.html')"><i class='bx bx-book-open'></i></a>
-            <a href="#/Amigos" onclick="carregarPagina('adicionar.html')"><i class='bx bx-user-plus'></i></a>
+            <a href="../Amigos/"><i class='bx bx-user-plus'></i></a>
             <a href=" #/Configurações" onclick="carregarPagina('configuracoes.html')"><i class='bx bx-cog'></i></a>
             <button id="logoutBtnMobile" style="color: red;"><i class='bx bx-log-in'></i></button>
         </div>
@@ -205,11 +204,11 @@
         const rankingList = document.getElementById("ranking-list");
 
         const availableAvatars = [
-            "/public/assets/avatars/avatar.jpg",
-            "/public/assets/avatars/avatar2.jpg",
-            "/public/assets/avatars/avatar3.jpg",
-            "/public/assets/avatars/avatar4.jpg",
-            "/public/assets/avatars/avatar5.jpg"
+            "../assets/avatars/avatar.jpg",
+            "../assets/avatars/avatar2.jpg",
+            "../assets/avatars/avatar3.jpg",
+            "../assets/avatars/avatar4.jpg",
+            "../assets/avatars/avatar5.jpg",
         ];
 
         let userDocRef;
@@ -251,10 +250,10 @@
                 btnAlterarUsername.addEventListener("click", () => updateApelido(inputUsername.value.trim()));
             }
             if (logoutBtn) {
-                logoutBtn.addEventListener('click', () => signOut(auth).then(() => window.location.href = "/public/index.html").catch(alert));
+                logoutBtn.addEventListener('click', () => signOut(auth).then(() => window.location.href = "../").catch(alert));
             }
             if (logoutBtnMobile) {
-                logoutBtnMobile.addEventListener('click', () => signOut(auth).then(() => window.location.href = "/public/index.html").catch(alert));
+                logoutBtnMobile.addEventListener('click', () => signOut(auth).then(() => window.location.href = "../").catch(alert));
             }
             if (editProfileButton) {
                 editProfileButton.addEventListener("click", () => {
@@ -324,7 +323,7 @@
                     const rankingItem = document.createElement("li");
 
                     rankingItem.innerHTML = `
-                <img src="${userData.avatarUrl || '/public/assets/avatars/avatar.jpg'}" alt="Avatar do usuário" class="ranking-avatar">
+                <img src="${userData.avatarUrl || '../assets/avatars/avatar.jpg'}" alt="Avatar do usuário" class="ranking-avatar">
                 <span class="ranking-nickname">${userData.apelido || userData.email}</span>
                 <span class="ranking-xp">${userData.xp || 0} XP</span>
             `;
@@ -368,7 +367,7 @@
                 });
                 setupEventListeners();
             } else {
-                window.location.href = "/public/index.html";
+                window.location.href = "../";
             }
 
             carregarRanking();

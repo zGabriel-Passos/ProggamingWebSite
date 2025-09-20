@@ -17,13 +17,13 @@ body {
   background: linear-gradient(120deg, #092b61, #09437a, #112a53);
   height: 100vh;
   width: 100%;
-  cursor: url(/public/PixelPointer.cur), auto;
+  cursor: url(./PixelPointer.cur), auto;
   transition: background 0.7s;
 }
 
 a,
 button {
-  cursor: url(/public/PixelSelector.cur), pointer !important;
+  cursor: url(./PixelSelector.cur), pointer !important;
 }
 
 body.tema-escuro {
@@ -976,4 +976,40 @@ body.loaded .site-content {
   font-weight: bold;
   color: #33ff99;
   text-shadow: 1px 1px #000;
+}
+
+@media (max-width: 768px) {
+  #ranking-container {
+    margin: 10px;
+    padding: 15px;
+  }
+
+  #ranking-container h2 {
+    font-size: 16px;
+    margin-bottom: 20px;
+  }
+
+  #ranking-list li {
+    padding: 5px 8px;
+    margin-bottom: 10px;
+  }
+
+  .ranking-position {
+    font-size: 14px;
+    width: 25px;
+  }
+
+  .ranking-avatar {
+    width: 40px;
+    height: 40px;
+    margin: 0 10px;
+  }
+
+  .ranking-nickname {
+    font-size: 12px;
+  }
+
+  .ranking-xp {
+    font-size: 12px;
+  }
 }

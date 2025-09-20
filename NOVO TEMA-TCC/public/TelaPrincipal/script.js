@@ -14,7 +14,6 @@ function mostrarSecao(id) {
 }
 
 function carregarPagina(arquivo) {
-  // Oculta todas as outras seções
   document.querySelectorAll(".page").forEach((secao) => {
     secao.style.display = "none";
   });

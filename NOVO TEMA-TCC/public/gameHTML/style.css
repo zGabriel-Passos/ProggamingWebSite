@@ -17,12 +17,12 @@ body {
     background: linear-gradient(120deg, #092b61, #09437a, #112a53);
     height: 100%;
     width: 100%;
-    cursor: url(/public/PixelPointer.cur), auto;
+    cursor: url(./PixelPointer.cur), auto;
 }
 
 a,
 button {
-    cursor: url(/public/PixelSelector.cur), pointer !important;
+    cursor: url(./PixelSelector.cur), pointer !important;
 }
 
 .header {
@@ -157,7 +157,7 @@ h2 {
 }
 
 .game {
-    background-image: url("/public/avatares/backgroundHTML.png");
+    background-image: url("../avatares/backgroundHTML.png");
     background-size: cover;
     background-repeat: no-repeat;
     animation: slideUp 1.2s ease-out forwards;

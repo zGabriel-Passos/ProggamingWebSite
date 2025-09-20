@@ -5,8 +5,9 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css">
-    <link rel="apple-touch-icon" href="/public/icon_512x512.png">
-    <link rel="icon" type="image/png" href="/public/icon_512x512.png">
+    <link rel="apple-touch-icon" href="./../icon_512x512.png">
+    <link rel="icon" type="image/png" href="./../icon_512x512.png">
+    <link rel="stylesheet" href="../TelaPrincipal/style.css">
     <link rel="stylesheet" href="style.css">
     <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap">
     <title>Proggaming | Fase 2 HTML</title>
@@ -36,7 +37,7 @@
             <hr>
             <span id="xp-total" style="font-family: 'Press Start 2P', cursive; font-weight: 600; color: #c7860e;">XP:
                 0</span>
-            <a href="/public/gameHTML/index.html" style="float: right; margin: 10px;">
+            <a href="../" style="float: right; margin: 10px;">
                 <button class="voltar">
                     <i class='bx bx-arrow-back'></i>
                     <span style="font-size: 12px;">Voltar</span>
@@ -59,7 +60,7 @@
         </div>
     </div>
 
-    <audio id="audio-sucesso" src="/public/Green Screen + Efeito Sonoro (Acerto).mp3"></audio>
+    <audio id="audio-sucesso" src="../Green Screen + Efeito Sonoro (Acerto).mp3"></audio>
 
     <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-app-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-auth-compat.js"></script>
@@ -158,7 +159,7 @@
 
                 if (!doc.exists) {
                     alert("Usuário não encontrado!");
-                    location.href = "/public/gameHTML/index.html";
+                    location.href = "../";
                     return;
                 }
 
@@ -166,19 +167,16 @@
 
                 if (!data.fasesHTML || data.fasesHTML.fase1?.status !== "concluida") {
                     alert("Você precisa concluir a Fase 1 antes!");
-                    location.href = "/public/gameHTML/index.html";
+                    location.href = "../";
                     return;
                 }
 
-                // AQUI ESTÁ A CHECAGEM PRINCIPAL.
-                // Se a fase 2 já estiver concluída no banco de dados,
                 if (data.fasesHTML?.fase2?.status === "concluida") {
                     alert("⚠️ Você já concluiu esta fase.");
-                    window.location.href = "/public/gameHTML/index.html";
+                    window.location.href = "../";
                     return; // Impede que o resto do código da função seja executado
                 }
 
-                // O código abaixo só é executado se a fase NÃO estiver concluída.
                 nivelAtual = data.fasesHTML?.fase2?.nivelAtual || 0;
                 xpTotal = data.xp || 0;
                 entradaCodigo.value = data.fasesHTML?.fase2?.codigoAtual || "";
@@ -201,7 +199,7 @@
                     });
                 });
             } else {
-                location.href = "/public/login.html";
+                location.href = "./../";
             }
         });
 

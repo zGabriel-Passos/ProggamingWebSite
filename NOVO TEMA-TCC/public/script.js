@@ -1,4 +1,3 @@
-// 🔥 Firebase config
 const firebaseConfig = {
   apiKey: "AIzaSyClRHfJuTSogkbWLaaUKsSBGN1KiT5xuUc",
   authDomain: "proggamingpage.firebaseapp.com",
@@ -8,6 +7,7 @@ const firebaseConfig = {
   appId: "1:911283259283:web:0b9be83ed5e07391360a66",
   measurementId: "G-TQP4LNPYQ1"
 };
+
 firebase.initializeApp(firebaseConfig);
 const auth = firebase.auth();
 
@@ -42,7 +42,7 @@ authButton.onclick = async () => {
       const user = userCredential.user;
 
       if (user.emailVerified) {
-        window.location.href = "/public/TelaPrincipal/index.html";
+        window.location.href = "./TelaPrincipal/";
       } else {
         errorDiv.textContent = "Verifique seu e-mail antes de continuar, cheque o spam do seu email.";
         await auth.signOut();
@@ -61,8 +61,7 @@ googleButton.onclick = async () => {
   const provider = new firebase.auth.GoogleAuthProvider();
   try {
     await auth.signInWithPopup(provider);
-    // Redirecionar após login com Google
-    window.location.href = "/public/TelaPrincipal/index.html";
+    window.location.href = "./TelaPrincipal/";
   } catch (err) {
     errorDiv.textContent = err.message;
   }
@@ -72,14 +71,12 @@ auth.onAuthStateChanged(user => {
   const currentPage = window.location.pathname;
 
   if (user && (user.emailVerified || user.providerData[0].providerId === 'google.com')) {
-    // Se logado e está fora da tela principal, redireciona para ela
-    if (!currentPage.includes("/public/TelaPrincipal/index.html")) {
-      window.location.href = "/public/TelaPrincipal/index.html";
+    if (!currentPage.includes("./TelaPrincipal/")) {
+      window.location.href = "./TelaPrincipal/";
     }
   } else {
-    // Se não logado e está tentando acessar página protegida
-    if (currentPage.includes("/public/TelaPrincipal/index.html")) {
-      window.location.href = "/public/index.html";
+    if (currentPage.includes("./TelaPrincipal/")) {
+      window.location.href = "../";
     }
   }
 });
@@ -133,7 +130,6 @@ window.onload = () => {
   const agora = Date.now();
 
   if (!ultimaExibicao || (agora - ultimaExibicao) > intervalo) {
-    // Mostra com delay de 10s
     setTimeout(mostrarAviso, delayPrimeiraExibicao);
   }
 };
