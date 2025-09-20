@@ -162,8 +162,7 @@ button:hover {
     body {
         display: flex;
         flex-direction: column;
-        height: 100vh;
-        overflow: hidden;
+        height: 110vh;
     }
 
     .bloco-teoria,
@@ -179,7 +178,7 @@ button:hover {
     .editor-container {
         flex: 1;
         display: none;
-        height: calc(90vh - 70px);
+        height: calc(70vh - 70px);
         padding: 10px;
         box-sizing: border-box;
     }

@@ -17,12 +17,12 @@ body {
     background: linear-gradient(120deg, #092b61, #09437a, #112a53);
     height: 100%;
     width: 100%;
-    cursor: url(./PixelPointer.cur), auto;
+    cursor: url(../PixelPointer.cur), auto;
 }
 
 a,
 button {
-    cursor: url(./PixelSelector.cur), pointer !important;
+    cursor: url(../PixelSelector.cur), pointer !important;
 }
 
 .header {

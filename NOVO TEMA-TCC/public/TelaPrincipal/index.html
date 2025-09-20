@@ -169,9 +169,9 @@
     <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-auth-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore-compat.js"></script>
     <script type="module">
-        import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
-        import { getAuth, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js";
-        import { getFirestore, doc, setDoc, getDoc, updateDoc, collection, query, orderBy, limit, getDocs } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
+        import { initializeApp } from 'https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js';
+        import { getAuth, onAuthStateChanged, signOut } from 'https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js';
+        import { getFirestore, doc, setDoc, getDoc, updateDoc, collection, query, orderBy, limit, onSnapshot } from 'https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js';
 
         const firebaseConfig = {
             apiKey: "AIzaSyClRHfJuTSogkbWLaaUKsSBGN1KiT5xuUc",
@@ -236,7 +236,6 @@
                 await updateDoc(userDocRef, { apelido: novoApelido });
                 mensagemUsername.style.color = "green";
                 mensagemUsername.textContent = "Apelido alterado com sucesso!";
-                perfilSpan.innerText = novoApelido;
                 inputUsername.value = "";
             } catch (error) {
                 mensagemUsername.style.color = "red";
@@ -305,73 +304,123 @@
             }
         }
 
-        async function carregarRanking() {
-            const rankingList = document.getElementById("ranking-list");
+        function updateProfileUI(dados) {
+            perfilSpan.innerText = dados.apelido || dados.email.split('@')[0];
+            perfilSpan.dataset.email = dados.email;
+            xpSpan.textContent = `XP: ${dados.xp || 0}`;
+            const savedAvatarUrl = dados.avatarUrl || availableAvatars[0];
+            userAvatar.src = savedAvatarUrl;
+            userAvatar.dataset.path = savedAvatarUrl;
+        }
+
+        function renderRanking(querySnapshot) {
             rankingList.innerHTML = '';
-            try {
-                const q = query(collection(db, "usuarios"), orderBy("xp", "desc"), limit(10));
-                const querySnapshot = await getDocs(q);
-
-                if (querySnapshot.empty) {
-                    rankingList.innerHTML = '<li>Nenhum dado de ranking encontrado.</li>';
-                    return;
-                }
-
-                querySnapshot.forEach((doc, index) => {
-                    console.log(`Debug - Documento: ${doc.id}, Posição: ${index}`);
-                    const userData = doc.data();
-                    const rankingItem = document.createElement("li");
-
-                    rankingItem.innerHTML = `
-                <img src="${userData.avatarUrl || '../assets/avatars/avatar.jpg'}" alt="Avatar do usuário" class="ranking-avatar">
-                <span class="ranking-nickname">${userData.apelido || userData.email}</span>
-                <span class="ranking-xp">${userData.xp || 0} XP</span>
-            `;
-                    rankingList.appendChild(rankingItem);
-                });
-            } catch (error) {
-                console.error("Erro ao carregar o ranking:", error);
-                rankingList.innerHTML = '<li>Erro ao carregar ranking.</li>';
+            if (querySnapshot.empty) {
+                rankingList.innerHTML = '<li>Nenhum dado de ranking encontrado.</li>';
+                return;
             }
+            querySnapshot.forEach((doc, index) => {
+                const userData = doc.data();
+                const rankingItem = document.createElement("li");
+
+                const avatarSrc = userData.avatarUrl || '../assets/avatars/avatar.jpg';
+                rankingItem.innerHTML = `
+            <img src="${avatarSrc}" alt="Avatar do usuário" class="ranking-avatar">
+            <span class="ranking-nickname">${userData.apelido || userData.email}</span>
+            <span class="ranking-xp">${userData.xp || 0} XP</span>
+        `;
+                rankingList.appendChild(rankingItem);
+            });
         }
 
         onAuthStateChanged(auth, async (user) => {
             if (user) {
-                userDocRef = doc(db, "usuarios", user.uid);
-                const docSnap = await getDoc(userDocRef);
                 welcomeText.textContent = `Olá, ${user.email} 👋`;
-                if (docSnap.exists()) {
-                    const dados = docSnap.data();
-                    perfilSpan.innerText = dados.apelido;
-                    perfilSpan.dataset.email = user.email;
-                    xpSpan.textContent = `XP: ${dados.xp || 0}`;
-                    const savedAvatarUrl = dados.avatarUrl || availableAvatars[0];
-                    userAvatar.src = savedAvatarUrl;
-                    userAvatar.dataset.path = savedAvatarUrl;
-                } else {
-                    const apelidoAleatorio = "user" + Math.floor(Math.random() * 10000);
-                    await setDoc(userDocRef, {
-                        apelido: apelidoAleatorio,
-                        email: user.email,
-                        xp: 0,
-                        avatarUrl: availableAvatars[0]
-                    });
-                    perfilSpan.innerText = apelidoAleatorio;
-                    perfilSpan.dataset.email = user.email;
-                    xpSpan.textContent = `XP: 0`;
-                    userAvatar.src = availableAvatars[0];
-                    userAvatar.dataset.path = availableAvatars[0];
-                }
+
+                userDocRef = doc(db, "usuarios", user.uid);
+
+                onSnapshot(userDocRef, async (docSnap) => {
+                    if (docSnap.exists()) {
+                        updateProfileUI(docSnap.data());
+                    } else {
+                        const apelidoAleatorio = "user" + Math.floor(Math.random() * 10000);
+                        const defaultAvatar = availableAvatars[0];
+                        await setDoc(userDocRef, {
+                            apelido: apelidoAleatorio,
+                            email: user.email,
+                            xp: 0,
+                            avatarUrl: defaultAvatar
+                        });
+                        updateProfileUI({
+                            apelido: apelidoAleatorio,
+                            email: user.email,
+                            xp: 0,
+                            avatarUrl: defaultAvatar
+                        });
+                    }
+                });
+
                 perfilSpan.addEventListener('click', () => {
                     alert("Você está logado como:\n" + perfilSpan.dataset.email);
                 });
                 setupEventListeners();
+
+                const rankingQuery = query(collection(db, "usuarios"), orderBy("xp", "desc"), limit(10));
+                onSnapshot(rankingQuery, (snapshot) => {
+                    console.log("Ranking atualizado!");
+                    renderRanking(snapshot);
+                });
+
             } else {
                 window.location.href = "../";
             }
-
-            carregarRanking();
         });
+
+        function mostrarSecao(id) {
+            document.querySelectorAll('.page').forEach(page => {
+                page.classList.remove('active');
+            });
+            document.getElementById(id).classList.add('active');
+        }
+
+        function carregarPagina(url) {
+            window.location.href = url;
+        }
+
+        window.addEventListener("DOMContentLoaded", () => {
+            setTimeout(() => {
+                document.body.classList.add("loaded");
+                setTimeout(() => {
+                    document.body.style.overflow = "auto";
+                }, 300);
+            }, 300);
+        });
+
+        let deferredPrompt;
+        const btnInstalar = document.getElementById('btnInstalar');
+
+        window.addEventListener('beforeinstallprompt', (e) => {
+            e.preventDefault();
+            deferredPrompt = e;
+            btnInstalar.style.display = 'block';
+        });
+
+        if (btnInstalar) {
+            btnInstalar.addEventListener('click', (e) => {
+                btnInstalar.style.display = 'none';
+                if (deferredPrompt) {
+                    deferredPrompt.prompt();
+                    deferredPrompt.userChoice.then((choiceResult) => {
+                        if (choiceResult.outcome === 'accepted') {
+                            console.log('Usuário aceitou a instalação do PWA.');
+                        } else {
+                            console.log('Usuário recusou a instalação do PWA.');
+                        }
+                        deferredPrompt = null;
+                    });
+                }
+            });
+        }
     </script>
 </body>
 

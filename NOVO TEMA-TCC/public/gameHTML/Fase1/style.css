@@ -6,12 +6,12 @@ body {
     font-family: "Poppins", sans-serif;
     margin: 0;
     padding: 0;
-    cursor: url(/public/PixelPointer.cur), auto;
+    cursor: url(./../PixelPointer.cur), auto;
 }
 
 a,
 button {
-    cursor: url(/public/PixelSelector.cur), pointer !important;
+    cursor: url(./../PixelSelector.cur), pointer !important;
 }
 
 
@@ -160,8 +160,7 @@ button:hover {
     body {
         display: flex;
         flex-direction: column;
-        height: 100vh;
-        overflow: hidden;
+        height: 120vh;
     }
 
     .bloco-teoria,
@@ -177,7 +176,7 @@ button:hover {
     .editor-container {
         flex: 1;
         display: none;
-        height: calc(90vh - 70px);
+        height: calc(70vh - 70px);
         padding: 10px;
         box-sizing: border-box;
     }
