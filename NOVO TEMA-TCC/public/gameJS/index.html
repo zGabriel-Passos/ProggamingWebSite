@@ -244,7 +244,7 @@
                 </div>
                 ${fase.status === "bloqueada"
                         ? `<button class="btn" disabled>Bloqueada</button>`
-                        : `<button class="btn" onclick="window.location.href='/public/gameJS/Fase${numeroFase}/index.html'">Acessar lições</button>`}
+                        : `<button class="btn" onclick="window.location.href='./Fase${numeroFase}/index.html'">Acessar lições</button>`}
             `;
 
                 fasesContainer.appendChild(div);
@@ -272,7 +272,7 @@
             if (user) {
                 renderFases(user);
             } else {
-                window.location.href = "/public/index.html";
+                window.location.href = "../index.html";
             }
         });
     </script>
