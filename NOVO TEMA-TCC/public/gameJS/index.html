@@ -57,7 +57,9 @@
 
     <div class="container">
         <h1>Fases de JavaScript</h1>
-        <button id="restart-button" onclick="showRestartConfirmation()" class="btn">Reiniciar Progresso</button>
+        <div style="display: flex; justify-content: center; margin-bottom: 20px;">
+          <button id="restart-button" onclick="showRestartConfirmation()" class="btn">Reiniciar Progresso</button>
+        </div>
         <div id="fasesContainer" class="games"></div>
     </div>
 
@@ -124,7 +126,7 @@
             if (user) {
                 document.getElementById("welcome").textContent = `Email logado: ${user.email}`;
             } else {
-                window.location.href = "/public/index.html";
+                window.location.href = "../index.html";
             }
         });
 
@@ -138,14 +140,14 @@
                     const dados = docSnap.data();
                     perfilSpan.innerText = dados.apelido;
                     perfilSpan.dataset.email = dados.email;
-                    const avatarUrl = dados.avatarUrl || '/public/avatares/avatar.jpg';
+                    const avatarUrl = dados.avatarUrl || '../avatares/avatar.jpg';
                     userAvatar.src = avatarUrl;
                 } else {
                     const apelidoAleatorio = "user" + Math.floor(Math.random() * 10000);
                     await setDoc(userRef, {
                         apelido: apelidoAleatorio,
                         email: user.email,
-                        avatarUrl: '/public/avatares/avatar.jpg',
+                        avatarUrl: '../avatares/avatar.jpg',
                         fasesJS: {
                             fase1: { status: "disponivel" },
                             fase2: { status: "bloqueada" },
@@ -161,7 +163,7 @@
                     });
                     perfilSpan.innerText = apelidoAleatorio;
                     perfilSpan.dataset.email = user.email;
-                    userAvatar.src = '/public/avatares/avatar.jpg';
+                    userAvatar.src = '../avatares/avatar.jpg';
                 }
 
                 perfilSpan.addEventListener('click', () => {
@@ -169,7 +171,7 @@
                 });
 
             } else {
-                window.location.href = "/public/index.html";
+                window.location.href = "../index.html";
             }
         });
 
@@ -258,7 +260,8 @@
 
                 await updateDoc(userRef, {
                     fasesJS: deleteField(),
-                    nivelAtual: 0,
+                    nivelJsAtual: 0,
+                    codigoJsAtual: "",
                 });
 
                 console.log("Progresso do usuário reiniciado com sucesso.");

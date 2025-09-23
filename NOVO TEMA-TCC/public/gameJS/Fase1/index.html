@@ -32,17 +32,17 @@
       </div>
       <p id="texto-teoria"></p>
       <div id="extra-teoria" style="margin-top:10px; font-weight: 600; font-size:14px; color:#ddd;"></div>
-      <h2 id="titulo-nivel">Nível 1/6</h2>
-      <p id="descricao-nivel">JavaScript é uma linguagem de programação essencial e a mais popular 
-        para o desenvolvimento web, responsável por adicionar interatividade e dinamismo a páginas web, 
+      <h2 id="titulo-nivel">Nível 1/5</h2>
+      <p id="descricao-nivel">JavaScript é uma linguagem de programação essencial e a mais popular
+        para o desenvolvimento web, responsável por adicionar interatividade e dinamismo a páginas web,
         como mapas interativos, animações e atualizações de conteúdo em tempo real. Ele é uma das três tecnologias
-         fundamentais da web, juntamente com HTML (estrutura) e CSS (estilo)</p>
+        fundamentais da web, juntamente com HTML (estrutura) e CSS (estilo)</p>
       <hr>
       <div style="margin: 10px 0px 10px 0px;">
         <span id="xp-total" style="font-family: 'Press Start 2P', cursive; font-weight: 600; color: #c7860e;">XP:
           0</span>
       </div>
-      <a href="../" style="float: right; margin: 10px;">
+      <a href="../index.html" style="float: right; margin: 10px;">
         <button class="voltar">
           <i class='bx bx-arrow-back'></i>
           <span style="font-size: 12px;">Voltar</span>
@@ -59,8 +59,8 @@
         <span class="dot green"></span>
         <span class="editor-title">index.html</span>
       </div>
-      <textarea id="entrada-codigo" class="code-editor" spellcheck="false" placeholder="Digite o código HTML aqui..."
-        style="height: 90%;"></textarea>
+      <textarea id="entrada-codigo" class="code-editor" spellcheck="false"
+        placeholder="Digite o código JavaScript aqui..." style="height: 90%;"></textarea>
       <button onclick="verificarNivel()">Testar Código</button>
     </div>
   </div>
@@ -72,7 +72,7 @@
   <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore-compat.js"></script>
   <script>
     let somAtivo = true;
-
+    let aguardandoAvanco = false;
 
     function toggleSom() {
       somAtivo = !somAtivo;
@@ -113,46 +113,39 @@
 
     const niveis = [
       {
-        titulo: "Nível 1/6",
+        titulo: "Nível 1/5",
         descricao: "JavaScript é uma linguagem de programação essencial e a mais popular para o desenvolvimento web, responsável por adicionar interatividade e dinamismo a páginas web, como mapas interativos, animações e atualizações de conteúdo em tempo real. Ele é uma das três tecnologias fundamentais da web, juntamente com HTML (estrutura) e CSS (estilo)",
         teoria: "",
         extra: "",
-        respostaEsperada: "", 
+        respostaEsperada: "",
       },
       {
-        titulo: "Nível 2/6",
+        titulo: "Nível 2/5",
         descricao: "Declare uma variável chamada 'mensagem' e atribua a ela o valor 'Olá, mundo!'.",
         teoria: "Para armazenar dados com Javascript, ultilizamos uma estrutura chamada variável. Para declararmos uma variavel que tem como valor um texto, ultlizamos a declaração <code>let nomeDaVariavel = 'valor';<code><br> No exemplo, 'let' é a palavra reservada que indica que estamos declarando uma variável, 'nomeDaVariavel' é o nome que escolhemos para a variável (que deve seguir certas regras, como não começar com números ou usar espaços) e 'valor' é o conteúdo que estamos atribuindo à variável, que no caso é um texto (string) e por isso está entre aspas simples.",
-        extra: "Exemplo: <code>&lt;p&gt;Olá, mundo!&lt;/p&gt;</code>",
-        respostaEsperada: /let .* = 'Olá mundo!';/i
+        extra: "Exemplo: <code>let texto = 'Olá, mundo!';</code>",
+        respostaEsperada: /let\s+mensagem\s*=\s*'Olá, mundo!'\s*;?\s*/i
       },
       {
-        titulo: "Nível 3/6",
-        descricao: "Use a tag de negrito para escrever 'Olá Mundo'. (Escreva o código no editor)",
-        teoria: "A tag <b> deixa o texto em negrito, mas apenas visualmente. Para dar ênfase semântica (quando o conteúdo é realmente importante), recomenda-se usar <strong>. Já <b> é mais usada para estilização simples.",
-        extra: "Exemplo: <code>&lt;b&gt;Olá Mundo&lt;/b&gt;</code>",
-        respostaEsperada: /<b>\s*olá mundo\s*<\/b>/i
+        titulo: "Nível 3/5",
+        descricao: "Crie uma variavel chamada mensagem e use o metodo console.log para imprimir-lá",
+        teoria: "O método <code>console.log()</code> é usado para exibir mensagens no console do navegador, o que é útil para depuração e verificação de valores durante o desenvolvimento. Para imprimir o valor de uma variável, você simplesmente passa o nome da variável como argumento para <code>console.log()</code>. Por exemplo, se você tem uma variável chamada <code>mensagem</code>, você pode exibir seu valor no console com <code>console.log(mensagem);</code>.",
+        extra: "Exemplo: <code>console.log(mensagem)</code>",
+        respostaEsperada: /let\s+\w+\s*=\s*'.*';?\s*console\.log\(\s*\w+\s*\);?/i
       },
       {
-        titulo: "Nível 4/6",
-        descricao: "Insira um título de aba usando a tag correta. (Escreva o código no editor)",
-        teoria: "A tag <title> define o título que aparece na aba do navegador e nos resultados de pesquisa do Google. Essa tag deve ficar sempre dentro do <head>. É importante escolher um título claro e objetivo, pois ajuda na experiência do usuário e no SEO (otimização para mecanismos de busca).",
-        extra: "Exemplo: <code>&lt;title&gt;Minha Página&lt;/title&gt;</code>",
-        respostaEsperada: /<title>.*<\/title>/i
+        titulo: "Nível 4/5",
+        descricao: "Transforme o comando console.log anterior em um comentário.",
+        teoria: "Para comentar um comando em JavaScript, basta adicionar // antes dele ou envolver com /* ... */. Isso faz com que o comando não seja executado.",
+        extra: "Exemplo: <code>// console.log(mensagem)</code> ou <code>/* console.log(mensagem) */</code>",
+        respostaEsperada: /(\/\/\s*console\.log\(.*\)|\/\*\s*console\.log\(.*\)\s*\*\/)/i
       },
       {
-        titulo: "Nível 5/6",
-        descricao: "Use a tag <i> para deixar 'Importante' em itálico. (Escreva o código no editor)",
-        teoria: "A tag <i> deixa o texto em itálico, mas assim como <b>, é apenas uma formatação visual. Para dar ênfase semântica, recomenda-se usar <em> (ênfase). A diferença é que <em> comunica ao navegador e leitores de tela que o texto é realmente importante.",
-        extra: "Exemplo: <code>&lt;i&gt;Importante&lt;/i&gt;</code>",
-        respostaEsperada: /<i>\s*importante\s*<\/i>/i
-      },
-      {
-        titulo: "Nível 6/6",
-        descricao: "Monte a estrutura básica com html, head e body. (Escreva o código no editor)",
-        teoria: "Todo documento HTML deve começar com <!DOCTYPE html>, que informa ao navegador que o documento segue o padrão HTML5. Depois, temos a estrutura básica:<html>: raiz do documento;<head>: contém informações sobre a página (título, metadados, links de CSS, scripts);<body>: onde fica o conteúdo visível (textos, imagens, botões, etc.). É fundamental entender essa estrutura, pois todos os sites são construídos a partir dela.",
-        extra: "Exemplo:<br><code>&lt;!DOCTYPE html&gt;<br>&lt;html&gt;<br>&lt;head&gt;&lt;/head&gt;<br>&lt;body&gt;&lt;/body&gt;<br>&lt;/html&gt;</code>",
-        respostaEsperada: /<html>[\s\S]*<head>[\s\S]*<\/head>[\s\S]*<body>[\s\S]*<\/body>[\s\S]*<\/html>/i
+        titulo: "Nível 5/5",
+        descricao: "Utilize o método alert ou outro método da window para exibir uma mensagem.",
+        teoria: "O objeto window representa a janela do navegador e possui vários métodos úteis, como alert(), prompt(), confirm(), entre outros. O método alert exibe uma caixa de diálogo com uma mensagem para o usuário.",
+        extra: "Exemplo: <code>alert('Olá!')</code> ou <code>window.alert('Bem-vindo!')</code>",
+        respostaEsperada: /(window\s*\.\s*alert\s*\(.*\)|alert\s*\(.*\))/i
       }
     ];
 
@@ -187,50 +180,78 @@
       });
     }
 
-    entradaCodigo.addEventListener("input", () => {
-      const input = entradaCodigo.value
-        .replace(/<script.*?>.*?<\/script>/gi, "")
-        .replace(/on\w+=".*?"/gi, "");
-      preview.innerHTML = input || "A visualização aparecerá aqui.";
-      salvarCodigo(entradaCodigo.value);
-    });
+    function atualizarBotaoCorreto(estado) {
+      const botao = document.querySelector('.editor-container button');
+      if (estado === 'correto') {
+        botao.style.background = '#2ecc40';
+        botao.innerHTML = '<i class="bx bx-check"></i> Correto! Clique para avançar';
+      } else if (estado === 'incorreto') {
+        botao.style.background = '#e74c3c';
+        botao.innerHTML = '<i class="bx bx-x"></i> Tente novamente';
+      } else {
+        botao.style.background = '';
+        botao.innerHTML = 'Testar Código';
+      }
+    }
+
+    function avancarNivel() {
+      aguardandoAvanco = false;
+      atualizarBotaoCorreto();
+      nivelJsAtual++;
+      salvarProgresso(nivelJsAtual);
+      if (nivelJsAtual < niveis.length) {
+        atualizarNivel();
+      } else {
+        document.querySelector('.resultado').innerHTML = `
+      <h2>Parabéns!</h2>
+      <p>Você concluiu a Fase 1 de JavaScript! ${fase1JsJaConcluida ? "Pode refazer, mas não ganhará XP extra." : "+50XP"}</p>
+      <button onclick="concluirFase1()">Concluir a fase</button>
+    `;
+      }
+    }
 
     function verificarNivel() {
       const entrada = entradaCodigo.value;
       const audio = document.getElementById("audio-sucesso");
       const resposta = niveis[nivelJsAtual].respostaEsperada;
+      const botao = document.querySelector('.editor-container button');
 
-      // Corrige para aceitar regex e string
+      if (aguardandoAvanco) {
+        avancarNivel();
+        return;
+      }
+
+      // Executa o código do usuário no console
+      if (nivelJsAtual === 2 || nivelJsAtual === 3 || nivelJsAtual === 4) {
+        mostrarConsoleReal();
+        setTimeout(() => {
+          if (window.eruda && eruda._devTools && eruda._devTools._tools.console) {
+            eruda._devTools._tools.console.clear();
+          }
+          try {
+            eval(entrada);
+          } catch (e) {
+            if (window.eruda && eruda._devTools && eruda._devTools._tools.console) {
+              eruda._devTools._tools.console.error(e);
+            }
+          }
+        }, 100);
+      }
+
       const passou = resposta instanceof RegExp ? resposta.test(entrada) : entrada === resposta;
 
       if (passou) {
         if (somAtivo) {
           audio.play();
         }
-
-        if (!fase1JsJaConcluida) { 
+        if (!fase1JsJaConcluida) {
           adicionarXP(10);
         }
-
-        // Se está no nível 1, redireciona para a fase 2
-        if (nivelJsAtual === 0) {
-          window.location.href = "../Fase2/index.html";
-          return;
-        }
-
-        nivelJsAtual++;
-        salvarProgresso(nivelJsAtual);
-
-        if (nivelJsAtual < niveis.length) {
-          atualizarNivel();
-        } else {
-          document.querySelector(".resultado").innerHTML = `
-        <h2>Parabéns!</h2>
-        <p>Você concluiu a Fase 1 de HTML! ${fase1JsJaConcluida ? "Pode refazer, mas não ganhará XP extra." : "+60XP"}</p>
-        <button onclick="concluirFase1()">Concluir a fase</button>
-      `;
-        }
+        salvarCodigo(entrada);
+        aguardandoAvanco = true;
+        atualizarBotaoCorreto('correto');
       } else {
+        atualizarBotaoCorreto('incorreto');
         alert("Resposta incorreta! Tente novamente.");
       }
     }
@@ -252,18 +273,18 @@
 
             ref.set({
               fasesJS: fases,
-              xp: firebase.firestore.FieldValue.increment(60),
+              xp: firebase.firestore.FieldValue.increment(50),
               fase1JsConcluida: true
             }, { merge: true }).then(() => {
               fase1JsJaConcluida = true;
               alert("✅ Fase 1 concluída! Fase 2 desbloqueada.");
-              window.location.href = "../Fase2/index.html";
+              window.location.href = "../index.html";
             });
           }
         });
       } else {
         alert("⚠️ Você já concluiu esta fase. Pode revisar, mas não ganha XP.");
-        window.location.href = "../";
+        window.location.href = "../index.html";
       }
     }
 
@@ -274,9 +295,26 @@
       document.getElementById("descricao-nivel").textContent = nivel.descricao;
       document.getElementById("texto-teoria").textContent = nivel.teoria;
       extraTeoria.innerHTML = nivel.extra;
-      entradaCodigo.value = "";
-      preview.innerHTML = "A visualização aparecerá aqui.";
+
+      db.collection("usuarios").doc(auth.currentUser.uid).get().then(docSnap => {
+        if (docSnap.exists && docSnap.data().codigoJsAtual) {
+          entradaCodigo.value = docSnap.data().codigoJsAtual;
+          preview.innerHTML = docSnap.data().codigoJsAtual;
+        } else {
+          entradaCodigo.value = "";
+          preview.innerHTML = "A visualização aparecerá aqui.";
+        }
+      });
+
       barraProgresso.style.width = `${(nivelJsAtual / niveis.length) * 100}%`;
+
+      const resultado = document.querySelector('.resultado');
+      if (nivelJsAtual === 0 || nivelJsAtual === 1) {
+        resultado.style.display = 'none';
+      } else {
+        resultado.style.display = 'block';
+        preview.innerHTML = "A visualização aparecerá aqui.";
+      }
     }
 
     function adicionarXP(qtd) {
@@ -303,6 +341,28 @@
       if (!user) return;
       const ref = db.collection("usuarios").doc(user.uid);
       ref.set({ codigoJsAtual: codigo }, { merge: true });
+    }
+  </script>
+
+  <script src="https://cdn.jsdelivr.net/npm/eruda"></script>
+  <script>
+    function mostrarConsoleReal() {
+      // Remove instância anterior do eruda, se existir
+      if (window._erudaIniciado) {
+        const preview = document.getElementById('preview');
+        preview.innerHTML = '';
+        eruda.destroy();
+        window._erudaIniciado = false;
+      }
+      // Cria um novo container para o console
+      const preview = document.getElementById('preview');
+      preview.innerHTML = '<div id="eruda-container" style="height:200px;"></div>';
+      eruda.init({
+        container: document.getElementById('eruda-container'),
+        tool: ['console'],
+        autoScale: true
+      });
+      window._erudaIniciado = true;
     }
   </script>
 </body>

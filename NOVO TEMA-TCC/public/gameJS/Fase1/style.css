@@ -67,6 +67,7 @@ button {
 }
 
 .resultado {
+    display: none;
     font-family: "Roboto", sans-serif;
     min-height: 500px;
     width: 100%;
