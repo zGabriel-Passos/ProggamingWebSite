@@ -57,7 +57,9 @@
 
     <div class="container">
         <h1>Fases de JavaScript</h1>
-        <button id="restart-button" onclick="showRestartConfirmation()" class="btn">Reiniciar Progresso</button>
+        <div style="display: flex; justify-content: center; margin-bottom: 20px;">
+            <button id="restart-button" onclick="showRestartConfirmation()" class="btn">Reiniciar Progresso</button>
+        </div>
         <div id="fasesContainer" class="games"></div>
     </div>
 
@@ -124,7 +126,7 @@
             if (user) {
                 document.getElementById("welcome").textContent = `Email logado: ${user.email}`;
             } else {
-                window.location.href = "/public/index.html";
+                window.location.href = "../index.html";
             }
         });
 
@@ -138,14 +140,14 @@
                     const dados = docSnap.data();
                     perfilSpan.innerText = dados.apelido;
                     perfilSpan.dataset.email = dados.email;
-                    const avatarUrl = dados.avatarUrl || '/public/avatares/avatar.jpg';
+                    const avatarUrl = dados.avatarUrl || '../avatares/avatar.jpg';
                     userAvatar.src = avatarUrl;
                 } else {
                     const apelidoAleatorio = "user" + Math.floor(Math.random() * 10000);
                     await setDoc(userRef, {
                         apelido: apelidoAleatorio,
                         email: user.email,
-                        avatarUrl: '/public/avatares/avatar.jpg',
+                        avatarUrl: '../avatares/avatar.jpg',
                         fasesJS: {
                             fase1: { status: "disponivel" },
                             fase2: { status: "bloqueada" },
@@ -161,7 +163,7 @@
                     });
                     perfilSpan.innerText = apelidoAleatorio;
                     perfilSpan.dataset.email = user.email;
-                    userAvatar.src = '/public/avatares/avatar.jpg';
+                    userAvatar.src = '../avatares/avatar.jpg';
                 }
 
                 perfilSpan.addEventListener('click', () => {
@@ -169,21 +171,21 @@
                 });
 
             } else {
-                window.location.href = "/public/index.html";
+                window.location.href = "../index.html";
             }
         });
 
         const fasesIniciais = {
-            fase1: { status: "disponivel" },
-            fase2: { status: "bloqueada" },
-            fase3: { status: "bloqueada" },
-            fase4: { status: "bloqueada" },
-            fase5: { status: "bloqueada" },
-            fase6: { status: "bloqueada" },
-            fase7: { status: "bloqueada" },
-            fase8: { status: "bloqueada" },
-            fase9: { status: "bloqueada" },
-            fase10: { status: "bloqueada" },
+            fase1: { status: "disponivel", nome: "Introdução à linguagem" },
+            fase2: { status: "bloqueada", nome: "Variáveis e Tipos de Dados" },
+            fase3: { status: "bloqueada", nome: "Operadores e expressões" },
+            fase4: { status: "bloqueada", nome: "Estruturas condicionais" },
+            fase5: { status: "bloqueada", nome: "Laços de repetição" },
+            fase6: { status: "bloqueada", nome: "Arrays" },
+            fase7: { status: "bloqueada", nome: "Funções" },
+            fase8: { status: "bloqueada", nome: "Objetos e manipulação de DOM" },
+            fase9: { status: "bloqueada", nome: "Eventos" },
+            fase10: { status: "bloqueada", nome: "Projeto final" },
         };
 
         async function renderFases(user) {
@@ -192,6 +194,12 @@
             let dados = snap.exists() ? snap.data() : { fasesJS: fasesIniciais, xp: 0 };
 
             const fases = { ...fasesIniciais, ...(dados.fasesJS || {}) };
+            Object.entries(fasesIniciais).forEach(([faseId, fasePadrao]) => {
+                if (!fases[faseId].nome) {
+                    fases[faseId].nome = fasePadrao.nome;
+                }
+            });
+
             const xpTotal = dados.xp || 0;
 
             if (fases.fase1.status === "concluida") {
@@ -231,21 +239,22 @@
                 if (fase.status === "bloqueada") div.style.opacity = "0.5";
 
                 const numeroFase = faseId.replace("fase", "");
+                const nomeFase = fase.nome || `Fase ${numeroFase}`;
 
                 let progresso = "0%";
                 if (fase.status === "disponivel") progresso = "10%";
                 if (fase.status === "concluida") progresso = "100%";
 
                 div.innerHTML = `
-                <span class="title">JS - Fase ${numeroFase}</span>
-                <span class="desc">Introdução à linguagem</span>
-                <div class="progress">
-                    <div class="progress-bar" style="width:${progresso}"></div>
-                </div>
-                ${fase.status === "bloqueada"
+                    <span class="title">JS - Fase ${numeroFase}</span>
+                    <span class="desc">${nomeFase}</span>
+                    <div class="progress">
+                        <div class="progress-bar" style="width:${progresso}"></div>
+                    </div>
+                    ${fase.status === "bloqueada"
                         ? `<button class="btn" disabled>Bloqueada</button>`
-                        : `<button class="btn" onclick="window.location.href='/public/gameJS/Fase${numeroFase}/index.html'">Acessar lições</button>`}
-            `;
+                        : `<button class="btn" onclick="window.location.href='./Fase${numeroFase}/index.html'">Acessar lições</button>`}
+                `;
 
                 fasesContainer.appendChild(div);
             });
@@ -258,7 +267,8 @@
 
                 await updateDoc(userRef, {
                     fasesJS: deleteField(),
-                    nivelAtual: 0,
+                    nivelJsAtual: 0,
+                    codigoJsAtual: "",
                 });
 
                 console.log("Progresso do usuário reiniciado com sucesso.");
@@ -272,7 +282,7 @@
             if (user) {
                 renderFases(user);
             } else {
-                window.location.href = "/public/index.html";
+                window.location.href = "../index.html";
             }
         });
     </script>

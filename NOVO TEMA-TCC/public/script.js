@@ -42,7 +42,7 @@ authButton.onclick = async () => {
       const user = userCredential.user;
 
       if (user.emailVerified) {
-        window.location.href = "./TelaPrincipal/";
+        window.location.href = "./TelaPrincipal/index.html  ";
       } else {
         errorDiv.textContent = "Verifique seu e-mail antes de continuar, cheque o spam do seu email.";
         await auth.signOut();
@@ -61,7 +61,7 @@ googleButton.onclick = async () => {
   const provider = new firebase.auth.GoogleAuthProvider();
   try {
     await auth.signInWithPopup(provider);
-    window.location.href = "./TelaPrincipal/";
+    window.location.href = "./TelaPrincipal/index.html  ";
   } catch (err) {
     errorDiv.textContent = err.message;
   }
@@ -71,11 +71,11 @@ auth.onAuthStateChanged(user => {
   const currentPage = window.location.pathname;
 
   if (user && (user.emailVerified || user.providerData[0].providerId === 'google.com')) {
-    if (!currentPage.includes("./TelaPrincipal/")) {
-      window.location.href = "./TelaPrincipal/";
+    if (!currentPage.includes("./TelaPrincipal/index.html ")) {
+      window.location.href = "./TelaPrincipal/index.html  ";
     }
   } else {
-    if (currentPage.includes("./TelaPrincipal/")) {
+    if (currentPage.includes("./TelaPrincipal/index.html  ")) {
       window.location.href = "../";
     }
   }
