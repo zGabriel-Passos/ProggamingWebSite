@@ -58,7 +58,7 @@
     <div class="container">
         <h1>Fases de JavaScript</h1>
         <div style="display: flex; justify-content: center; margin-bottom: 20px;">
-          <button id="restart-button" onclick="showRestartConfirmation()" class="btn">Reiniciar Progresso</button>
+            <button id="restart-button" onclick="showRestartConfirmation()" class="btn">Reiniciar Progresso</button>
         </div>
         <div id="fasesContainer" class="games"></div>
     </div>
@@ -176,16 +176,16 @@
         });
 
         const fasesIniciais = {
-            fase1: { status: "disponivel" },
-            fase2: { status: "bloqueada" },
-            fase3: { status: "bloqueada" },
-            fase4: { status: "bloqueada" },
-            fase5: { status: "bloqueada" },
-            fase6: { status: "bloqueada" },
-            fase7: { status: "bloqueada" },
-            fase8: { status: "bloqueada" },
-            fase9: { status: "bloqueada" },
-            fase10: { status: "bloqueada" },
+            fase1: { status: "disponivel", nome: "Introdução à linguagem" },
+            fase2: { status: "bloqueada", nome: "Variáveis e Tipos de Dados" },
+            fase3: { status: "bloqueada", nome: "Operadores e expressões" },
+            fase4: { status: "bloqueada", nome: "Estruturas condicionais" },
+            fase5: { status: "bloqueada", nome: "Laços de repetição" },
+            fase6: { status: "bloqueada", nome: "Arrays" },
+            fase7: { status: "bloqueada", nome: "Funções" },
+            fase8: { status: "bloqueada", nome: "Objetos e manipulação de DOM" },
+            fase9: { status: "bloqueada", nome: "Eventos" },
+            fase10: { status: "bloqueada", nome: "Projeto final" },
         };
 
         async function renderFases(user) {
@@ -194,6 +194,12 @@
             let dados = snap.exists() ? snap.data() : { fasesJS: fasesIniciais, xp: 0 };
 
             const fases = { ...fasesIniciais, ...(dados.fasesJS || {}) };
+            Object.entries(fasesIniciais).forEach(([faseId, fasePadrao]) => {
+                if (!fases[faseId].nome) {
+                    fases[faseId].nome = fasePadrao.nome;
+                }
+            });
+
             const xpTotal = dados.xp || 0;
 
             if (fases.fase1.status === "concluida") {
@@ -233,21 +239,22 @@
                 if (fase.status === "bloqueada") div.style.opacity = "0.5";
 
                 const numeroFase = faseId.replace("fase", "");
+                const nomeFase = fase.nome || `Fase ${numeroFase}`;
 
                 let progresso = "0%";
                 if (fase.status === "disponivel") progresso = "10%";
                 if (fase.status === "concluida") progresso = "100%";
 
                 div.innerHTML = `
-                <span class="title">JS - Fase ${numeroFase}</span>
-                <span class="desc">Introdução à linguagem</span>
-                <div class="progress">
-                    <div class="progress-bar" style="width:${progresso}"></div>
-                </div>
-                ${fase.status === "bloqueada"
+                    <span class="title">JS - Fase ${numeroFase}</span>
+                    <span class="desc">${nomeFase}</span>
+                    <div class="progress">
+                        <div class="progress-bar" style="width:${progresso}"></div>
+                    </div>
+                    ${fase.status === "bloqueada"
                         ? `<button class="btn" disabled>Bloqueada</button>`
                         : `<button class="btn" onclick="window.location.href='./Fase${numeroFase}/index.html'">Acessar lições</button>`}
-            `;
+                `;
 
                 fasesContainer.appendChild(div);
             });
