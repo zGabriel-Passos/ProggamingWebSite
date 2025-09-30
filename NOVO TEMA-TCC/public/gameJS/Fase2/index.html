@@ -10,7 +10,7 @@
   <link rel="stylesheet" href="../TelaPrincipal/style.css">
   <link rel="stylesheet" href="style.css">
   <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap">
-  <title>Proggaming | Fase 1 - JavaScript</title>
+  <title>Proggaming | Fase 2 - JavaScript</title>
 </head>
 
 <body>
@@ -27,16 +27,14 @@
   <div class="container-nivel">
     <div class="bloco-teoria">
       <div style="display: flex; flex-direction: row; align-items: center; justify-content: space-between;">
-        <h3>Teoria - Fase 1</h3>
+        <h3>Teoria - Fase 2</h3>
         <button class="botao-som" id="botao-som" onclick="toggleSom()">🔊</button>
       </div>
       <p id="texto-teoria"></p>
       <div id="extra-teoria" style="margin-top:10px; font-weight: 600; font-size:14px; color:#ddd;"></div>
-      <h2 id="titulo-nivel">Nível 1/5</h2>
-      <p id="descricao-nivel">JavaScript é uma linguagem de programação essencial e a mais popular
-        para o desenvolvimento web, responsável por adicionar interatividade e dinamismo a páginas web,
-        como mapas interativos, animações e atualizações de conteúdo em tempo real. Ele é uma das três tecnologias
-        fundamentais da web, juntamente com HTML (estrutura) e CSS (estilo)</p>
+      <h2 id="titulo-nivel">Nível 1/6</h2>
+      <p id="descricao-nivel">Nesta fase você vai criar variáveis, trabalhar com tipos de dados e
+        montar frases usando concatenação e template literals.</p>
       <hr>
       <div style="margin: 10px 0px 10px 0px;">
         <span id="xp-total" style="font-family: 'Press Start 2P', cursive; font-weight: 600; color: #c7860e;">XP:
@@ -103,7 +101,7 @@
     const db = firebase.firestore();
 
     let nivelJsAtual = 0;
-    let fase1JsJaConcluida = false;
+    let fase2JaConcluida = false;
 
     const entradaCodigo = document.getElementById("entrada-codigo");
     const preview = document.getElementById("preview");
@@ -113,39 +111,46 @@
 
     const niveis = [
       {
-        titulo: "Nível 1/5",
-        descricao: "JavaScript é uma linguagem de programação essencial e a mais popular para o desenvolvimento web, responsável por adicionar interatividade e dinamismo a páginas web, como mapas interativos, animações e atualizações de conteúdo em tempo real. Ele é uma das três tecnologias fundamentais da web, juntamente com HTML (estrutura) e CSS (estilo)",
-        teoria: "",
-        extra: "",
-        respostaEsperada: "",
+        titulo: "Nível 1/6",
+        descricao: "Declare uma variável com var, outra com let e outra com const.",
+        teoria: "<code>var</code> foi a forma original de declarar variáveis em JS e tem escopo de função (vaza de blocos). <code>let</code> tem escopo de bloco e é a escolha moderna para valores que mudam. <code>const</code> também tem escopo de bloco e impede reatribuição do identificador (o conteúdo de objetos/arrays ainda pode ser mutado). Prefira <code>let</code> e <code>const</code> no dia a dia.",
+        extra: "Exemplo: <code>var a = 1;</code> <code>let b = 2;</code> <code>const c = 3;</code>",
+        respostaEsperada: /(?=[\s\S]*\bvar\s+\w+\s*=)(?=[\s\S]*\blet\s+\w+\s*=)(?=[\s\S]*\bconst\s+\w+\s*=)[\s\S]*/i,
       },
       {
-        titulo: "Nível 2/5",
-        descricao: "Declare uma variável chamada 'mensagem' e atribua a ela o valor 'Olá, mundo!'.",
-        teoria: "Para armazenar dados com Javascript, ultilizamos uma estrutura chamada variável. Para declararmos uma variavel que tem como valor um texto, ultlizamos a declaração <code>let nomeDaVariavel = 'valor';<code><br> No exemplo, 'let' é a palavra reservada que indica que estamos declarando uma variável, 'nomeDaVariavel' é o nome que escolhemos para a variável (que deve seguir certas regras, como não começar com números ou usar espaços) e 'valor' é o conteúdo que estamos atribuindo à variável, que no caso é um texto (string) e por isso está entre aspas simples.",
-        extra: "Exemplo: <code>let texto = 'Olá, mundo!';</code>",
-        respostaEsperada: /let\s+mensagem\s*=\s*'Olá, mundo!'\s*;?\s*/i
+        titulo: "Nível 2/6",
+        descricao: "Crie uma string, um number e um boolean.",
+        teoria: "Os principais tipos primitivos são: <code>string</code> (texto entre aspas), <code>number</code> (inteiros e decimais sem distinção) e <code>boolean</code> (<code>true</code>/<code>false</code>). Saber escolher o tipo correto evita bugs e facilita validações.",
+        extra: "Ex.: <code>let s = 'texto'</code>, <code>let n = 10</code>, <code>let b = true</code>.",
+        respostaEsperada: /(?=[\s\S]*(let|var|const)\s+\w+\s*=\s*['\"]).*(?=[\s\S]*(let|var|const)\s+\w+\s*=\s*\d).*(?=[\s\S]*(let|var|const)\s+\w+\s*=\s*(true|false))[\s\S]*/i
       },
       {
-        titulo: "Nível 3/5",
-        descricao: "Crie uma variavel chamada mensagem e use o metodo console.log para imprimir-lá",
-        teoria: "O método <code>console.log()</code> é usado para exibir mensagens no console do navegador, o que é útil para depuração e verificação de valores durante o desenvolvimento. Para imprimir o valor de uma variável, você simplesmente passa o nome da variável como argumento para <code>console.log()</code>. Por exemplo, se você tem uma variável chamada <code>mensagem</code>, você pode exibir seu valor no console com <code>console.log(mensagem);</code>.",
-        extra: "Exemplo: <code>console.log(mensagem)</code>",
-        respostaEsperada: /let\s+\w+\s*=\s*'.*';?\s*console\.log\(\s*\w+\s*\);?/i
+        titulo: "Nível 3/6",
+        descricao: "Converta um valor com Number() e outro com String().",
+        teoria: "Conversões explícitas tornam seu código previsível: <code>Number(x)</code> tenta transformar <code>x</code> em número (retorna <code>NaN</code> se falhar). <code>String(x)</code> converte qualquer valor em texto. Evite confiar em coerção implícita (ex.: <code>==</code>) para não gerar surpresas.",
+        extra: "Ex.: <code>let n = Number('42')</code> e <code>let s = String(42)</code>.",
+        respostaEsperada: /(?=[\s\S]*\bNumber\s*\()[\s\S]*\bString\s*\([\s\S]*/i
       },
       {
-        titulo: "Nível 4/5",
-        descricao: "Transforme o comando console.log anterior em um comentário.",
-        teoria: "Para comentar um comando em JavaScript, basta adicionar // antes dele ou envolver com /* ... */. Isso faz com que o comando não seja executado.",
-        extra: "Exemplo: <code>// console.log(mensagem)</code> ou <code>/* console.log(mensagem) */</code>",
-        respostaEsperada: /(\/\/\s*console\.log\(.*\)|\/\*\s*console\.log\(.*\)\s*\*\/)/i
+        titulo: "Nível 4/6",
+        descricao: "Faça uma frase juntando textos com + (concatenação).",
+        teoria: "Para juntar textos, use o operador <code>+</code> ou métodos como <code>concat()</code>. Atenção: quando um operando é string e o outro é number, o <code>+</code> faz concatenação, não soma. Garanta o tipo correto antes de operar.",
+        extra: "Ex.: <code>let frase = 'Olá, ' + nome;</code>",
+        respostaEsperada: /(?=[\s\S]*\+)(?=[\s\S]*['\"][^'\"]+['\"])[\s\S]*/i
       },
       {
-        titulo: "Nível 5/5",
-        descricao: "Utilize o método alert ou outro método da window para exibir uma mensagem.",
-        teoria: "O objeto window representa a janela do navegador e possui vários métodos úteis, como alert(), prompt(), confirm(), entre outros. O método alert exibe uma caixa de diálogo com uma mensagem para o usuário.",
-        extra: "Exemplo: <code>alert('Olá!')</code> ou <code>window.alert('Bem-vindo!')</code>",
-        respostaEsperada: /(window\s*\.\s*alert\s*\(.*\)|alert\s*\(.*\))/i
+        titulo: "Nível 5/6",
+        descricao: "Use template literals (crase) e ${} para interpolar.",
+        teoria: "Template literals (entre crases) facilitam interpolar variáveis com <code>${}</code> e quebrar linhas sem escapes. São ideais para montar mensagens legíveis e reduzir erros de concatenação.",
+        extra: "Ex.: <code>let msg = `Olá, ${nome}!`</code>",
+        respostaEsperada: /`[\s\S]*`/i
+      },
+      {
+        titulo: "Nível 6/6",
+        descricao: "Monte um mini formulário lógico e imprima uma frase com os dados.",
+        teoria: "Simule entradas do usuário criando variáveis (ex.: <code>nome</code>, <code>idade</code>) e gere uma frase final. Use <code>Number()</code> quando precisar tratar números e prefira template literals para clareza.",
+        extra: "Ex.: <code>let nome = 'Ana', idade = 20; console.log(`Me chamo ${nome} e tenho ${idade}`)</code>",
+        respostaEsperada: /(?=[\s\S]*(let|var|const)\s+nome\s*=)(?=[\s\S]*(let|var|const)\s+idade\s*=)(?=[\s\S]*console\.log)[\s\S]*/i
       }
     ];
 
@@ -161,16 +166,16 @@
         if (docSnap.exists) {
           const data = docSnap.data();
           const xp = data.xp || 0;
-          nivelJsAtual = (data.fasesJS && data.fasesJS.fase1 && Number.isInteger(data.fasesJS.fase1.nivelAtual)) ? data.fasesJS.fase1.nivelAtual : 0;
-          fase1JsJaConcluida = (data.fasesJS && data.fasesJS.fase1 && data.fasesJS.fase1.status === "concluida") || false;
+          nivelJsAtual = (data.fasesJS && data.fasesJS.fase2 && Number.isInteger(data.fasesJS.fase2.nivelAtual)) ? data.fasesJS.fase2.nivelAtual : 0;
+          fase2JaConcluida = (data.fasesJS && data.fasesJS.fase2 && data.fasesJS.fase2.status === "concluida") || false;
           xpTotalSpan.textContent = `XP: ${xp}`;
           atualizarNivel();
-          if (data.fasesJS && data.fasesJS.fase1 && data.fasesJS.fase1.codigoAtual) {
-            entradaCodigo.value = data.fasesJS.fase1.codigoAtual;
-            preview.innerHTML = data.fasesJS.fase1.codigoAtual;
+          if (data.fasesJS && data.fasesJS.fase2 && data.fasesJS.fase2.codigoAtual) {
+            entradaCodigo.value = data.fasesJS.fase2.codigoAtual;
+            preview.innerHTML = data.fasesJS.fase2.codigoAtual;
           }
 
-          if (fase1JsJaConcluida) {
+          if (fase2JaConcluida) {
             alert("⚠️ Você já concluiu esta fase.");
             history.back()
           }
@@ -204,8 +209,8 @@
       } else {
         document.querySelector('.resultado').innerHTML = `
       <h2>Parabéns!</h2>
-      <p>Você concluiu a Fase 1 de JavaScript! ${fase1JsJaConcluida ? "Pode refazer, mas não ganhará XP extra." : "+50XP"}</p>
-      <button onclick="concluirFase1()">Concluir a fase</button>
+      <p>Você concluiu a Fase 2 de JavaScript! ${fase2JaConcluida ? "Pode refazer, mas não ganhará XP extra." : "+60XP"}</p>
+      <button onclick="concluirFase2()">Concluir a fase</button>
     `;
       }
     }
@@ -221,7 +226,6 @@
         return;
       }
 
-      // Executa o código do usuário no console
       if (nivelJsAtual === 2 || nivelJsAtual === 3 || nivelJsAtual === 4) {
         mostrarConsoleReal();
         setTimeout(() => {
@@ -256,26 +260,27 @@
       }
     }
 
-    function concluirFase1() {
+    function concluirFase() {
       const user = auth.currentUser;
       if (!user) return;
       const ref = db.collection("usuarios").doc(user.uid);
 
-      if (!fase1JsJaConcluida) {
+      if (!fase2JaConcluida) {
         ref.get().then(docSnap => {
           if (docSnap.exists) {
             const data = docSnap.data();
             const fases = data.fasesJS || {};
 
-            fases.fase1 = { status: "concluida" };
-            fases.fase2 = { status: "disponivel" };
+            fases.fase2 = { status: "concluida" };
+            fases.fase3 = fases.fase3 || { status: "disponivel" };
+            data.nivelJsAtual++;
 
             ref.set({
               fasesJS: fases,
-              xp: firebase.firestore.FieldValue.increment(50)
+              xp: firebase.firestore.FieldValue.increment(60)
             }, { merge: true }).then(() => {
-              fase1JsJaConcluida = true;
-              alert("✅ Fase 1 concluída! Fase 2 desbloqueada.");
+              fase2JaConcluida = true;
+              alert("✅ Fase 2 concluída! Fase 3 desbloqueada.");
               window.location.href = "../index.html";
             });
           }
@@ -297,7 +302,7 @@
       db.collection("usuarios").doc(auth.currentUser.uid).get().then(docSnap => {
         if (docSnap.exists) {
           const dados = docSnap.data();
-          const codigoAtual = dados && dados.fasesJS && dados.fasesJS.fase1 && dados.fasesJS.fase1.codigoAtual;
+          const codigoAtual = dados && dados.fasesJS && dados.fasesJS.fase2 && dados.fasesJS.fase2.codigoAtual;
           if (codigoAtual) {
             entradaCodigo.value = codigoAtual;
             preview.innerHTML = codigoAtual;
@@ -335,14 +340,14 @@
       const user = auth.currentUser;
       if (!user) return;
       const ref = db.collection("usuarios").doc(user.uid);
-      ref.set({ "fasesJS.fase1.nivelAtual": nivel }, { merge: true });
+      ref.set({ "fasesJS.fase2.nivelAtual": nivel }, { merge: true });
     }
 
     function salvarCodigo(codigo) {
       const user = auth.currentUser;
       if (!user) return;
       const ref = db.collection("usuarios").doc(user.uid);
-      ref.set({ "fasesJS.fase1.codigoAtual": codigo }, { merge: true });
+      ref.set({ "fasesJS.fase2.codigoAtual": codigo }, { merge: true });
     }
   </script>
 
