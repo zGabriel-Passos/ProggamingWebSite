@@ -42,7 +42,7 @@ authButton.onclick = async () => {
       const user = userCredential.user;
 
       if (user.emailVerified) {
-        window.location.href = "./TelaPrincipal/index.html  ";
+        window.location.href = "./TelaPrincipal/";
       } else {
         errorDiv.textContent = "Verifique seu e-mail antes de continuar, cheque o spam do seu email.";
         await auth.signOut();
@@ -61,7 +61,7 @@ googleButton.onclick = async () => {
   const provider = new firebase.auth.GoogleAuthProvider();
   try {
     await auth.signInWithPopup(provider);
-    window.location.href = "./TelaPrincipal/index.html  ";
+    window.location.href = "./TelaPrincipal/";
   } catch (err) {
     errorDiv.textContent = err.message;
   }
@@ -71,11 +71,11 @@ auth.onAuthStateChanged(user => {
   const currentPage = window.location.pathname;
 
   if (user && (user.emailVerified || user.providerData[0].providerId === 'google.com')) {
-    if (!currentPage.includes("./TelaPrincipal/index.html ")) {
-      window.location.href = "./TelaPrincipal/index.html  ";
+    if (!currentPage.includes("./TelaPrincipal/")) {
+      window.location.href = "./TelaPrincipal/";
     }
   } else {
-    if (currentPage.includes("./TelaPrincipal/index.html  ")) {
+    if (currentPage.includes("./TelaPrincipal/")) {
       window.location.href = "../";
     }
   }
@@ -85,7 +85,7 @@ window.addEventListener("DOMContentLoaded", () => {
   setTimeout(() => {
     document.body.classList.add("loaded");
     setTimeout(() => {
-      document.body.style.overflow = "auto"; // libera rolagem após o overlay sumir
+      document.body.style.overflow = "auto";
     }, 300);
   }, 300);
 });
@@ -109,8 +109,8 @@ resetPasswordButton.onclick = async () => {
 
 const overlay = document.getElementById('overlay-aviso');
 const btnFechar = document.getElementById('btn-fechar');
-const intervalo = 5 * 60 * 1000; // 5 minutos em ms
-const delayPrimeiraExibicao = 1000; // 10 segundos em ms
+const intervalo = 5 * 60 * 1000;
+const delayPrimeiraExibicao = 1000;
 
 function mostrarAviso() {
   overlay.classList.add('mostrar');
