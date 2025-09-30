@@ -162,12 +162,12 @@
           const data = docSnap.data();
           const xp = data.xp || 0;
           nivelJsAtual = data.nivelJsAtual || 0;
-          fase1JsJaConcluida = data.fase1JsConcluida || false;
+          fase1JsJaConcluida = (data.fasesJS && data.fasesJS.fase1 && data.fasesJS.fase1.status === "concluida") || false;
           xpTotalSpan.textContent = `XP: ${xp}`;
           atualizarNivel();
-          if (data.codigoJsAtual) {
-            entradaCodigo.value = data.codigoJsAtual;
-            preview.innerHTML = data.codigoJsAtual;
+          if (data.fasesJS && data.fasesJS.fase1 && data.fasesJS.fase1.codigoAtual) {
+            entradaCodigo.value = data.fasesJS.fase1.codigoAtual;
+            preview.innerHTML = data.fasesJS.fase1.codigoAtual;
           }
 
           if (fase1JsJaConcluida) {
@@ -273,8 +273,7 @@
 
             ref.set({
               fasesJS: fases,
-              xp: firebase.firestore.FieldValue.increment(50),
-              fase1JsConcluida: true
+              xp: firebase.firestore.FieldValue.increment(50)
             }, { merge: true }).then(() => {
               fase1JsJaConcluida = true;
               alert("✅ Fase 1 concluída! Fase 2 desbloqueada.");
@@ -297,13 +296,17 @@
       extraTeoria.innerHTML = nivel.extra;
 
       db.collection("usuarios").doc(auth.currentUser.uid).get().then(docSnap => {
-        if (docSnap.exists && docSnap.data().codigoJsAtual) {
-          entradaCodigo.value = docSnap.data().codigoJsAtual;
-          preview.innerHTML = docSnap.data().codigoJsAtual;
-        } else {
-          entradaCodigo.value = "";
-          preview.innerHTML = "A visualização aparecerá aqui.";
+        if (docSnap.exists) {
+          const dados = docSnap.data();
+          const codigoAtual = dados && dados.fasesJS && dados.fasesJS.fase1 && dados.fasesJS.fase1.codigoAtual;
+          if (codigoAtual) {
+            entradaCodigo.value = codigoAtual;
+            preview.innerHTML = codigoAtual;
+            return;
+          }
         }
+        entradaCodigo.value = "";
+        preview.innerHTML = "A visualização aparecerá aqui.";
       });
 
       barraProgresso.style.width = `${(nivelJsAtual / niveis.length) * 100}%`;
@@ -340,21 +343,19 @@
       const user = auth.currentUser;
       if (!user) return;
       const ref = db.collection("usuarios").doc(user.uid);
-      ref.set({ codigoJsAtual: codigo }, { merge: true });
+      ref.set({ "fasesJS.fase1.codigoAtual": codigo }, { merge: true });
     }
   </script>
 
   <script src="https://cdn.jsdelivr.net/npm/eruda"></script>
   <script>
     function mostrarConsoleReal() {
-      // Remove instância anterior do eruda, se existir
       if (window._erudaIniciado) {
         const preview = document.getElementById('preview');
         preview.innerHTML = '';
         eruda.destroy();
         window._erudaIniciado = false;
       }
-      // Cria um novo container para o console
       const preview = document.getElementById('preview');
       preview.innerHTML = '<div id="eruda-container" style="height:200px;"></div>';
       eruda.init({
