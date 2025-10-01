@@ -1,0 +1,411 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="stylesheet" href="https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css">
+  <link rel="apple-touch-icon" href="./../icon_512x512.png">
+  <link rel="icon" type="image/png" href="./../icon_512x512.png">
+  <link rel="stylesheet" href="../TelaPrincipal/style.css">
+  <link rel="stylesheet" href="style.css">
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap">
+  <title>Proggaming | Fase 5 - Laços de Repetição</title>
+</head>
+
+<body>
+  <div class="navbar">
+    <button onclick="mostrarTela('bloco-teoria')">Teoria</button>
+    <button onclick="mostrarTela('resultado')">Resultado</button>
+    <button onclick="mostrarTela('editor-container')">Editor</button>
+  </div>
+
+  <div class="progresso">
+    <div class="barra" id="barra-progresso"></div>
+  </div>
+
+  <div class="container-nivel">
+    <div class="bloco-teoria">
+      <div style="display: flex; flex-direction: row; align-items: center; justify-content: space-between;">
+        <h3>Teoria - Fase 5</h3>
+        <button class="botao-som" id="botao-som" onclick="toggleSom()">🔊</button>
+      </div>
+      <p id="texto-teoria"></p>
+      <div id="extra-teoria" style="margin-top:10px; font-weight: 600; font-size:14px; color:#ddd;"></div>
+      <h2 id="titulo-nivel">Nível 1/6</h2>
+      <p id="descricao-nivel">Sessão 5 – Laços de Repetição<br>Tema: Repetir ações com for, while</p>
+      <hr>
+      <div style="margin: 10px 0px 10px 0px;">
+        <span id="xp-total" style="font-family: 'Press Start 2P', cursive; font-weight: 600; color: #c7860e;">XP:
+          0</span>
+      </div>
+      <a href="../index.html" style="float: right; margin: 10px;">
+        <button class="voltar">
+          <i class='bx bx-arrow-back'></i>
+          <span style="font-size: 12px;">Voltar</span>
+        </button>
+      </a>
+    </div>
+
+    <div class="resultado" id="preview">A visualização aparecerá aqui.</div>
+
+    <div class="editor-container">
+      <div class="editor-header">
+        <span class="dot red"></span>
+        <span class="dot yellow"></span>
+        <span class="dot green"></span>
+        <span class="editor-title">index.html</span>
+      </div>
+      <textarea id="entrada-codigo" class="code-editor" spellcheck="false"
+        placeholder="Digite o código JavaScript aqui..." style="height: 90%;"></textarea>
+      <button onclick="verificarNivel()">Testar Código</button>
+    </div>
+  </div>
+
+  <audio id="audio-sucesso" src="../Green Screen + Efeito Sonoro (Acerto).mp3"></audio>
+
+  <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-auth-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore-compat.js"></script>
+  <script>
+    let somAtivo = true;
+    let aguardandoAvanco = false;
+
+    function toggleSom() {
+      somAtivo = !somAtivo;
+      const botaoSom = document.getElementById("botao-som");
+      botaoSom.innerText = somAtivo ? "🔊" : "🔇";
+    }
+
+    function mostrarTela(id) {
+      document.querySelectorAll('.bloco-teoria, .resultado, .editor-container')
+        .forEach(el => el.classList.remove('active'));
+
+      document.querySelector('.' + id).classList.add('active');
+    }
+
+    mostrarTela('bloco-teoria');
+
+    const firebaseConfig = {
+      apiKey: "AIzaSyClRHfJuTSogkbWLaaUKsSBGN1KiT5xuUc",
+      authDomain: "proggamingpage.firebaseapp.com",
+      projectId: "proggamingpage",
+      storageBucket: "proggamingpage.firebasestorage.app",
+      messagingSenderId: "911283259283",
+      appId: "1:911283259283:web:0b9be83ed5e07391360a66",
+      measurementId: "G-TQP4LNPYQ1"
+    };
+    firebase.initializeApp(firebaseConfig);
+    const auth = firebase.auth();
+    const db = firebase.firestore();
+
+    let nivelJsAtual = 0;
+    let fase5JaConcluida = false;
+
+    const entradaCodigo = document.getElementById("entrada-codigo");
+    const preview = document.getElementById("preview");
+    const barraProgresso = document.getElementById("barra-progresso");
+    const xpTotalSpan = document.getElementById("xp-total");
+    const extraTeoria = document.getElementById("extra-teoria");
+
+    const niveis = [
+      {
+        titulo: "Nível 1/6",
+        descricao: "Utilize a estrutura for para repetir ações.",
+        teoria: "O for permite repetir um bloco de código um número definido de vezes.",
+        extra: "Exemplo:<br><code>for (let i = 0; i < 5; i++) {<br>&nbsp;console.log(i);<br>}</code>",
+        respostaEsperada: /for\s*\([\s\S]*;[\s\S]*;[\s\S]*\)\s*\{[\s\S]*\}/i
+      },
+      {
+        titulo: "Nível 2/6",
+        descricao: "Utilize while e do...while para repetir enquanto uma condição for verdadeira.",
+        teoria: "O while repete enquanto a condição for verdadeira. O do...while garante pelo menos uma execução.",
+        extra: "Exemplo:<br><code>let i = 0;<br>while (i < 3) {<br>&nbsp;console.log(i);<br>&nbsp;i++;<br>}<br>do {<br>&nbsp;console.log(i);<br>&nbsp;i++;<br>} while (i < 5);</code>",
+        respostaEsperada: /(while\s*\([\s\S]*\)\s*\{[\s\S]*\}|do\s*\{[\s\S]*\}\s*while\s*\([\s\S]*\);)/i
+      },
+      {
+        titulo: "Nível 3/6",
+        descricao: "Faça uma contagem crescente e decrescente usando laços.",
+        teoria: "Você pode controlar o valor da variável de controle para contar para cima ou para baixo.",
+        extra: "Exemplo:<br><code>for (let i = 1; i <= 5; i++) {<br>&nbsp;console.log(i);<br>}<br>for (let i = 5; i >= 1; i--) {<br>&nbsp;console.log(i);<br>}</code>",
+        respostaEsperada: /(for\s*\([\s\S]*;\s*i\s*(<=|>=)\s*\d+;[\s\S]*\)\s*\{[\s\S]*\})/i
+      },
+      {
+        titulo: "Nível 4/6",
+        descricao: "Interrompa ou pule uma repetição usando break ou continue.",
+        teoria: "O break encerra o laço. O continue pula para a próxima iteração.",
+        extra: "Exemplo:<br><code>for (let i = 0; i < 5; i++) {<br>&nbsp;if (i === 2) break;<br>&nbsp;console.log(i);<br>}<br>for (let i = 0; i < 5; i++) {<br>&nbsp;if (i === 2) continue;<br>&nbsp;console.log(i);<br>}</code>",
+        respostaEsperada: /(break|continue)/i
+      },
+      {
+        titulo: "Nível 5/6",
+        descricao: "Utilize loops aninhados para criar padrões.",
+        teoria: "Um laço dentro de outro permite criar estruturas como tabelas ou padrões.",
+        extra: "Exemplo:<br><code>for (let i = 1; i <= 3; i++) {<br>&nbsp;for (let j = 1; j <= 3; j++) {<br>&nbsp;&nbsp;console.log(i, j);<br>&nbsp;}<br>}</code>",
+        respostaEsperada: /for\s*\([\s\S]*\)\s*\{[\s\S]*for\s*\([\s\S]*\)\s*\{[\s\S]*\}/i
+      },
+      {
+        titulo: "Nível 6/6",
+        descricao: "Atividade: gere a tabuada de um número usando for.",
+        teoria: "Use o for para multiplicar um número por valores de 1 a 10 e mostrar o resultado.",
+        extra: "Exemplo:<br><code>let n = 5;<br>for (let i = 1; i <= 10; i++) {<br>&nbsp;console.log(n + ' x ' + i + ' = ' + (n * i));<br>}</code>",
+        respostaEsperada: /for\s*\([\s\S]*i\s*<=\s*10;[\s\S]*\)\s*\{[\s\S]*n\s*\*\s*i[\s\S]*\}/i
+      }
+    ];
+
+
+    auth.onAuthStateChanged(user => {
+      if (!user) window.location.href = "./../";
+      else carregarProgresso(user);
+    });
+
+    function carregarProgresso(user) {
+      const ref = db.collection("usuarios").doc(user.uid);
+      ref.get().then(docSnap => {
+        if (docSnap.exists) {
+          const data = docSnap.data();
+          const xp = data.xp || 0;
+          nivelJsAtual = (data.fasesJS && data.fasesJS.fase5 && Number.isInteger(data.fasesJS.fase5.nivelAtual)) ? data.fasesJS.fase5.nivelAtual : 0;
+          fase5JaConcluida = (data.fasesJS && data.fasesJS.fase5 && data.fasesJS.fase5.status === "concluida") || false;
+          xpTotalSpan.textContent = `XP: ${xp}`;
+          atualizarNivel();
+          if (data.fasesJS && data.fasesJS.fase5 && data.fasesJS.fase5.codigoAtual) {
+            entradaCodigo.value = data.fasesJS.fase5.codigoAtual;
+            preview.innerHTML = data.fasesJS.fase5.codigoAtual;
+          }
+
+          if (fase5JaConcluida) {
+            alert("⚠️ Você já concluiu esta fase.");
+            history.back()
+          }
+        } else {
+          atualizarNivel();
+        }
+      });
+    }
+
+    function atualizarBotaoCorreto(estado) {
+      const botao = document.querySelector('.editor-container button');
+      if (estado === 'correto') {
+        botao.style.background = '#2ecc40';
+        botao.innerHTML = '<i class="bx bx-check"></i> Correto! Clique para avançar';
+      } else if (estado === 'incorreto') {
+        botao.style.background = '#e74c3c';
+        botao.innerHTML = '<i class="bx bx-x"></i> Tente novamente';
+      } else {
+        botao.style.background = '';
+        botao.innerHTML = 'Testar Código';
+      }
+    }
+
+    function avancarNivel() {
+      aguardandoAvanco = false;
+      atualizarBotaoCorreto();
+      nivelJsAtual++;
+      salvarProgresso(nivelJsAtual);
+      if (nivelJsAtual < niveis.length) {
+        atualizarNivel();
+      } else {
+        document.querySelector('.resultado').innerHTML = `
+          <h2>Parabéns!</h2>
+          <p>Você concluiu a Fase 5 de Laços de Repetição! ${fase5JaConcluida ? "Pode refazer, mas não ganhará XP extra." : "+70XP"}</p>
+          <button onclick="concluirFase5()">Concluir a fase</button>
+        `;
+      }
+    }
+
+    function atualizarNivel() {
+      if (nivelJsAtual >= niveis.length) return;
+      const nivel = niveis[nivelJsAtual];
+      document.getElementById("titulo-nivel").textContent = nivel.titulo;
+      document.getElementById("descricao-nivel").textContent = nivel.descricao;
+      document.getElementById("texto-teoria").textContent = nivel.teoria;
+
+      let extra = nivel.extra;
+      if (extra) {
+        extra = extra.replace(/<\/code>\s*/g, '</code><br>');
+        extra = extra.replace(/;\s*/g, ';<br>');
+        extra = extra.replace(/(<br>\s*)+/g, '<br>');
+      }
+      extraTeoria.innerHTML = extra;
+
+      db.collection("usuarios").doc(auth.currentUser.uid).get().then(docSnap => {
+        if (docSnap.exists) {
+          const dados = docSnap.data();
+          const codigoAtual = dados && dados.fasesJS && dados.fasesJS.fase5 && dados.fasesJS.fase5.codigoAtual;
+          if (codigoAtual) {
+            entradaCodigo.value = codigoAtual;
+            mostrarVisualizacao(nivelJsAtual, codigoAtual);
+            return;
+          }
+        }
+        entradaCodigo.value = "";
+        preview.innerHTML = "A visualização aparecerá aqui.";
+      });
+
+      barraProgresso.style.width = `${(nivelJsAtual / niveis.length) * 100}%`;
+
+      const resultado = document.querySelector('.resultado');
+      if (nivelJsAtual === 0 || nivelJsAtual === 1) {
+        resultado.style.display = 'none';
+      } else {
+        resultado.style.display = 'block';
+        preview.innerHTML = "A visualização aparecerá aqui.";
+      }
+    }
+
+    function mostrarVisualizacao(nivel, codigo) {
+      if (nivel === 5) {
+        let output = "";
+        const originalConsoleLog = console.log;
+        console.log = function (...args) {
+          output += args.join(" ") + "<br>";
+        };
+        try {
+          eval(codigo);
+        } catch (e) {
+          output += `<span style="color:red;">${e}</span>`;
+        }
+        console.log = originalConsoleLog;
+        preview.innerHTML = output || "Nenhum resultado.";
+      } else {
+        preview.innerHTML = "A visualização aparecerá aqui.";
+      }
+    }
+
+    function verificarNivel() {
+      const entrada = entradaCodigo.value;
+      const audio = document.getElementById("audio-sucesso");
+      const resposta = niveis[nivelJsAtual].respostaEsperada;
+      const botao = document.querySelector('.editor-container button');
+
+      if (aguardandoAvanco) {
+        avancarNivel();
+        return;
+      }
+
+      mostrarVisualizacao(nivelJsAtual, entrada);
+
+      if (nivelJsAtual >= 0 && nivelJsAtual <= 5) {
+        mostrarConsoleReal();
+        setTimeout(() => {
+          if (window.eruda && eruda._devTools && eruda._devTools._tools.console) {
+            eruda._devTools._tools.console.clear();
+          }
+          try {
+            eval(entrada);
+          } catch (e) {
+            if (window.eruda && eruda._devTools && eruda._devTools._tools.console) {
+              eruda._devTools._tools.console.error(e);
+            }
+          }
+        }, 100);
+      }
+
+      const passou = resposta instanceof RegExp ? resposta.test(entrada) : entrada === resposta;
+
+      if (passou) {
+        if (somAtivo) {
+          audio.play();
+        }
+        if (!fase5JaConcluida) {
+          adicionarXP(12);
+        }
+        salvarCodigo(entrada);
+        aguardandoAvanco = true;
+        atualizarBotaoCorreto('correto');
+      } else {
+        atualizarBotaoCorreto('incorreto');
+        alert("Resposta incorreta! Tente novamente.");
+      }
+    }
+
+    function concluirFase5() {
+      const user = auth.currentUser;
+      if (!user) return;
+      const ref = db.collection("usuarios").doc(user.uid);
+
+      if (!fase5JaConcluida) {
+        ref.get().then(docSnap => {
+          if (docSnap.exists) {
+            const data = docSnap.data();
+            const fases = data.fasesJS || {};
+            fases.fase5 = { status: "concluida" };
+            fases.fase6 = fases.fase6 || { status: "disponivel" };
+            ref.set({
+              fasesJS: fases,
+              xp: firebase.firestore.FieldValue.increment(70)
+            }, { merge: true }).then(() => {
+              fase5JaConcluida = true;
+              alert("✅ Fase 5 concluída! Fase 6 desbloqueada.");
+              window.location.href = "../index.html";
+            });
+          }
+        });
+      } else {
+        alert("⚠️ Você já concluiu esta fase. Pode revisar, mas não ganha XP.");
+        window.location.href = "../index.html";
+      }
+    }
+
+    function adicionarXP(qtd) {
+      const user = auth.currentUser;
+      if (!user) return;
+      const ref = db.collection("usuarios").doc(user.uid);
+      db.runTransaction(async t => {
+        const docSnap = await t.get(ref);
+        const xpAtual = docSnap.exists ? (docSnap.data().xp || 0) : 0;
+        t.set(ref, { xp: xpAtual + qtd }, { merge: true });
+        xpTotalSpan.textContent = `XP: ${xpAtual + qtd}`;
+      });
+    }
+
+    function salvarProgresso(nivel) {
+      const user = auth.currentUser;
+      if (!user) return;
+      const ref = db.collection("usuarios").doc(user.uid);
+      ref.set({
+        fasesJS: {
+          fase5: {
+            nivelAtual: nivel
+          }
+        }
+      }, { merge: true });
+    }
+
+    function salvarCodigo(codigo) {
+      const user = auth.currentUser;
+      if (!user) return;
+      const ref = db.collection("usuarios").doc(user.uid);
+      ref.set({
+        fasesJS: {
+          fase5: {
+            codigoAtual: codigo
+          }
+        }
+      }, { merge: true });
+    }
+  </script>
+
+  <script src="https://cdn.jsdelivr.net/npm/eruda"></script>
+  <script>
+    function mostrarConsoleReal() {
+      if (window._erudaIniciado) {
+        const preview = document.getElementById('preview');
+        preview.innerHTML = '';
+        eruda.destroy();
+        window._erudaIniciado = false;
+      }
+      const preview = document.getElementById('preview');
+      preview.innerHTML = '<div id="eruda-container" style="height:200px;"></div>';
+      eruda.init({
+        container: document.getElementById('eruda-container'),
+        tool: ['console'],
+        autoScale: true
+      });
+      window._erudaIniciado = true;
+    }
+  </script>
+</body>
+
+</html>
