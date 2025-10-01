@@ -854,6 +854,11 @@ body.loaded .site-content {
 }
 
 @media (max-width: 600px) {
+  .blog .welcome {
+    font-family: "Poppins";
+    font-size: 12px;
+  }
+
   .modal-content {
     width: 95%;
     margin: 10px;
@@ -979,6 +984,11 @@ body.loaded .site-content {
 }
 
 @media (max-width: 768px) {
+  .blog .welcome {
+    font-family: "Poppins";
+    font-size: 13px;
+  }
+
   #ranking-container {
     margin: 10px;
     padding: 15px;
@@ -1000,8 +1010,8 @@ body.loaded .site-content {
   }
 
   .ranking-avatar {
-    width: 40px;
-    height: 40px;
+    width: 30px;
+    height: 30px;
     margin: 0 10px;
   }
 
@@ -1010,6 +1020,7 @@ body.loaded .site-content {
   }
 
   .ranking-xp {
+    font-family: "Roboto";
     font-size: 12px;
   }
 }
