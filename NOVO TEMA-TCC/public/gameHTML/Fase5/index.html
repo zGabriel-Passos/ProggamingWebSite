@@ -75,6 +75,16 @@
             botaoSom.innerText = somAtivo ? "🔊" : "🔇";
         }
 
+        function normalizeCode(code) {
+            let normalized = code.replace(/[\n\r\t]/g, ' ');
+
+            normalized = normalized.replace(/\s*([<>{}()\[\];:])\s*/g, '$1');
+
+            normalized = normalized.replace(/\s+/g, ' ');
+
+            return normalized.trim();
+        }
+
         const firebaseConfig = {
             apiKey: "AIzaSyClRHfJuTSogkbWLaaUKsSBGN1KiT5xuUc",
             authDomain: "proggamingpage.firebaseapp.com",
@@ -140,7 +150,8 @@
                 descricao: "Quiz: Qual tag é usada para definir um item de lista, seja ela ordenada ou não?",
                 teoria: "A tag `<li>` (list item) é a tag universal para definir um item de uma lista, independentemente de ela ser `<ol>` ou `<ul>`.",
                 extra: "Digite apenas a tag de abertura e fechamento. Ex: <code>&lt;li&gt;&lt;/li&gt;</code>",
-                respostaEsperada: /<li>\s*<\/li>/i
+                // A regex original /<li>\s*<\/li>/i já é boa para esse nível, mas usaremos a normalização
+                respostaEsperada: /<li><\/li>/i
             },
             {
                 titulo: "Nível 6/6 (Desafio)",
@@ -203,11 +214,13 @@
         });
 
         function verificarNivel() {
-            const entrada = entradaCodigo.value.trim();
+            const entradaOriginal = entradaCodigo.value;
+            const entradaNormalizada = normalizeCode(entradaOriginal);
+
             const audio = document.getElementById("audio-sucesso");
             const regex = niveis[nivelAtual].respostaEsperada;
 
-            if (regex.test(entrada)) {
+            if (regex.test(entradaNormalizada)) {
                 if (somAtivo) {
                     audio.play();
                 }

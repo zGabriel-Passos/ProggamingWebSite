@@ -30,7 +30,7 @@
     </div>
 
     <div class="header">
-        <a href="../TelaPrincipal/index.html">
+        <a href="../TelaPrincipal/">
             <button class="voltar">
                 <i class='bx bx-arrow-back'></i>
                 <span>Voltar</span>
@@ -124,7 +124,7 @@
             if (user) {
                 document.getElementById("welcome").textContent = `Email logado: ${user.email}`;
             } else {
-                window.location.href = "/public/index.html";
+                window.location.href = "./../";
             }
         });
 
@@ -170,7 +170,7 @@
                 });
 
             } else {
-                window.location.href = "/public/index.html";
+                window.location.href = "./../";
             }
         });
 
@@ -245,7 +245,7 @@
                 </div>
                 ${fase.status === "bloqueada"
                         ? `<button class="btn" disabled>Bloqueada</button>`
-                        : `<button class="btn" onclick="window.location.href='/public/gameCSS/Fase${numeroFase}/index.html'">Acessar lições</button>`}
+                        : `<button class="btn" onclick="window.location.href='/gameCSS/Fase${numeroFase}/index.html'">Acessar lições</button>`}
             `;
 
                 fasesContainer.appendChild(div);
@@ -273,7 +273,7 @@
             if (user) {
                 renderFases(user);
             } else {
-                window.location.href = "/public/index.html";
+                window.location.href = "./../";
             }
         });
     </script>
