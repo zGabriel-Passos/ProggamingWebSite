@@ -58,7 +58,6 @@ function userLine(u, actionsHTML = '') {
         <img class="user-avatar" src="${avatarSrc}" alt="Avatar">
         <div class="meta">
             <div><strong>${u.apelido ?? '(sem apelido)'}</strong> <span class="badge">XP ${xp}</span></div>
-            <div class="muted">${u.email ?? ''}</div>
         </div>
         <div class="pill">${actionsHTML}</div>
     </div>`;
