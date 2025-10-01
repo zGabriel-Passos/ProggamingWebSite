@@ -215,6 +215,67 @@
       }
     }
 
+    function atualizarNivel() {
+      if (nivelJsAtual >= niveis.length) return;
+      const nivel = niveis[nivelJsAtual];
+      document.getElementById("titulo-nivel").textContent = nivel.titulo;
+      document.getElementById("descricao-nivel").textContent = nivel.descricao;
+      document.getElementById("texto-teoria").textContent = nivel.teoria;
+
+      // Exibe exemplos com quebra de linha correta (não antes da vírgula)
+      let extra = nivel.extra;
+      if (extra) {
+        extra = extra.replace(/<\/code>\s*/g, '</code><br>');
+        extra = extra.replace(/;\s*/g, ';<br>');
+        // Não quebra antes da vírgula
+        extra = extra.replace(/(<br>\s*)+/g, '<br>');
+      }
+      extraTeoria.innerHTML = extra;
+
+      db.collection("usuarios").doc(auth.currentUser.uid).get().then(docSnap => {
+        if (docSnap.exists) {
+          const dados = docSnap.data();
+          const codigoAtual = dados && dados.fasesJS && dados.fasesJS.fase2 && dados.fasesJS.fase2.codigoAtual;
+          if (codigoAtual) {
+            entradaCodigo.value = codigoAtual;
+            mostrarVisualizacao(nivelJsAtual, codigoAtual);
+            return;
+          }
+        }
+        entradaCodigo.value = "";
+        preview.innerHTML = "A visualização aparecerá aqui.";
+      });
+
+      barraProgresso.style.width = `${(nivelJsAtual / niveis.length) * 100}%`;
+
+      const resultado = document.querySelector('.resultado');
+      if (nivelJsAtual === 0 || nivelJsAtual === 1) {
+        resultado.style.display = 'none';
+      } else {
+        resultado.style.display = 'block';
+        preview.innerHTML = "A visualização aparecerá aqui.";
+      }
+    }
+
+    function mostrarVisualizacao(nivel, codigo) {
+      if (nivel === 5) {
+        let output = "";
+        const originalConsoleLog = console.log;
+        console.log = function (...args) {
+          output += args.join(" ") + "<br>";
+        };
+        try {
+          eval(codigo);
+        } catch (e) {
+          output += `<span style="color:red;">${e}</span>`;
+        }
+        console.log = originalConsoleLog;
+        preview.innerHTML = output || "Nenhum resultado.";
+      } else {
+        preview.innerHTML = "A visualização aparecerá aqui.";
+      }
+    }
+
     function verificarNivel() {
       const entrada = entradaCodigo.value;
       const audio = document.getElementById("audio-sucesso");
@@ -225,6 +286,8 @@
         avancarNivel();
         return;
       }
+
+      mostrarVisualizacao(nivelJsAtual, entrada);
 
       if (nivelJsAtual === 2 || nivelJsAtual === 3 || nivelJsAtual === 4) {
         mostrarConsoleReal();
@@ -248,7 +311,7 @@
         if (somAtivo) {
           audio.play();
         }
-        if (!fase1JsJaConcluida) {
+        if (!fase2JaConcluida) {
           adicionarXP(10);
         }
         salvarCodigo(entrada);
@@ -291,39 +354,6 @@
       }
     }
 
-    function atualizarNivel() {
-      if (nivelJsAtual >= niveis.length) return;
-      const nivel = niveis[nivelJsAtual];
-      document.getElementById("titulo-nivel").textContent = nivel.titulo;
-      document.getElementById("descricao-nivel").textContent = nivel.descricao;
-      document.getElementById("texto-teoria").textContent = nivel.teoria;
-      extraTeoria.innerHTML = nivel.extra;
-
-      db.collection("usuarios").doc(auth.currentUser.uid).get().then(docSnap => {
-        if (docSnap.exists) {
-          const dados = docSnap.data();
-          const codigoAtual = dados && dados.fasesJS && dados.fasesJS.fase2 && dados.fasesJS.fase2.codigoAtual;
-          if (codigoAtual) {
-            entradaCodigo.value = codigoAtual;
-            preview.innerHTML = codigoAtual;
-            return;
-          }
-        }
-        entradaCodigo.value = "";
-        preview.innerHTML = "A visualização aparecerá aqui.";
-      });
-
-      barraProgresso.style.width = `${(nivelJsAtual / niveis.length) * 100}%`;
-
-      const resultado = document.querySelector('.resultado');
-      if (nivelJsAtual === 0 || nivelJsAtual === 1) {
-        resultado.style.display = 'none';
-      } else {
-        resultado.style.display = 'block';
-        preview.innerHTML = "A visualização aparecerá aqui.";
-      }
-    }
-
     function adicionarXP(qtd) {
       const user = auth.currentUser;
       if (!user) return;
@@ -340,14 +370,26 @@
       const user = auth.currentUser;
       if (!user) return;
       const ref = db.collection("usuarios").doc(user.uid);
-      ref.set({ "fasesJS.fase2.nivelAtual": nivel }, { merge: true });
+      ref.set({
+        fasesJS: {
+          fase2: {
+            nivelAtual: nivel
+          }
+        }
+      }, { merge: true });
     }
 
     function salvarCodigo(codigo) {
       const user = auth.currentUser;
       if (!user) return;
       const ref = db.collection("usuarios").doc(user.uid);
-      ref.set({ "fasesJS.fase2.codigoAtual": codigo }, { merge: true });
+      ref.set({
+        fasesJS: {
+          fase2: {
+            codigoAtual: codigo
+          }
+        }
+      }, { merge: true });
     }
   </script>
 

@@ -10,7 +10,7 @@
   <link rel="stylesheet" href="../TelaPrincipal/style.css">
   <link rel="stylesheet" href="style.css">
   <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap">
-  <title>Proggaming | Fase 1 - JavaScript</title>
+  <title>Proggaming | Fase 3 - Operadores e Expressões</title>
 </head>
 
 <body>
@@ -27,16 +27,13 @@
   <div class="container-nivel">
     <div class="bloco-teoria">
       <div style="display: flex; flex-direction: row; align-items: center; justify-content: space-between;">
-        <h3>Teoria - Fase 1</h3>
+        <h3>Teoria - Fase 3</h3>
         <button class="botao-som" id="botao-som" onclick="toggleSom()">🔊</button>
       </div>
       <p id="texto-teoria"></p>
       <div id="extra-teoria" style="margin-top:10px; font-weight: 600; font-size:14px; color:#ddd;"></div>
-      <h2 id="titulo-nivel">Nível 1/5</h2>
-      <p id="descricao-nivel">JavaScript é uma linguagem de programação essencial e a mais popular
-        para o desenvolvimento web, responsável por adicionar interatividade e dinamismo a páginas web,
-        como mapas interativos, animações e atualizações de conteúdo em tempo real. Ele é uma das três tecnologias
-        fundamentais da web, juntamente com HTML (estrutura) e CSS (estilo)</p>
+      <h2 id="titulo-nivel">Nível 1/6</h2>
+      <p id="descricao-nivel">Sessão 3 – Operadores e Expressões<br>Tema: Operações matemáticas e lógicas</p>
       <hr>
       <div style="margin: 10px 0px 10px 0px;">
         <span id="xp-total" style="font-family: 'Press Start 2P', cursive; font-weight: 600; color: #c7860e;">XP:
@@ -103,7 +100,7 @@
     const db = firebase.firestore();
 
     let nivelJsAtual = 0;
-    let fase1JsJaConcluida = false;
+    let fase3JaConcluida = false;
 
     const entradaCodigo = document.getElementById("entrada-codigo");
     const preview = document.getElementById("preview");
@@ -113,39 +110,46 @@
 
     const niveis = [
       {
-        titulo: "Nível 1/5",
-        descricao: "JavaScript é uma linguagem de programação essencial e a mais popular para o desenvolvimento web, responsável por adicionar interatividade e dinamismo a páginas web, como mapas interativos, animações e atualizações de conteúdo em tempo real. Ele é uma das três tecnologias fundamentais da web, juntamente com HTML (estrutura) e CSS (estilo)",
-        teoria: "",
-        extra: "",
-        respostaEsperada: "",
+        titulo: "Nível 1/6",
+        descricao: "Utilize operadores aritméticos (+, -, *, /, %) para realizar cálculos.",
+        teoria: "Operadores aritméticos permitem realizar operações matemáticas básicas. Exemplo: <code>+</code> soma, <code>-</code> subtrai, <code>*</code> multiplica, <code>/</code> divide, <code>%</code> retorna o resto da divisão.",
+        extra: "Exemplo:<br><code>let soma = 2 + 3;</code><br><code>let resto = 10 % 3;</code>",
+        respostaEsperada: /(\d+\s*[\+\-\*\/%]\s*\d+)/i
       },
       {
-        titulo: "Nível 2/5",
-        descricao: "Declare uma variável chamada 'mensagem' e atribua a ela o valor 'Olá, mundo!'.",
-        teoria: "Para armazenar dados com Javascript, ultilizamos uma estrutura chamada variável. Para declararmos uma variavel que tem como valor um texto, ultlizamos a declaração <code>let nomeDaVariavel = 'valor';<code><br> No exemplo, 'let' é a palavra reservada que indica que estamos declarando uma variável, 'nomeDaVariavel' é o nome que escolhemos para a variável (que deve seguir certas regras, como não começar com números ou usar espaços) e 'valor' é o conteúdo que estamos atribuindo à variável, que no caso é um texto (string) e por isso está entre aspas simples.",
-        extra: "Exemplo: <code>let texto = 'Olá, mundo!';</code>",
-        respostaEsperada: /let\s+mensagem\s*=\s*'Olá, mundo!'\s*;?\s*/i
+        titulo: "Nível 2/6",
+        descricao: "Utilize operadores relacionais (==, ===, !=, <, >) para comparar valores.",
+        teoria: "Operadores relacionais comparam valores e retornam verdadeiro ou falso. <code>==</code> compara valor, <code>===</code> compara valor e tipo, <code>!=</code> diferente, <code><</code> menor, <code>></code> maior.",
+        extra: "Exemplo:<br><code>let igual = 5 == '5';</code><br><code>let estrito = 5 === '5';</code><br><code>let menor = 3 < 5;</code>",
+        respostaEsperada: /(==|===|!=|<|>)/i
       },
       {
-        titulo: "Nível 3/5",
-        descricao: "Crie uma variavel chamada mensagem e use o metodo console.log para imprimir-lá",
-        teoria: "O método <code>console.log()</code> é usado para exibir mensagens no console do navegador, o que é útil para depuração e verificação de valores durante o desenvolvimento. Para imprimir o valor de uma variável, você simplesmente passa o nome da variável como argumento para <code>console.log()</code>. Por exemplo, se você tem uma variável chamada <code>mensagem</code>, você pode exibir seu valor no console com <code>console.log(mensagem);</code>.",
-        extra: "Exemplo: <code>console.log(mensagem)</code>",
-        respostaEsperada: /let\s+\w+\s*=\s*'.*';?\s*console\.log\(\s*\w+\s*\);?/i
+        titulo: "Nível 3/6",
+        descricao: "Utilize operadores lógicos (&&, ||, !) para combinar expressões.",
+        teoria: "Operadores lógicos permitem combinar condições. <code>&&</code> (E), <code>||</code> (OU), <code>!</code> (NÃO).",
+        extra: "Exemplo:<br><code>let cond = true && false;</code><br><code>let ou = true || false;</code><br><code>let nao = !true;</code>",
+        respostaEsperada: /(&&|\|\||!)/i
       },
       {
-        titulo: "Nível 4/5",
-        descricao: "Transforme o comando console.log anterior em um comentário.",
-        teoria: "Para comentar um comando em JavaScript, basta adicionar // antes dele ou envolver com /* ... */. Isso faz com que o comando não seja executado.",
-        extra: "Exemplo: <code>// console.log(mensagem)</code> ou <code>/* console.log(mensagem) */</code>",
-        respostaEsperada: /(\/\/\s*console\.log\(.*\)|\/\*\s*console\.log\(.*\)\s*\*\/)/i
+        titulo: "Nível 4/6",
+        descricao: "Observe a precedência dos operadores em uma expressão.",
+        teoria: "A precedência define a ordem de execução dos operadores. Parênteses alteram a ordem. Exemplo: <code>2 + 3 * 4</code> resulta em 14, pois a multiplicação ocorre antes da soma.",
+        extra: "Exemplo:<br><code>let resultado = 2 + 3 * 4;</code><br><code>let resultado2 = (2 + 3) * 4;</code>",
+        respostaEsperada: /\([\s\S]*\)|\d+\s*[\+\-\*\/]\s*\d+\s*[\+\-\*\/]\s*\d+/i
       },
       {
-        titulo: "Nível 5/5",
-        descricao: "Utilize o método alert ou outro método da window para exibir uma mensagem.",
-        teoria: "O objeto window representa a janela do navegador e possui vários métodos úteis, como alert(), prompt(), confirm(), entre outros. O método alert exibe uma caixa de diálogo com uma mensagem para o usuário.",
-        extra: "Exemplo: <code>alert('Olá!')</code> ou <code>window.alert('Bem-vindo!')</code>",
-        respostaEsperada: /(window\s*\.\s*alert\s*\(.*\)|alert\s*\(.*\))/i
+        titulo: "Nível 5/6",
+        descricao: "Realize operações entre strings e números.",
+        teoria: "Ao somar uma string com um número, ocorre concatenação. Para somar valores numéricos, converta ambos para número.",
+        extra: "Exemplo:<br><code>let texto = 'Idade: ' + 20;</code><br><code>let soma = Number('10') + 5;</code>",
+        respostaEsperada: /(['"].*['"]\s*\+\s*\d+|Number\s*\([\s\S]*\)\s*\+\s*\d+)/i
+      },
+      {
+        titulo: "Nível 6/6",
+        descricao: "Monte uma expressão lógica que envolva operadores aritméticos, relacionais e lógicos.",
+        teoria: "Você pode combinar operadores para criar expressões complexas. Exemplo: <code>(2 + 3) > 4 && true</code>.",
+        extra: "Exemplo:<br><code>let exp = (2 + 3) > 4 && true;</code>",
+        respostaEsperada: /\([\s\S]*\)\s*[<>!=]=?\s*\d+\s*(&&|\|\|)\s*(true|false)/i
       }
     ];
 
@@ -161,16 +165,16 @@
         if (docSnap.exists) {
           const data = docSnap.data();
           const xp = data.xp || 0;
-          nivelJsAtual = (data.fasesJS && data.fasesJS.fase1 && Number.isInteger(data.fasesJS.fase1.nivelAtual)) ? data.fasesJS.fase1.nivelAtual : 0;
-          fase1JsJaConcluida = (data.fasesJS && data.fasesJS.fase1 && data.fasesJS.fase1.status === "concluida") || false;
+          nivelJsAtual = (data.fasesJS && data.fasesJS.fase3 && Number.isInteger(data.fasesJS.fase3.nivelAtual)) ? data.fasesJS.fase3.nivelAtual : 0;
+          fase3JaConcluida = (data.fasesJS && data.fasesJS.fase3 && data.fasesJS.fase3.status === "concluida") || false;
           xpTotalSpan.textContent = `XP: ${xp}`;
           atualizarNivel();
-          if (data.fasesJS && data.fasesJS.fase1 && data.fasesJS.fase1.codigoAtual) {
-            entradaCodigo.value = data.fasesJS.fase1.codigoAtual;
-            preview.innerHTML = data.fasesJS.fase1.codigoAtual;
+          if (data.fasesJS && data.fasesJS.fase3 && data.fasesJS.fase3.codigoAtual) {
+            entradaCodigo.value = data.fasesJS.fase3.codigoAtual;
+            preview.innerHTML = data.fasesJS.fase3.codigoAtual;
           }
 
-          if (fase1JsJaConcluida) {
+          if (fase3JaConcluida) {
             alert("⚠️ Você já concluiu esta fase.");
             history.back()
           }
@@ -203,108 +207,10 @@
         atualizarNivel();
       } else {
         document.querySelector('.resultado').innerHTML = `
-      <h2>Parabéns!</h2>
-      <p>Você concluiu a Fase 1 de JavaScript! ${fase1JsJaConcluida ? "Pode refazer, mas não ganhará XP extra." : "+50XP"}</p>
-      <button onclick="concluirFase1()">Concluir a fase</button>
-    `;
-      }
-    }
-
-    function mostrarVisualizacao(nivel, codigo) {
-      if (nivel === 3) {
-        let output = "";
-        const originalConsoleLog = console.log;
-        console.log = function (...args) {
-          output += args.join(" ") + "<br>";
-        };
-        try {
-          eval(codigo);
-        } catch (e) {
-          output += `<span style="color:red;">${e}</span>`;
-        }
-        console.log = originalConsoleLog;
-        preview.innerHTML = output || "Nenhum resultado.";
-      } else if (nivel === 4) {
-        preview.innerHTML = "";
-      } else {
-        preview.innerHTML = "A visualização aparecerá aqui.";
-      }
-    }
-
-    function verificarNivel() {
-      const entrada = entradaCodigo.value;
-      const audio = document.getElementById("audio-sucesso");
-      const resposta = niveis[nivelJsAtual].respostaEsperada;
-      const botao = document.querySelector('.editor-container button');
-
-      if (aguardandoAvanco) {
-        avancarNivel();
-        return;
-      }
-
-      mostrarVisualizacao(nivelJsAtual, entrada);
-
-      if (nivelJsAtual === 2 || nivelJsAtual === 3 || nivelJsAtual === 4) {
-        mostrarConsoleReal();
-        setTimeout(() => {
-          if (window.eruda && eruda._devTools && eruda._devTools._tools.console) {
-            eruda._devTools._tools.console.clear();
-          }
-          try {
-            eval(entrada);
-          } catch (e) {
-            if (window.eruda && eruda._devTools && eruda._devTools._tools.console) {
-              eruda._devTools._tools.console.error(e);
-            }
-          }
-        }, 100);
-      }
-
-      const passou = resposta instanceof RegExp ? resposta.test(entrada) : entrada === resposta;
-
-      if (passou) {
-        if (somAtivo) {
-          audio.play();
-        }
-        if (!fase1JsJaConcluida) {
-          adicionarXP(10);
-        }
-        salvarCodigo(entrada);
-        aguardandoAvanco = true;
-        atualizarBotaoCorreto('correto');
-      } else {
-        atualizarBotaoCorreto('incorreto');
-        alert("Resposta incorreta! Tente novamente.");
-      }
-    }
-
-    function concluirFase1() {
-      const user = auth.currentUser;
-      if (!user) return;
-      const ref = db.collection("usuarios").doc(user.uid);
-
-      if (!fase1JsJaConcluida) {
-        ref.get().then(docSnap => {
-          if (docSnap.exists) {
-            const data = docSnap.data();
-            const fases = data.fasesJS || {};
-
-            fases.fase1 = { status: "concluida" };
-            fases.fase2 = { status: "disponivel" };
-
-            ref.set({
-              fasesJS: fases,
-              xp: firebase.firestore.FieldValue.increment(50)
-            }, { merge: true }).then(() => {
-              fase1JsJaConcluida = true;
-              alert("✅ Fase 1 concluída! Fase 2 desbloqueada.");
-              window.location.href = "../index.html";
-            });
-          }
-        });
-      } else {
-        alert("⚠️ Você já concluiu esta fase. Pode revisar, mas não ganha XP.");
-        window.location.href = "../index.html";
+          <h2>Parabéns!</h2>
+          <p>Você concluiu a Fase 3 de Operadores e Expressões! ${fase3JaConcluida ? "Pode refazer, mas não ganhará XP extra." : "+70XP"}</p>
+          <button onclick="concluirFase3()">Concluir a fase</button>
+        `;
       }
     }
 
@@ -326,10 +232,9 @@
       db.collection("usuarios").doc(auth.currentUser.uid).get().then(docSnap => {
         if (docSnap.exists) {
           const dados = docSnap.data();
-          const codigoAtual = dados && dados.fasesJS && dados.fasesJS.fase1 && dados.fasesJS.fase1.codigoAtual;
+          const codigoAtual = dados && dados.fasesJS && dados.fasesJS.fase3 && dados.fasesJS.fase3.codigoAtual;
           if (codigoAtual) {
             entradaCodigo.value = codigoAtual;
-            // Executa visualização do código salvo ao entrar no nível
             mostrarVisualizacao(nivelJsAtual, codigoAtual);
             return;
           }
@@ -346,6 +251,100 @@
       } else {
         resultado.style.display = 'block';
         preview.innerHTML = "A visualização aparecerá aqui.";
+      }
+    }
+
+    function mostrarVisualizacao(nivel, codigo) {
+      if (nivel === 5) {
+        let output = "";
+        const originalConsoleLog = console.log;
+        console.log = function (...args) {
+          output += args.join(" ") + "<br>";
+        };
+        try {
+          eval(codigo);
+        } catch (e) {
+          output += `<span style="color:red;">${e}</span>`;
+        }
+        console.log = originalConsoleLog;
+        preview.innerHTML = output || "Nenhum resultado.";
+      } else {
+        preview.innerHTML = "A visualização aparecerá aqui.";
+      }
+    }
+
+    function verificarNivel() {
+      const entrada = entradaCodigo.value;
+      const audio = document.getElementById("audio-sucesso");
+      const resposta = niveis[nivelJsAtual].respostaEsperada;
+      const botao = document.querySelector('.editor-container button');
+
+      if (aguardandoAvanco) {
+        avancarNivel();
+        return;
+      }
+
+      mostrarVisualizacao(nivelJsAtual, entrada);
+
+      if (nivelJsAtual >= 0 && nivelJsAtual <= 5) {
+        mostrarConsoleReal();
+        setTimeout(() => {
+          if (window.eruda && eruda._devTools && eruda._devTools._tools.console) {
+            eruda._devTools._tools.console.clear();
+          }
+          try {
+            eval(entrada);
+          } catch (e) {
+            if (window.eruda && eruda._devTools && eruda._devTools._tools.console) {
+              eruda._devTools._tools.console.error(e);
+            }
+          }
+        }, 100);
+      }
+
+      const passou = resposta instanceof RegExp ? resposta.test(entrada) : entrada === resposta;
+
+      if (passou) {
+        if (somAtivo) {
+          audio.play();
+        }
+        if (!fase3JaConcluida) {
+          adicionarXP(12);
+        }
+        salvarCodigo(entrada);
+        aguardandoAvanco = true;
+        atualizarBotaoCorreto('correto');
+      } else {
+        atualizarBotaoCorreto('incorreto');
+        alert("Resposta incorreta! Tente novamente.");
+      }
+    }
+
+    function concluirFase3() {
+      const user = auth.currentUser;
+      if (!user) return;
+      const ref = db.collection("usuarios").doc(user.uid);
+
+      if (!fase3JaConcluida) {
+        ref.get().then(docSnap => {
+          if (docSnap.exists) {
+            const data = docSnap.data();
+            const fases = data.fasesJS || {};
+            fases.fase3 = { status: "concluida" };
+            fases.fase4 = fases.fase4 || { status: "disponivel" };
+            ref.set({
+              fasesJS: fases,
+              xp: firebase.firestore.FieldValue.increment(70)
+            }, { merge: true }).then(() => {
+              fase3JaConcluida = true;
+              alert("✅ Fase 3 concluída! Fase 4 desbloqueada.");
+              window.location.href = "../index.html";
+            });
+          }
+        });
+      } else {
+        alert("⚠️ Você já concluiu esta fase. Pode revisar, mas não ganha XP.");
+        window.location.href = "../index.html";
       }
     }
 
@@ -367,7 +366,7 @@
       const ref = db.collection("usuarios").doc(user.uid);
       ref.set({
         fasesJS: {
-          fase1: {
+          fase3: {
             nivelAtual: nivel
           }
         }
@@ -380,7 +379,7 @@
       const ref = db.collection("usuarios").doc(user.uid);
       ref.set({
         fasesJS: {
-          fase1: {
+          fase3: {
             codigoAtual: codigo
           }
         }
