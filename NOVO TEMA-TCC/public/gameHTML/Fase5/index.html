@@ -5,8 +5,9 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css">
-    <link rel="apple-touch-icon" href="/public/icon_512x512.png">
-    <link rel="icon" type="image/png" href="/public/icon_512x512.png">
+    <link rel="apple-touch-icon" href="./../icon_512x512.png">
+    <link rel="icon" type="image/png" href="./../icon_512x512.png">
+    <link rel="stylesheet" href="../TelaPrincipal/style.css">
     <link rel="stylesheet" href="style.css">
     <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap">
     <title>Proggaming | Fase 5 HTML</title>
@@ -36,7 +37,7 @@
             <hr>
             <span id="xp-total" style="font-family: 'Press Start 2P', cursive; font-weight: 600; color: #c7860e;">XP:
                 0</span>
-            <a href="/public/gameHTML/index.html" style="float: right; margin: 10px;">
+            <a href="../" style="float: right; margin: 10px;">
                 <button class="voltar">
                     <i class='bx bx-arrow-back'></i>
                     <span style="font-size: 12px;">Voltar</span>
@@ -59,7 +60,7 @@
         </div>
     </div>
 
-    <audio id="audio-sucesso" src="/public/Green Screen + Efeito Sonoro (Acerto).mp3"></audio>
+    <audio id="audio-sucesso" src="../Green Screen + Efeito Sonoro (Acerto).mp3"></audio>
 
     <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-app-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-auth-compat.js"></script>
@@ -105,7 +106,6 @@
         const extraTeoria = document.getElementById("extra-teoria");
         const xpSpan = document.getElementById("xp-total");
 
-        // =================== FASE 5: LISTAS ===================
         const niveis = [
             {
                 titulo: "Nível 1/6",
@@ -151,7 +151,6 @@
             }
         ];
 
-        // =================== AUTENTICAÇÃO & PROGRESSO ===================
         auth.onAuthStateChanged(async user => {
             if (user) {
                 userDocRef = db.collection("usuarios").doc(user.uid);
@@ -159,23 +158,21 @@
 
                 if (!doc.exists) {
                     alert("Usuário não encontrado!");
-                    location.href = "/public/gameHTML/index.html";
+                    location.href = "../";
                     return;
                 }
 
                 const data = doc.data();
 
-                // Precisa da fase 4 concluída para liberar
                 if (!data.fasesHTML || data.fasesHTML.fase4?.status !== "concluida") {
                     alert("Você precisa concluir a Fase 4 antes!");
-                    location.href = "/public/gameHTML/index.html";
+                    location.href = "../";
                     return;
                 }
 
-                // Se fase 5 já concluída
                 if (data.fasesHTML?.fase5?.status === "concluida") {
                     alert("⚠️ Você já concluiu esta fase.");
-                    window.location.href = "/public/gameHTML/index.html";
+                    window.location.href = "../";
                     return;
                 }
 
@@ -201,7 +198,7 @@
                     });
                 });
             } else {
-                location.href = "/public/login.html";
+                location.href = "./../";
             }
         });
 
@@ -259,10 +256,10 @@
                 });
 
                 document.querySelector(".resultado").innerHTML = `
-        <h2>Parabéns!</h2>
-        <p>Você concluiu a Fase 5 de HTML! +60XP</p>
-        <button onclick="location.href='/public/gameHTML/index.html'">Concluir a fase</button>
-    `;
+                    <h2>Parabéns!</h2>
+                    <p>Você concluiu a Fase 5 de HTML! +60XP</p>
+                    <button onclick="location.href='../'">Concluir a fase</button>
+                `;
             } catch (e) {
                 console.error("Erro ao salvar fase 5:", e);
                 alert("Erro ao salvar progresso. Tente novamente!");
