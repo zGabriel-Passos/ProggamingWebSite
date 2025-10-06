@@ -113,28 +113,28 @@
       {
         titulo: "Nível 1/6",
         descricao: "Declare uma variável com var, outra com let e outra com const.",
-        teoria: "<code>var</code> foi a forma original de declarar variáveis em JS e tem escopo de função (vaza de blocos). <code>let</code> tem escopo de bloco e é a escolha moderna para valores que mudam. <code>const</code> também tem escopo de bloco e impede reatribuição do identificador (o conteúdo de objetos/arrays ainda pode ser mutado). Prefira <code>let</code> e <code>const</code> no dia a dia.",
-        extra: "Exemplo: <code>var a = 1;</code> <code>let b = 2;</code> <code>const c = 3;</code>",
+        teoria: "var</code> foi a forma original de declarar variáveis em JS e tem escopo de função (vaza de blocos). let tem escopo de bloco e é a escolha moderna para valores que mudam. const também tem escopo de bloco e impede reatribuição do identificador (o conteúdo de objetos/arrays ainda pode ser mutado). Prefira let e const no dia a dia.",
+        extra: "Exemplo: <code>var a = 1; let b = 2; const c = 3;</code>",
         respostaEsperada: /(?=[\s\S]*\bvar\s+\w+\s*=)(?=[\s\S]*\blet\s+\w+\s*=)(?=[\s\S]*\bconst\s+\w+\s*=)[\s\S]*/i,
       },
       {
         titulo: "Nível 2/6",
         descricao: "Crie uma string, um number e um boolean.",
-        teoria: "Os principais tipos primitivos são: <code>string</code> (texto entre aspas), <code>number</code> (inteiros e decimais sem distinção) e <code>boolean</code> (<code>true</code>/<code>false</code>). Saber escolher o tipo correto evita bugs e facilita validações.",
-        extra: "Ex.: <code>let s = 'texto'</code>, <code>let n = 10</code>, <code>let b = true</code>.",
+        teoria: "Os principais tipos primitivos são: string (texto entre aspas), number (inteiros e decimais sem distinção) e boolean (true/false). Saber escolher o tipo correto evita bugs e facilita validações.",
+        extra: "Ex.: <code>let s = 'texto'; let n = 10; let b = true;</code>",
         respostaEsperada: /(?=[\s\S]*(let|var|const)\s+\w+\s*=\s*['\"]).*(?=[\s\S]*(let|var|const)\s+\w+\s*=\s*\d).*(?=[\s\S]*(let|var|const)\s+\w+\s*=\s*(true|false))[\s\S]*/i
       },
       {
         titulo: "Nível 3/6",
         descricao: "Converta um valor com Number() e outro com String().",
-        teoria: "Conversões explícitas tornam seu código previsível: <code>Number(x)</code> tenta transformar <code>x</code> em número (retorna <code>NaN</code> se falhar). <code>String(x)</code> converte qualquer valor em texto. Evite confiar em coerção implícita (ex.: <code>==</code>) para não gerar surpresas.",
-        extra: "Ex.: <code>let n = Number('42')</code> e <code>let s = String(42)</code>.",
+        teoria: "Conversões explícitas tornam seu código previsível: Number(x) tenta transformar x em número (retorna NaN se falhar). String(x) converte qualquer valor em texto. Evite confiar em coerção implícita (ex.: == para não gerar surpresas.",
+        extra: "Ex.: <code>let n = Number('42')</code><code>let s = String(42)</code>",
         respostaEsperada: /(?=[\s\S]*\bNumber\s*\()[\s\S]*\bString\s*\([\s\S]*/i
       },
       {
         titulo: "Nível 4/6",
         descricao: "Faça uma frase juntando textos com + (concatenação).",
-        teoria: "Para juntar textos, use o operador <code>+</code> ou métodos como <code>concat()</code>. Atenção: quando um operando é string e o outro é number, o <code>+</code> faz concatenação, não soma. Garanta o tipo correto antes de operar.",
+        teoria: "Para juntar textos, use o operador + ou métodos como concat(). Atenção: quando um operando é string e o outro é number, o + faz concatenação, não soma. Garanta o tipo correto antes de operar.",
         extra: "Ex.: <code>let frase = 'Olá, ' + nome;</code>",
         respostaEsperada: /(?=[\s\S]*\+)(?=[\s\S]*['\"][^'\"]+['\"])[\s\S]*/i
       },
@@ -222,13 +222,14 @@
       document.getElementById("descricao-nivel").textContent = nivel.descricao;
       document.getElementById("texto-teoria").textContent = nivel.teoria;
 
-      // Exibe exemplos com quebra de linha correta (não antes da vírgula)
       let extra = nivel.extra;
       if (extra) {
+        extra = extra.replace(/<code>([\s\S]*?)<\/code>/g, function (match, p1) {
+          return '<code>' + p1.replace(/\s*<br>\s*/g, '').replace(/\n/g, '') + '</code>';
+        });
         extra = extra.replace(/<\/code>\s*/g, '</code><br>');
         extra = extra.replace(/;\s*/g, ';<br>');
-        // Não quebra antes da vírgula
-        extra = extra.replace(/(<br>\s*)+/g, '<br>');
+        extra = extra.replace(/(<br>\s*){2,}/g, '<br>');
       }
       extraTeoria.innerHTML = extra;
 
@@ -236,7 +237,7 @@
         if (docSnap.exists) {
           const dados = docSnap.data();
           const codigoAtual = dados && dados.fasesJS && dados.fasesJS.fase2 && dados.fasesJS.fase2.codigoAtual;
-          if (codigoAtual) {
+          if (codigoAtual !== undefined && codigoAtual !== null) {
             entradaCodigo.value = codigoAtual;
             mostrarVisualizacao(nivelJsAtual, codigoAtual);
             return;
@@ -253,7 +254,6 @@
         resultado.style.display = 'none';
       } else {
         resultado.style.display = 'block';
-        preview.innerHTML = "A visualização aparecerá aqui.";
       }
     }
 

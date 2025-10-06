@@ -327,9 +327,8 @@
         if (docSnap.exists) {
           const dados = docSnap.data();
           const codigoAtual = dados && dados.fasesJS && dados.fasesJS.fase1 && dados.fasesJS.fase1.codigoAtual;
-          if (codigoAtual) {
+          if (codigoAtual !== undefined && codigoAtual !== null) {
             entradaCodigo.value = codigoAtual;
-            // Executa visualização do código salvo ao entrar no nível
             mostrarVisualizacao(nivelJsAtual, codigoAtual);
             return;
           }
@@ -345,7 +344,6 @@
         resultado.style.display = 'none';
       } else {
         resultado.style.display = 'block';
-        preview.innerHTML = "A visualização aparecerá aqui.";
       }
     }
 
