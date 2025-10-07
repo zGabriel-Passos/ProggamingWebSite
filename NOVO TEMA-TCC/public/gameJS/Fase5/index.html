@@ -113,42 +113,48 @@
         titulo: "Nível 1/6",
         descricao: "Utilize a estrutura for para repetir ações.",
         teoria: "O for permite repetir um bloco de código um número definido de vezes.",
-        extra: "Exemplo:<br><code>for (let i = 0; i < 5; i++) {<br>&nbsp;console.log(i);<br>}</code>",
+        extra: "Exemplo:<br><code>for (let i = 0; i < 5; i++) {<br>console.log(i);<br>}</code>",
+        codigoInicial: "",
         respostaEsperada: /for\s*\([\s\S]*;[\s\S]*;[\s\S]*\)\s*\{[\s\S]*\}/i
       },
       {
         titulo: "Nível 2/6",
         descricao: "Utilize while e do...while para repetir enquanto uma condição for verdadeira.",
         teoria: "O while repete enquanto a condição for verdadeira. O do...while garante pelo menos uma execução.",
-        extra: "Exemplo:<br><code>let i = 0;<br>while (i < 3) {<br>&nbsp;console.log(i);<br>&nbsp;i++;<br>}<br>do {<br>&nbsp;console.log(i);<br>&nbsp;i++;<br>} while (i < 5);</code>",
+        extra: "Exemplo:<br><code>let i = 0;<br>while (i < 3) {<br>console.log(i);<br>i++;<br>}<br>do {<br>console.log(i);<br>i++;<br>} while (i < 5);</code>",
+        codigoInicial: "",
         respostaEsperada: /(while\s*\([\s\S]*\)\s*\{[\s\S]*\}|do\s*\{[\s\S]*\}\s*while\s*\([\s\S]*\);)/i
       },
       {
         titulo: "Nível 3/6",
         descricao: "Faça uma contagem crescente e decrescente usando laços.",
         teoria: "Você pode controlar o valor da variável de controle para contar para cima ou para baixo.",
-        extra: "Exemplo:<br><code>for (let i = 1; i <= 5; i++) {<br>&nbsp;console.log(i);<br>}<br>for (let i = 5; i >= 1; i--) {<br>&nbsp;console.log(i);<br>}</code>",
+        extra: "Exemplo:<br><code>for (let i = 1; i <= 5; i++) {<br>console.log(i);<br>}<br>for (let i = 5; i >= 1; i--) {<br>console.log(i);<br>}</code>",
+        codigoInicial: "",
         respostaEsperada: /(for\s*\([\s\S]*;\s*i\s*(<=|>=)\s*\d+;[\s\S]*\)\s*\{[\s\S]*\})/i
       },
       {
         titulo: "Nível 4/6",
         descricao: "Interrompa ou pule uma repetição usando break ou continue.",
         teoria: "O break encerra o laço. O continue pula para a próxima iteração.",
-        extra: "Exemplo:<br><code>for (let i = 0; i < 5; i++) {<br>&nbsp;if (i === 2) break;<br>&nbsp;console.log(i);<br>}<br>for (let i = 0; i < 5; i++) {<br>&nbsp;if (i === 2) continue;<br>&nbsp;console.log(i);<br>}</code>",
+        extra: "Exemplo:<br><code>for (let i = 0; i < 5; i++) {<br>if (i === 2) break;<br>console.log(i);<br>}<br>for (let i = 0; i < 5; i++) {<br>if (i === 2) continue;<br>console.log(i);<br>}</code>",
+        codigoInicial: "",
         respostaEsperada: /(break|continue)/i
       },
       {
         titulo: "Nível 5/6",
         descricao: "Utilize loops aninhados para criar padrões.",
         teoria: "Um laço dentro de outro permite criar estruturas como tabelas ou padrões.",
-        extra: "Exemplo:<br><code>for (let i = 1; i <= 3; i++) {<br>&nbsp;for (let j = 1; j <= 3; j++) {<br>&nbsp;&nbsp;console.log(i, j);<br>&nbsp;}<br>}</code>",
+        extra: "Exemplo:<br><code>for (let i = 1; i <= 3; i++) {<br>for (let j = 1; j <= 3; j++) {<br>console.log(i, j);<br>}<br>}</code>",
+        codigoInicial: "",
         respostaEsperada: /for\s*\([\s\S]*\)\s*\{[\s\S]*for\s*\([\s\S]*\)\s*\{[\s\S]*\}/i
       },
       {
         titulo: "Nível 6/6",
         descricao: "Atividade: gere a tabuada de um número usando for.",
         teoria: "Use o for para multiplicar um número por valores de 1 a 10 e mostrar o resultado.",
-        extra: "Exemplo:<br><code>let n = 5;<br>for (let i = 1; i <= 10; i++) {<br>&nbsp;console.log(n + ' x ' + i + ' = ' + (n * i));<br>}</code>",
+        extra: "Exemplo:<br><code>let n = 5;<br>for (let i = 1; i <= 10; i++) {<br>console.log(n + ' x ' + i + ' = ' + (n * i));<br>}</code>",
+        codigoInicial: "",
         respostaEsperada: /for\s*\([\s\S]*i\s*<=\s*10;[\s\S]*\)\s*\{[\s\S]*n\s*\*\s*i[\s\S]*\}/i
       }
     ];

@@ -117,6 +117,7 @@
         descricao: "JavaScript é uma linguagem de programação essencial e a mais popular para o desenvolvimento web, responsável por adicionar interatividade e dinamismo a páginas web, como mapas interativos, animações e atualizações de conteúdo em tempo real. Ele é uma das três tecnologias fundamentais da web, juntamente com HTML (estrutura) e CSS (estilo)",
         teoria: "",
         extra: "",
+        codigoInicial: "",
         respostaEsperada: "",
       },
       {
@@ -124,13 +125,15 @@
         descricao: "Declare uma variável chamada 'mensagem' e atribua a ela o valor 'Olá, mundo!'.",
         teoria: "Para armazenar dados com Javascript, ultilizamos uma estrutura chamada variável. Para declararmos uma variavel que tem como valor um texto, ultlizamos a declaração let nomeDaVariavel = 'valor';<br> No exemplo, 'let' é a palavra reservada que indica que estamos declarando uma variável, 'nomeDaVariavel' é o nome que escolhemos para a variável (que deve seguir certas regras, como não começar com números ou usar espaços) e 'valor' é o conteúdo que estamos atribuindo à variável, que no caso é um texto (string) e por isso está entre aspas simples.",
         extra: "Exemplo: let texto = 'Olá, mundo!';",
+        codigoInicial: "",
         respostaEsperada: /let\s+mensagem\s*=\s*'Olá, mundo!'\s*;?\s*/i
       },
       {
         titulo: "Nível 3/5",
-        descricao: "Crie uma variavel chamada mensagem e use o metodo console.log para imprimir-lá",
+        descricao: "Use o metodo console.log para imprimir a variável mensagem",
         teoria: "O método console.log() é usado para exibir mensagens no console do navegador, o que é útil para depuração e verificação de valores durante o desenvolvimento. Para imprimir o valor de uma variável, você simplesmente passa o nome da variável como argumento para console.log(). Por exemplo, se você tem uma variável chamada mensagem, você pode exibir seu valor no console com console.log(mensagem);",
         extra: "Exemplo: console.log(mensagem)",
+        codigoInicial: "let mensagem = 'Olá, Mundo!'",
         respostaEsperada: /let\s+\w+\s*=\s*'.*';?\s*console\.log\(\s*\w+\s*\);?/i
       },
       {
@@ -138,6 +141,7 @@
         descricao: "Transforme o comando console.log anterior em um comentário.",
         teoria: "Para comentar um comando em JavaScript, basta adicionar // antes dele ou envolver com /* ... */. Isso faz com que o comando não seja executado.",
         extra: "Exemplo: // console.log(mensagem) ou /* console.log(mensagem) */",
+        codigoInicial: "let mensagem = 'Olá, Mundo!'<br>console.log(mensagem)",
         respostaEsperada: /(\/\/\s*console\.log\(.*\)|\/\*\s*console\.log\(.*\)\s*\*\/)/i
       },
       {
@@ -145,6 +149,7 @@
         descricao: "Utilize o método alert ou outro método da window para exibir uma mensagem.",
         teoria: "O objeto window representa a janela do navegador e possui vários métodos úteis, como alert(), prompt(), confirm(), entre outros. O método alert exibe uma caixa de diálogo com uma mensagem para o usuário.",
         extra: "Exemplo: alert('Olá!') ou window.alert('Bem-vindo!')",
+        codigoInicial: "",
         respostaEsperada: /(window\s*\.\s*alert\s*\(.*\)|alert\s*\(.*\))/i
       }
     ];

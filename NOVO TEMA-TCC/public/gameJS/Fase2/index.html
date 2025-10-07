@@ -115,6 +115,7 @@
         descricao: "Declare uma variável com var, outra com let e outra com const.",
         teoria: "var foi a forma original de declarar variáveis em JS e tem escopo de função (vaza de blocos). let tem escopo de bloco e é a escolha moderna para valores que mudam. const também tem escopo de bloco e impede reatribuição do identificador (o conteúdo de objetos/arrays ainda pode ser mutado). Prefira let e const no dia a dia.",
         extra: "Exemplo: var a = 1; let b = 2; const c = 3;",
+        codigoInicial: "",
         respostaEsperada: /(?=[\s\S]*\bvar\s+\w+\s*=)(?=[\s\S]*\blet\s+\w+\s*=)(?=[\s\S]*\bconst\s+\w+\s*=)[\s\S]*/i,
       },
       {
@@ -122,6 +123,7 @@
         descricao: "Crie uma string, um number e um boolean.",
         teoria: "Os principais tipos primitivos são: string (texto entre aspas), number (inteiros e decimais sem distinção) e boolean (true/false). Saber escolher o tipo correto evita bugs e facilita validações.",
         extra: "Ex.: let s = 'texto'; let n = 10; let b = true;",
+        codigoInicial: "",
         respostaEsperada: /(?=[\s\S]*(let|var|const)\s+\w+\s*=\s*['\"]).*(?=[\s\S]*(let|var|const)\s+\w+\s*=\s*\d).*(?=[\s\S]*(let|var|const)\s+\w+\s*=\s*(true|false))[\s\S]*/i
       },
       {
@@ -129,6 +131,7 @@
         descricao: "Converta um valor com Number() e outro com String().",
         teoria: "Conversões explícitas tornam seu código previsível: Number(x) tenta transformar x em número (retorna NaN se falhar). String(x) converte qualquer valor em texto. Evite confiar em coerção implícita (ex.: == para não gerar surpresas.",
         extra: "Ex.: let n = Number('42')<br>let s = String(42)",
+        codigoInicial: "",
         respostaEsperada: /(?=[\s\S]*\bNumber\s*\()[\s\S]*\bString\s*\([\s\S]*/i
       },
       {
@@ -136,6 +139,7 @@
         descricao: "Faça uma frase juntando textos com + (concatenação).",
         teoria: "Para juntar textos, use o operador + ou métodos como concat(). Atenção: quando um operando é string e o outro é number, o + faz concatenação, não soma. Garanta o tipo correto antes de operar.",
         extra: "Ex.: let frase = 'Olá, ' + nome;",
+        codigoInicial: "",
         respostaEsperada: /(?=[\s\S]*\+)(?=[\s\S]*['\"][^'\"]+['\"])[\s\S]*/i
       },
       {
@@ -143,6 +147,7 @@
         descricao: "Use template literals (crase) e ${} para interpolar.",
         teoria: "Template literals (entre crases) facilitam interpolar variáveis com ${} e quebrar linhas sem escapes. São ideais para montar mensagens legíveis e reduzir erros de concatenação.",
         extra: "Ex.: let msg = `Olá, ${nome}!`",
+        codigoInicial: "",
         respostaEsperada: /`[\s\S]*`/i
       }
     ];
