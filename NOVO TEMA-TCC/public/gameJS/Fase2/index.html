@@ -32,7 +32,7 @@
       </div>
       <p id="texto-teoria"></p>
       <div id="extra-teoria" style="margin-top:10px; font-weight: 600; font-size:14px; color:#ddd;"></div>
-      <h2 id="titulo-nivel">Nível 1/6</h2>
+      <h2 id="titulo-nivel">Nível 1/5</h2>
       <p id="descricao-nivel">Nesta fase você vai criar variáveis, trabalhar com tipos de dados e
         montar frases usando concatenação e template literals.</p>
       <hr>
@@ -111,46 +111,39 @@
 
     const niveis = [
       {
-        titulo: "Nível 1/6",
+        titulo: "Nível 1/5",
         descricao: "Declare uma variável com var, outra com let e outra com const.",
-        teoria: "var</code> foi a forma original de declarar variáveis em JS e tem escopo de função (vaza de blocos). let tem escopo de bloco e é a escolha moderna para valores que mudam. const também tem escopo de bloco e impede reatribuição do identificador (o conteúdo de objetos/arrays ainda pode ser mutado). Prefira let e const no dia a dia.",
-        extra: "Exemplo: <code>var a = 1; let b = 2; const c = 3;</code>",
+        teoria: "var foi a forma original de declarar variáveis em JS e tem escopo de função (vaza de blocos). let tem escopo de bloco e é a escolha moderna para valores que mudam. const também tem escopo de bloco e impede reatribuição do identificador (o conteúdo de objetos/arrays ainda pode ser mutado). Prefira let e const no dia a dia.",
+        extra: "Exemplo: var a = 1; let b = 2; const c = 3;",
         respostaEsperada: /(?=[\s\S]*\bvar\s+\w+\s*=)(?=[\s\S]*\blet\s+\w+\s*=)(?=[\s\S]*\bconst\s+\w+\s*=)[\s\S]*/i,
       },
       {
-        titulo: "Nível 2/6",
+        titulo: "Nível 2/5",
         descricao: "Crie uma string, um number e um boolean.",
         teoria: "Os principais tipos primitivos são: string (texto entre aspas), number (inteiros e decimais sem distinção) e boolean (true/false). Saber escolher o tipo correto evita bugs e facilita validações.",
-        extra: "Ex.: <code>let s = 'texto'; let n = 10; let b = true;</code>",
+        extra: "Ex.: let s = 'texto'; let n = 10; let b = true;",
         respostaEsperada: /(?=[\s\S]*(let|var|const)\s+\w+\s*=\s*['\"]).*(?=[\s\S]*(let|var|const)\s+\w+\s*=\s*\d).*(?=[\s\S]*(let|var|const)\s+\w+\s*=\s*(true|false))[\s\S]*/i
       },
       {
-        titulo: "Nível 3/6",
+        titulo: "Nível 3/5",
         descricao: "Converta um valor com Number() e outro com String().",
         teoria: "Conversões explícitas tornam seu código previsível: Number(x) tenta transformar x em número (retorna NaN se falhar). String(x) converte qualquer valor em texto. Evite confiar em coerção implícita (ex.: == para não gerar surpresas.",
-        extra: "Ex.: <code>let n = Number('42')</code><code>let s = String(42)</code>",
+        extra: "Ex.: let n = Number('42')<br>let s = String(42)",
         respostaEsperada: /(?=[\s\S]*\bNumber\s*\()[\s\S]*\bString\s*\([\s\S]*/i
       },
       {
-        titulo: "Nível 4/6",
+        titulo: "Nível 4/5",
         descricao: "Faça uma frase juntando textos com + (concatenação).",
         teoria: "Para juntar textos, use o operador + ou métodos como concat(). Atenção: quando um operando é string e o outro é number, o + faz concatenação, não soma. Garanta o tipo correto antes de operar.",
-        extra: "Ex.: <code>let frase = 'Olá, ' + nome;</code>",
+        extra: "Ex.: let frase = 'Olá, ' + nome;",
         respostaEsperada: /(?=[\s\S]*\+)(?=[\s\S]*['\"][^'\"]+['\"])[\s\S]*/i
       },
       {
-        titulo: "Nível 5/6",
+        titulo: "Nível 5/5",
         descricao: "Use template literals (crase) e ${} para interpolar.",
-        teoria: "Template literals (entre crases) facilitam interpolar variáveis com <code>${}</code> e quebrar linhas sem escapes. São ideais para montar mensagens legíveis e reduzir erros de concatenação.",
-        extra: "Ex.: <code>let msg = `Olá, ${nome}!`</code>",
+        teoria: "Template literals (entre crases) facilitam interpolar variáveis com ${} e quebrar linhas sem escapes. São ideais para montar mensagens legíveis e reduzir erros de concatenação.",
+        extra: "Ex.: let msg = `Olá, ${nome}!`",
         respostaEsperada: /`[\s\S]*`/i
-      },
-      {
-        titulo: "Nível 6/6",
-        descricao: "Monte um mini formulário lógico e imprima uma frase com os dados.",
-        teoria: "Simule entradas do usuário criando variáveis (ex.: <code>nome</code>, <code>idade</code>) e gere uma frase final. Use <code>Number()</code> quando precisar tratar números e prefira template literals para clareza.",
-        extra: "Ex.: <code>let nome = 'Ana', idade = 20; console.log(`Me chamo ${nome} e tenho ${idade}`)</code>",
-        respostaEsperada: /(?=[\s\S]*(let|var|const)\s+nome\s*=)(?=[\s\S]*(let|var|const)\s+idade\s*=)(?=[\s\S]*console\.log)[\s\S]*/i
       }
     ];
 
@@ -209,8 +202,8 @@
       } else {
         document.querySelector('.resultado').innerHTML = `
       <h2>Parabéns!</h2>
-      <p>Você concluiu a Fase 2 de JavaScript! ${fase2JaConcluida ? "Pode refazer, mas não ganhará XP extra." : "+60XP"}</p>
-      <button onclick="concluirFase2()">Concluir a fase</button>
+      <p>Você concluiu a Fase 2 de JavaScript! ${fase2JaConcluida ? "Pode refazer, mas não ganhará XP extra." : "+50XP"}</p>
+      <button onclick="concluirFase()">Concluir a fase</button>
     `;
       }
     }
@@ -224,10 +217,6 @@
 
       let extra = nivel.extra;
       if (extra) {
-        extra = extra.replace(/<code>([\s\S]*?)<\/code>/g, function (match, p1) {
-          return '<code>' + p1.replace(/\s*<br>\s*/g, '').replace(/\n/g, '') + '</code>';
-        });
-        extra = extra.replace(/<\/code>\s*/g, '</code><br>');
         extra = extra.replace(/;\s*/g, ';<br>');
         extra = extra.replace(/(<br>\s*){2,}/g, '<br>');
       }
@@ -258,7 +247,7 @@
     }
 
     function mostrarVisualizacao(nivel, codigo) {
-      if (nivel === 5) {
+      if (nivel === 4) {
         let output = "";
         const originalConsoleLog = console.log;
         console.log = function (...args) {
@@ -340,7 +329,7 @@
 
             ref.set({
               fasesJS: fases,
-              xp: firebase.firestore.FieldValue.increment(60)
+              xp: firebase.firestore.FieldValue.increment(50)
             }, { merge: true }).then(() => {
               fase2JaConcluida = true;
               alert("✅ Fase 2 concluída! Fase 3 desbloqueada.");

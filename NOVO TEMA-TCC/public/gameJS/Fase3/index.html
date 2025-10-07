@@ -112,43 +112,43 @@
       {
         titulo: "Nível 1/6",
         descricao: "Utilize operadores aritméticos (+, -, *, /, %) para realizar cálculos.",
-        teoria: "Operadores aritméticos permitem realizar operações matemáticas básicas. Exemplo: <code>+</code> soma, <code>-</code> subtrai, <code>*</code> multiplica, <code>/</code> divide, <code>%</code> retorna o resto da divisão.",
-        extra: "Exemplo:<br><code>let soma = 2 + 3;</code><br><code>let resto = 10 % 3;</code>",
+        teoria: "Operadores aritméticos permitem realizar operações matemáticas básicas. Exemplo: + soma, - subtrai, * multiplica, / divide, % retorna o resto da divisão.",
+        extra: "Exemplo:<br>let soma = 2 + 3;<br>let resto = 10 % 3;",
         respostaEsperada: /(\d+\s*[\+\-\*\/%]\s*\d+)/i
       },
       {
         titulo: "Nível 2/6",
         descricao: "Utilize operadores relacionais (==, ===, !=, <, >) para comparar valores.",
-        teoria: "Operadores relacionais comparam valores e retornam verdadeiro ou falso. <code>==</code> compara valor, <code>===</code> compara valor e tipo, <code>!=</code> diferente, <code><</code> menor, <code>></code> maior.",
-        extra: "Exemplo:<br><code>let igual = 5 == '5';</code><br><code>let estrito = 5 === '5';</code><br><code>let menor = 3 < 5;</code>",
+        teoria: "Operadores relacionais comparam valores e retornam verdadeiro ou falso. == compara valor, === compara valor e tipo, != diferente, < menor, > maior.",
+        extra: "Exemplo:<br>let igual = 5 == '5';<br>let estrito = 5 === '5';<br>let menor = 3 < 5;",
         respostaEsperada: /(==|===|!=|<|>)/i
       },
       {
         titulo: "Nível 3/6",
         descricao: "Utilize operadores lógicos (&&, ||, !) para combinar expressões.",
-        teoria: "Operadores lógicos permitem combinar condições. <code>&&</code> (E), <code>||</code> (OU), <code>!</code> (NÃO).",
-        extra: "Exemplo:<br><code>let cond = true && false;</code><br><code>let ou = true || false;</code><br><code>let nao = !true;</code>",
+        teoria: "Operadores lógicos permitem combinar condições. && (E), || (OU), ! (NÃO).",
+        extra: "Exemplo:<br>let cond = true && false;<br>let ou = true || false;<br>let nao = !true;",
         respostaEsperada: /(&&|\|\||!)/i
       },
       {
         titulo: "Nível 4/6",
         descricao: "Observe a precedência dos operadores em uma expressão.",
-        teoria: "A precedência define a ordem de execução dos operadores. Parênteses alteram a ordem. Exemplo: <code>2 + 3 * 4</code> resulta em 14, pois a multiplicação ocorre antes da soma.",
-        extra: "Exemplo:<br><code>let resultado = 2 + 3 * 4;</code><br><code>let resultado2 = (2 + 3) * 4;</code>",
+        teoria: "A precedência define a ordem de execução dos operadores. Parênteses alteram a ordem. Exemplo: 2 + 3 * 4 resulta em 14, pois a multiplicação ocorre antes da soma.",
+        extra: "Exemplo:<br>let resultado = 2 + 3 * 4;<br>let resultado2 = (2 + 3) * 4;",
         respostaEsperada: /\([\s\S]*\)|\d+\s*[\+\-\*\/]\s*\d+\s*[\+\-\*\/]\s*\d+/i
       },
       {
         titulo: "Nível 5/6",
         descricao: "Realize operações entre strings e números.",
         teoria: "Ao somar uma string com um número, ocorre concatenação. Para somar valores numéricos, converta ambos para número.",
-        extra: "Exemplo:<br><code>let texto = 'Idade: ' + 20;</code><br><code>let soma = Number('10') + 5;</code>",
+        extra: "Exemplo:<br>let texto = 'Idade: ' + 20;<br>let soma = Number('10') + 5;",
         respostaEsperada: /(['"].*['"]\s*\+\s*\d+|Number\s*\([\s\S]*\)\s*\+\s*\d+)/i
       },
       {
         titulo: "Nível 6/6",
         descricao: "Monte uma expressão lógica que envolva operadores aritméticos, relacionais e lógicos.",
-        teoria: "Você pode combinar operadores para criar expressões complexas. Exemplo: <code>(2 + 3) > 4 && true</code>.",
-        extra: "Exemplo:<br><code>let exp = (2 + 3) > 4 && true;</code>",
+        teoria: "Você pode combinar operadores para criar expressões complexas. Exemplo: (2 + 3) > 4 && true.",
+        extra: "Exemplo:<br>let exp = (2 + 3) > 4 && true;",
         respostaEsperada: /\([\s\S]*\)\s*[<>!=]=?\s*\d+\s*(&&|\|\|)\s*(true|false)/i
       }
     ];
