@@ -127,7 +127,6 @@ async function pesquisar() {
     }
 }
 
-// Ações
 async function enviarSolicitacao(destUid) {
     if (destUid === me.uid) return;
     const parentEl = document.querySelector(`.item[data-uid="${destUid}"]`);
@@ -191,7 +190,6 @@ async function excluirAmigo(friendUid) {
     if (parentEl) parentEl.classList.remove('sending');
 }
 
-// Delegação de eventos
 solicitacoesDiv.addEventListener('click', async (e) => {
     const btn = e.target.closest('button');
     if (!btn) return;
@@ -228,7 +226,6 @@ amigosDiv.addEventListener('click', async (e) => {
     }
 });
 
-// Pesquisa
 btnPesquisar.addEventListener('click', pesquisar);
 input.addEventListener('keydown', (e) => { if (e.key === 'Enter') pesquisar(); });
 
@@ -242,7 +239,6 @@ onAuthStateChanged(auth, async (user) => {
         if (!snap.exists()) {
             await updateDoc(userRef(user.uid), {
                 apelido: user.email.split('@')[0],
-                email: user.email,
                 avatarUrl: '../assets/avatars/avatar.jpg',
                 xp: 0
             });
