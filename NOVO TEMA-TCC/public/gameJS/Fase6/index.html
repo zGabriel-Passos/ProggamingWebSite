@@ -10,7 +10,7 @@
   <link rel="stylesheet" href="../TelaPrincipal/style.css">
   <link rel="stylesheet" href="style.css">
   <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap">
-  <title>Proggaming | Fase 2 - JavaScript</title>
+  <title>Proggaming | Fase 6 - Vetores</title>
 </head>
 
 <body>
@@ -27,14 +27,14 @@
   <div class="container-nivel">
     <div class="bloco-teoria">
       <div style="display: flex; flex-direction: row; align-items: center; justify-content: space-between;">
-        <h3>Teoria - Fase 2</h3>
+        <h3>Teoria - Fase 6</h3>
         <button class="botao-som" id="botao-som" onclick="toggleSom()">🔊</button>
       </div>
       <p id="texto-teoria"></p>
       <div id="extra-teoria" style="margin-top:10px; font-weight: 600; font-size:14px; color:#ddd;"></div>
-      <h2 id="titulo-nivel">Nível 1/5</h2>
-      <p id="descricao-nivel">Nesta fase você vai criar variáveis, trabalhar com tipos de dados e
-        montar frases usando concatenação e template literals.</p>
+      <h2 id="titulo-nivel">Nível 1/7</h2>
+      <p id="descricao-nivel">Sessão 6 – Vetores (Arrays)<br>Tema: criação, acesso, modificação e iteração de arrays.
+      </p>
       <hr>
       <div style="margin: 10px 0px 10px 0px;">
         <span id="xp-total" style="font-family: 'Press Start 2P', cursive; font-weight: 600; color: #c7860e;">XP:
@@ -101,7 +101,7 @@
     const db = firebase.firestore();
 
     let nivelJsAtual = 0;
-    let fase2JaConcluida = false;
+    let fase6JaConcluida = false;
 
     const entradaCodigo = document.getElementById("entrada-codigo");
     const preview = document.getElementById("preview");
@@ -112,60 +112,60 @@
     const niveis = [
       {
         titulo: "Nível 1/7",
-        descricao: "Crie um vetor",
-        teoria: "Um vetor ou Array é uma estrutura de dados que armazena uma coleção de valores em uma única variável, organizados como uma lista. Cada elemento possui um índice numérico (começando em 0) para acesso, e os Arrays podem conter diferentes tipos de dados, como números, strings e objetos. Eles são criados usando colchetes []",
-        extra: "Exemplo: let vetor = ['valor1', 'valor2', 10, true]",
+        descricao: "Crie um vetor (array) com pelo menos 3 itens.",
+        teoria: "Arrays são listas ordenadas de valores. Você cria com colchetes: []. Cada item é acessado por índice começando em 0.",
+        extra: "Ex.: let numeros = [1, 2, 3]",
         codigoInicial: "",
-        respostaEsperada: /\b(?:let|const|var)\s+\w+\s*=\s*\[.*\]/i
+        respostaEsperada: /\b(?:let|const|var)\s+\w+\s*=\s*\[[\s\S]*?,[\s\S]*?,[\s\S]*?\]/i
       },
       {
         titulo: "Nível 2/7",
-        descricao: "Modifique um item de um vetor",
-        teoria: "Os principais tipos primitivos são: string (texto entre aspas), number (inteiros e decimais sem distinção) e boolean (true/false). Saber escolher o tipo correto evita bugs e facilita validações.",
-        extra: "Ex.: let s = 'texto'; let n = 10; let b = true;",
+        descricao: "Modifique um item do vetor via índice (arr[0] = ...).",
+        teoria: "Use arr[indice] para ler/escrever posições. Lembre que o primeiro elemento está no índice 0.",
+        extra: "Ex.: nomes[1] = 'Ana'",
         codigoInicial: "",
-        respostaEsperada: /(?=[\s\S]*(let|var|const)\s+\w+\s*=\s*['\"]).*(?=[\s\S]*(let|var|const)\s+\w+\s*=\s*\d).*(?=[\s\S]*(let|var|const)\s+\w+\s*=\s*(true|false))[\s\S]*/i
+        respostaEsperada: /\w+\s*\[\s*\d+\s*\]\s*=\s*[\s\S]+/i
       },
       {
         titulo: "Nível 3/7",
-        descricao: "Métodos: push(), pop(), shift(), unshift()",
-        teoria: "Conversões explícitas tornam seu código previsível: Number(x) tenta transformar x em número (retorna NaN se falhar). String(x) converte qualquer valor em texto. Evite confiar em coerção implícita (ex.: == para não gerar surpresas.",
-        extra: "Ex.: let n = Number('42')<br>let s = String(42)",
+        descricao: "Use push, pop, shift ou unshift no vetor.",
+        teoria: "push adiciona ao final; pop remove do final; unshift adiciona no início; shift remove do início.",
+        extra: "Ex.: itens.push('novo')",
         codigoInicial: "",
-        respostaEsperada: /(?=[\s\S]*\bNumber\s*\()[\s\S]*\bString\s*\([\s\S]*/i
+        respostaEsperada: /(\.push\s*\(|\.pop\s*\(|\.shift\s*\(|\.unshift\s*\()/i
       },
       {
         titulo: "Nível 4/7",
-        descricao: "Atributo length",
-        teoria: "Para juntar textos, use o operador + ou métodos como concat(). Atenção: quando um operando é string e o outro é number, o + faz concatenação, não soma. Garanta o tipo correto antes de operar.",
-        extra: "Ex.: let frase = 'Olá, ' + nome;",
+        descricao: "Acesse o tamanho do vetor com length.",
+        teoria: "A propriedade length retorna a quantidade de itens do array.",
+        extra: "Ex.: let qtd = itens.length",
         codigoInicial: "",
-        respostaEsperada: /(?=[\s\S]*\+)(?=[\s\S]*['\"][^'\"]+['\"])[\s\S]*/i
+        respostaEsperada: /\w+\s*\.\s*length/i
       },
       {
         titulo: "Nível 5/7",
-        descricao: "Percorrer vetor com for",
-        teoria: "Template literals (entre crases) facilitam interpolar variáveis com ${} e quebrar linhas sem escapes. São ideais para montar mensagens legíveis e reduzir erros de concatenação.",
-        extra: "Ex.: let msg = `Olá, ${nome}!`",
+        descricao: "Percorra o vetor com for usando i < arr.length e acesse arr[i].",
+        teoria: "Use um laço for tradicional para iterar pelos índices e acessar cada valor.",
+        extra: "Ex.: for (let i = 0; i < arr.length; i++) { console.log(arr[i]) }",
         codigoInicial: "",
-        respostaEsperada: /`[\s\S]*`/i
+        respostaEsperada: /for\s*\([^)]*;\s*\w+\s*<\s*\w+\s*\.\s*length;[^)]*\)\s*\{[\s\S]*\w+\s*\[\s*\w+\s*\]/i
       },
       {
         titulo: "Nível 6/7",
-        descricao: "Percorrer vetor com forEach()",
-        teoria: "Template literals (entre crases) facilitam interpolar variáveis com ${} e quebrar linhas sem escapes. São ideais para montar mensagens legíveis e reduzir erros de concatenação.",
-        extra: "Ex.: let msg = `Olá, ${nome}!`",
+        descricao: "Percorra o vetor com forEach.",
+        teoria: "forEach executa uma função para cada item do array.",
+        extra: "Ex.: itens.forEach((v,i)=>console.log(i,v))",
         codigoInicial: "",
-        respostaEsperada: /`[\s\S]*`/i
+        respostaEsperada: /\.forEach\s*\(/i
       },
       {
         titulo: "Nível 7/7",
-        descricao: "Operador spread",
-        teoria: "Template literals (entre crases) facilitam interpolar variáveis com ${} e quebrar linhas sem escapes. São ideais para montar mensagens legíveis e reduzir erros de concatenação.",
-        extra: "Ex.: let msg = `Olá, ${nome}!`",
+        descricao: "Use o operador spread ... com arrays.",
+        teoria: "Spread expande os itens de um array. Útil para copiar, concatenar e passar argumentos.",
+        extra: "Ex.: let copia = [...orig];",
         codigoInicial: "",
-        respostaEsperada: /`[\s\S]*`/i
-      },
+        respostaEsperada: /\.\.\./i
+      }
     ];
 
 
@@ -180,16 +180,16 @@
         if (docSnap.exists) {
           const data = docSnap.data();
           const xp = data.xp || 0;
-          nivelJsAtual = (data.fasesJS && data.fasesJS.fase2 && Number.isInteger(data.fasesJS.fase2.nivelAtual)) ? data.fasesJS.fase2.nivelAtual : 0;
-          fase2JaConcluida = (data.fasesJS && data.fasesJS.fase2 && data.fasesJS.fase2.status === "concluida") || false;
+          nivelJsAtual = (data.fasesJS && data.fasesJS.fase6 && Number.isInteger(data.fasesJS.fase6.nivelAtual)) ? data.fasesJS.fase6.nivelAtual : 0;
+          fase6JaConcluida = (data.fasesJS && data.fasesJS.fase6 && data.fasesJS.fase6.status === "concluida") || false;
           xpTotalSpan.textContent = `XP: ${xp}`;
           atualizarNivel();
-          if (data.fasesJS && data.fasesJS.fase2 && data.fasesJS.fase2.codigoAtual) {
-            entradaCodigo.value = data.fasesJS.fase2.codigoAtual;
-            preview.innerHTML = data.fasesJS.fase2.codigoAtual;
+          if (data.fasesJS && data.fasesJS.fase6 && data.fasesJS.fase6.codigoAtual) {
+            entradaCodigo.value = data.fasesJS.fase6.codigoAtual;
+            preview.innerHTML = data.fasesJS.fase6.codigoAtual;
           }
 
-          if (fase2JaConcluida) {
+          if (fase6JaConcluida) {
             alert("⚠️ Você já concluiu esta fase.");
             history.back()
           }
@@ -268,22 +268,7 @@
     }
 
     function mostrarVisualizacao(nivel, codigo) {
-      if (nivel === 4) {
-        let output = "";
-        const originalConsoleLog = console.log;
-        console.log = function (...args) {
-          output += args.join(" ") + "<br>";
-        };
-        try {
-          eval(codigo);
-        } catch (e) {
-          output += `<span style="color:red;">${e}</span>`;
-        }
-        console.log = originalConsoleLog;
-        preview.innerHTML = output || "Nenhum resultado.";
-      } else {
-        preview.innerHTML = "A visualização aparecerá aqui.";
-      }
+      preview.innerHTML = "A visualização aparecerá aqui.";
     }
 
     function verificarNivel() {
@@ -299,21 +284,7 @@
 
       mostrarVisualizacao(nivelJsAtual, entrada);
 
-      if (nivelJsAtual === 2 || nivelJsAtual === 3 || nivelJsAtual === 4) {
-        mostrarConsoleReal();
-        setTimeout(() => {
-          if (window.eruda && eruda._devTools && eruda._devTools._tools.console) {
-            eruda._devTools._tools.console.clear();
-          }
-          try {
-            eval(entrada);
-          } catch (e) {
-            if (window.eruda && eruda._devTools && eruda._devTools._tools.console) {
-              eruda._devTools._tools.console.error(e);
-            }
-          }
-        }, 100);
-      }
+      // visualização do console desativada
 
       const passou = resposta instanceof RegExp ? resposta.test(entrada) : entrada === resposta;
 
@@ -321,8 +292,8 @@
         if (somAtivo) {
           audio.play();
         }
-        if (!fase2JaConcluida) {
-          adicionarXP(10);
+        if (!fase6JaConcluida) {
+          adicionarXP(12);
         }
         salvarCodigo(entrada);
         aguardandoAvanco = true;
@@ -333,27 +304,26 @@
       }
     }
 
-    function concluirFase() {
+    function concluirFase6() {
       const user = auth.currentUser;
       if (!user) return;
       const ref = db.collection("usuarios").doc(user.uid);
 
-      if (!fase2JaConcluida) {
+      if (!fase6JaConcluida) {
         ref.get().then(docSnap => {
           if (docSnap.exists) {
             const data = docSnap.data();
             const fases = data.fasesJS || {};
 
-            fases.fase2 = { status: "concluida" };
-            fases.fase3 = fases.fase3 || { status: "disponivel" };
-            data.nivelJsAtual++;
+            fases.fase6 = { status: "concluida" };
+            fases.fase7 = fases.fase7 || { status: "disponivel" };
 
             ref.set({
               fasesJS: fases,
-              xp: firebase.firestore.FieldValue.increment(50)
+              xp: firebase.firestore.FieldValue.increment(70)
             }, { merge: true }).then(() => {
-              fase2JaConcluida = true;
-              alert("✅ Fase 2 concluída! Fase 3 desbloqueada.");
+              fase6JaConcluida = true;
+              alert("✅ Fase 6 concluída! Fase 7 desbloqueada.");
               window.location.href = "../index.html";
             });
           }
@@ -382,7 +352,7 @@
       const ref = db.collection("usuarios").doc(user.uid);
       ref.set({
         fasesJS: {
-          fase2: {
+          fase6: {
             nivelAtual: nivel
           }
         }
@@ -395,7 +365,7 @@
       const ref = db.collection("usuarios").doc(user.uid);
       ref.set({
         fasesJS: {
-          fase2: {
+          fase6: {
             codigoAtual: codigo
           }
         }

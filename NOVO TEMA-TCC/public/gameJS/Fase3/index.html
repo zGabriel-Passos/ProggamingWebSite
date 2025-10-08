@@ -260,22 +260,7 @@
     }
 
     function mostrarVisualizacao(nivel, codigo) {
-      if (nivel === 5) {
-        let output = "";
-        const originalConsoleLog = console.log;
-        console.log = function (...args) {
-          output += args.join(" ") + "<br>";
-        };
-        try {
-          eval(codigo);
-        } catch (e) {
-          output += `<span style="color:red;">${e}</span>`;
-        }
-        console.log = originalConsoleLog;
-        preview.innerHTML = output || "Nenhum resultado.";
-      } else {
-        preview.innerHTML = "A visualização aparecerá aqui.";
-      }
+      preview.innerHTML = "A visualização aparecerá aqui.";
     }
 
     function verificarNivel() {
@@ -291,21 +276,7 @@
 
       mostrarVisualizacao(nivelJsAtual, entrada);
 
-      if (nivelJsAtual >= 0 && nivelJsAtual <= 5) {
-        mostrarConsoleReal();
-        setTimeout(() => {
-          if (window.eruda && eruda._devTools && eruda._devTools._tools.console) {
-            eruda._devTools._tools.console.clear();
-          }
-          try {
-            eval(entrada);
-          } catch (e) {
-            if (window.eruda && eruda._devTools && eruda._devTools._tools.console) {
-              eruda._devTools._tools.console.error(e);
-            }
-          }
-        }, 100);
-      }
+      // visualização do console desativada
 
       const passou = resposta instanceof RegExp ? resposta.test(entrada) : entrada === resposta;
 

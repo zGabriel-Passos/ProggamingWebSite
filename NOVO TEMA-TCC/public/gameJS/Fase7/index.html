@@ -10,7 +10,7 @@
   <link rel="stylesheet" href="../TelaPrincipal/style.css">
   <link rel="stylesheet" href="style.css">
   <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap">
-  <title>Proggaming | Fase 2 - JavaScript</title>
+  <title>Proggaming | Fase 7 - Funções</title>
 </head>
 
 <body>
@@ -27,14 +27,13 @@
   <div class="container-nivel">
     <div class="bloco-teoria">
       <div style="display: flex; flex-direction: row; align-items: center; justify-content: space-between;">
-        <h3>Teoria - Fase 2</h3>
+        <h3>Teoria - Fase 7</h3>
         <button class="botao-som" id="botao-som" onclick="toggleSom()">🔊</button>
       </div>
       <p id="texto-teoria"></p>
       <div id="extra-teoria" style="margin-top:10px; font-weight: 600; font-size:14px; color:#ddd;"></div>
-      <h2 id="titulo-nivel">Nível 1/5</h2>
-      <p id="descricao-nivel">Nesta fase você vai criar variáveis, trabalhar com tipos de dados e
-        montar frases usando concatenação e template literals.</p>
+      <h2 id="titulo-nivel">Nível 1/6</h2>
+      <p id="descricao-nivel">Sessão 7 – Funções<br>Tema: declarar, parametrizar, retornar valores e compor funções.</p>
       <hr>
       <div style="margin: 10px 0px 10px 0px;">
         <span id="xp-total" style="font-family: 'Press Start 2P', cursive; font-weight: 600; color: #c7860e;">XP:
@@ -101,7 +100,7 @@
     const db = firebase.firestore();
 
     let nivelJsAtual = 0;
-    let fase2JaConcluida = false;
+    let fase7JaConcluida = false;
 
     const entradaCodigo = document.getElementById("entrada-codigo");
     const preview = document.getElementById("preview");
@@ -112,52 +111,52 @@
     const niveis = [
       {
         titulo: "Nível 1/6",
-        descricao: "Declare uma função que soma dois números",
-        teoria: "var foi a forma original de declarar variáveis em JS e tem escopo de função (vaza de blocos). let tem escopo de bloco e é a escolha moderna para valores que mudam. const também tem escopo de bloco e impede reatribuição do identificador (o conteúdo de objetos/arrays ainda pode ser mutado). Prefira let e const no dia a dia.",
-        extra: "Exemplo: var a = 1; let b = 2; const c = 3;",
+        descricao: "Declare uma função soma(a, b) que retorna a + b.",
+        teoria: "Funções encapsulam lógica reutilizável. Você pode usar function tradicional ou arrow function.",
+        extra: "Ex.: function soma(a,b){ return a+b } ou const soma = (a,b)=>a+b",
         codigoInicial: "",
-        respostaEsperada: /(?=[\s\S]*\bvar\s+\w+\s*=)(?=[\s\S]*\blet\s+\w+\s*=)(?=[\s\S]*\bconst\s+\w+\s*=)[\s\S]*/i,
+        respostaEsperada: /(function\s+soma\s*\(|const\s+soma\s*=\s*\(\s*\w+\s*,\s*\w+\s*\)\s*=>)/i
       },
       {
         titulo: "Nível 2/6",
-        descricao: "Receba os números como parametros na função",
-        teoria: "",
-        extra: "",
+        descricao: "Garanta que a função receba parâmetros (a, b).",
+        teoria: "Parâmetros permitem receber valores externos.",
+        extra: "Ex.: function soma(a,b) { ... }",
         codigoInicial: "",
-        respostaEsperada: /placeholder/i 
+        respostaEsperada: /(function\s+soma\s*\(\s*\w+\s*,\s*\w+\s*\)|const\s+soma\s*=\s*\(\s*\w+\s*,\s*\w+\s*\)\s*=>)/i
       },
       {
         titulo: "Nível 3/6",
-        descricao: "Retorne o resultado da soma e atribua a uma variável",
-        teoria: "",
-        extra: "",
+        descricao: "Retorne a soma e atribua o resultado a uma variável.",
+        teoria: "Use return para devolver um valor e atribua a uma variável.",
+        extra: "Ex.: let r = soma(2,3)",
         codigoInicial: "",
-        respostaEsperada: /placeholder/i 
+        respostaEsperada: /return\s+\w+\s*\+\s*\w+[\s\S]*\b(let|const|var)\s+\w+\s*=\s*soma\s*\(/i
       },
       {
         titulo: "Nível 4/6",
-        descricao: "Escopo da variável",
-        teoria: "",
-        extra: "",
+        descricao: "Crie uma variável local dentro de uma função (escopo).",
+        teoria: "Variáveis declaradas dentro da função existem apenas naquele escopo.",
+        extra: "Ex.: function f(){ let x = 1 }",
         codigoInicial: "",
-        respostaEsperada: /placeholder/i 
+        respostaEsperada: /function[\s\S]*\{[\s\S]*\blet\s+\w+\s*=\s*[\s\S]*\}/i
       },
       {
         titulo: "Nível 5/6",
-        descricao: "Chame uma função dentro de uma função",
-        teoria: "",
-        extra: "",
+        descricao: "Chame uma função dentro de outra função.",
+        teoria: "Funções podem compor chamadas para dividir responsabilidades.",
+        extra: "Ex.: function a(){ return 1 } function b(){ return a() }",
         codigoInicial: "",
-        respostaEsperada: /placeholder/i 
+        respostaEsperada: /function[\s\S]*\{[\s\S]*\w+\s*\([\s\S]*\)[\s\S]*\}/i
       },
       {
         titulo: "Nível 6/6",
-        descricao: "Criar uma função que calcula IMC",
-        teoria: "",
-        extra: "",
+        descricao: "Implemente calcularIMC(peso, altura) = peso/(altura*altura).",
+        teoria: "IMC = peso/altura². Retorne o valor e teste a função.",
+        extra: "Ex.: const imc = calcularIMC(70,1.75)",
         codigoInicial: "",
-        respostaEsperada: /placeholder/i 
-      },
+        respostaEsperada: /(calcularIMC|imc)[\s\S]*\/\s*\(?\s*altura\s*\*\s*altura\s*\)?/i
+      }
     ];
 
 
@@ -172,16 +171,16 @@
         if (docSnap.exists) {
           const data = docSnap.data();
           const xp = data.xp || 0;
-          nivelJsAtual = (data.fasesJS && data.fasesJS.fase2 && Number.isInteger(data.fasesJS.fase2.nivelAtual)) ? data.fasesJS.fase2.nivelAtual : 0;
-          fase2JaConcluida = (data.fasesJS && data.fasesJS.fase2 && data.fasesJS.fase2.status === "concluida") || false;
+          nivelJsAtual = (data.fasesJS && data.fasesJS.fase7 && Number.isInteger(data.fasesJS.fase7.nivelAtual)) ? data.fasesJS.fase7.nivelAtual : 0;
+          fase7JaConcluida = (data.fasesJS && data.fasesJS.fase7 && data.fasesJS.fase7.status === "concluida") || false;
           xpTotalSpan.textContent = `XP: ${xp}`;
           atualizarNivel();
-          if (data.fasesJS && data.fasesJS.fase2 && data.fasesJS.fase2.codigoAtual) {
-            entradaCodigo.value = data.fasesJS.fase2.codigoAtual;
-            preview.innerHTML = data.fasesJS.fase2.codigoAtual;
+          if (data.fasesJS && data.fasesJS.fase7 && data.fasesJS.fase7.codigoAtual) {
+            entradaCodigo.value = data.fasesJS.fase7.codigoAtual;
+            preview.innerHTML = data.fasesJS.fase7.codigoAtual;
           }
 
-          if (fase2JaConcluida) {
+          if (fase7JaConcluida) {
             alert("⚠️ Você já concluiu esta fase.");
             history.back()
           }
@@ -238,7 +237,7 @@
       db.collection("usuarios").doc(auth.currentUser.uid).get().then(docSnap => {
         if (docSnap.exists) {
           const dados = docSnap.data();
-          const codigoAtual = dados && dados.fasesJS && dados.fasesJS.fase2 && dados.fasesJS.fase2.codigoAtual;
+          const codigoAtual = dados && dados.fasesJS && dados.fasesJS.fase7 && dados.fasesJS.fase7.codigoAtual;
           if (codigoAtual !== undefined && codigoAtual !== null) {
             entradaCodigo.value = codigoAtual;
             mostrarVisualizacao(nivelJsAtual, codigoAtual);
@@ -260,22 +259,7 @@
     }
 
     function mostrarVisualizacao(nivel, codigo) {
-      if (nivel === 4) {
-        let output = "";
-        const originalConsoleLog = console.log;
-        console.log = function (...args) {
-          output += args.join(" ") + "<br>";
-        };
-        try {
-          eval(codigo);
-        } catch (e) {
-          output += `<span style="color:red;">${e}</span>`;
-        }
-        console.log = originalConsoleLog;
-        preview.innerHTML = output || "Nenhum resultado.";
-      } else {
-        preview.innerHTML = "A visualização aparecerá aqui.";
-      }
+      preview.innerHTML = "A visualização aparecerá aqui.";
     }
 
     function verificarNivel() {
@@ -291,21 +275,7 @@
 
       mostrarVisualizacao(nivelJsAtual, entrada);
 
-      if (nivelJsAtual === 2 || nivelJsAtual === 3 || nivelJsAtual === 4) {
-        mostrarConsoleReal();
-        setTimeout(() => {
-          if (window.eruda && eruda._devTools && eruda._devTools._tools.console) {
-            eruda._devTools._tools.console.clear();
-          }
-          try {
-            eval(entrada);
-          } catch (e) {
-            if (window.eruda && eruda._devTools && eruda._devTools._tools.console) {
-              eruda._devTools._tools.console.error(e);
-            }
-          }
-        }, 100);
-      }
+      // visualização do console desativada
 
       const passou = resposta instanceof RegExp ? resposta.test(entrada) : entrada === resposta;
 
@@ -313,8 +283,8 @@
         if (somAtivo) {
           audio.play();
         }
-        if (!fase2JaConcluida) {
-          adicionarXP(10);
+        if (!fase7JaConcluida) {
+          adicionarXP(12);
         }
         salvarCodigo(entrada);
         aguardandoAvanco = true;
@@ -325,27 +295,24 @@
       }
     }
 
-    function concluirFase() {
+    function concluirFase7() {
       const user = auth.currentUser;
       if (!user) return;
       const ref = db.collection("usuarios").doc(user.uid);
 
-      if (!fase2JaConcluida) {
+      if (!fase7JaConcluida) {
         ref.get().then(docSnap => {
           if (docSnap.exists) {
             const data = docSnap.data();
             const fases = data.fasesJS || {};
-
-            fases.fase2 = { status: "concluida" };
-            fases.fase3 = fases.fase3 || { status: "disponivel" };
-            data.nivelJsAtual++;
-
+            fases.fase7 = { status: "concluida" };
+            fases.fase8 = fases.fase8 || { status: "disponivel" };
             ref.set({
               fasesJS: fases,
-              xp: firebase.firestore.FieldValue.increment(50)
+              xp: firebase.firestore.FieldValue.increment(70)
             }, { merge: true }).then(() => {
-              fase2JaConcluida = true;
-              alert("✅ Fase 2 concluída! Fase 3 desbloqueada.");
+              fase7JaConcluida = true;
+              alert("✅ Fase 7 concluída! Fase 8 desbloqueada.");
               window.location.href = "../index.html";
             });
           }
@@ -374,7 +341,7 @@
       const ref = db.collection("usuarios").doc(user.uid);
       ref.set({
         fasesJS: {
-          fase2: {
+          fase7: {
             nivelAtual: nivel
           }
         }
@@ -387,7 +354,7 @@
       const ref = db.collection("usuarios").doc(user.uid);
       ref.set({
         fasesJS: {
-          fase2: {
+          fase7: {
             codigoAtual: codigo
           }
         }

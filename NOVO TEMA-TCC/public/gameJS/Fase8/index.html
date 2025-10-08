@@ -10,7 +10,7 @@
   <link rel="stylesheet" href="../TelaPrincipal/style.css">
   <link rel="stylesheet" href="style.css">
   <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap">
-  <title>Proggaming | Fase 2 - JavaScript</title>
+  <title>Proggaming | Fase 8 - Objetos e DOM</title>
 </head>
 
 <body>
@@ -27,14 +27,14 @@
   <div class="container-nivel">
     <div class="bloco-teoria">
       <div style="display: flex; flex-direction: row; align-items: center; justify-content: space-between;">
-        <h3>Teoria - Fase 2</h3>
+        <h3>Teoria - Fase 8</h3>
         <button class="botao-som" id="botao-som" onclick="toggleSom()">🔊</button>
       </div>
       <p id="texto-teoria"></p>
       <div id="extra-teoria" style="margin-top:10px; font-weight: 600; font-size:14px; color:#ddd;"></div>
       <h2 id="titulo-nivel">Nível 1/5</h2>
-      <p id="descricao-nivel">Nesta fase você vai criar variáveis, trabalhar com tipos de dados e
-        montar frases usando concatenação e template literals.</p>
+      <p id="descricao-nivel">Sessão 8 – Objetos e DOM<br>Tema: criar/alterar objetos e manipular elementos da página.
+      </p>
       <hr>
       <div style="margin: 10px 0px 10px 0px;">
         <span id="xp-total" style="font-family: 'Press Start 2P', cursive; font-weight: 600; color: #c7860e;">XP:
@@ -101,7 +101,7 @@
     const db = firebase.firestore();
 
     let nivelJsAtual = 0;
-    let fase2JaConcluida = false;
+    let fase8JaConcluida = false;
 
     const entradaCodigo = document.getElementById("entrada-codigo");
     const preview = document.getElementById("preview");
@@ -110,46 +110,46 @@
     const extraTeoria = document.getElementById("extra-teoria");
 
     const niveis = [
-    {
+      {
         titulo: "Nível 1/5",
-        descricao: "Criar objetos com propriedades",
-        teoria: "",
-        extra: "",
+        descricao: "Crie um objeto com pelo menos 3 propriedades.",
+        teoria: "Objetos descrevem entidades com pares chave:valor.",
+        extra: "Ex.: const user = { nome:'Ana', idade:20, ativo:true }",
         codigoInicial: "",
-        respostaEsperada: /placeholder/i 
+        respostaEsperada: /\{[\s\S]*:\s*[\s\S]*,[\s\S]*:\s*[\s\S]*,[\s\S]*:\s*[\s\S]*\}/i
       },
       {
         titulo: "Nível 2/5",
-        descricao: "Acessar e alterar valores (objeto.propriedade)",
-        teoria: "",
-        extra: "",
+        descricao: "Acesse e altere uma propriedade: obj.prop = valor.",
+        teoria: "Use ponto ou colchetes para acessar propriedades.",
+        extra: "Ex.: user.nome = 'Bia'",
         codigoInicial: "",
-        respostaEsperada: /placeholder/i 
+        respostaEsperada: /\w+\s*\.[a-zA-Z_$][\w$]*\s*=\s*[\s\S]+/i
       },
       {
         titulo: "Nível 3/5",
-        descricao: "Busque o elemento pelo Id",
-        teoria: "",
-        extra: "",
+        descricao: "Selecione um elemento do DOM por id.",
+        teoria: "document.getElementById retorna um elemento pelo id.",
+        extra: "Ex.: const el = document.getElementById('app')",
         codigoInicial: "",
-        respostaEsperada: /placeholder/i 
+        respostaEsperada: /document\s*\.\s*getElementById\s*\(\s*['"][\w-]+['"]\s*\)/i
       },
       {
         titulo: "Nível 4/5",
-        descricao: "innerHTML, value, style",
-        teoria: "",
-        extra: "",
+        descricao: "Altere innerHTML, value ou style de um elemento.",
+        teoria: "Modifique conteúdo, valor de inputs ou estilos inline.",
+        extra: "Ex.: el.innerHTML = 'Olá'; el.style.color = 'red'",
         codigoInicial: "",
-        respostaEsperada: /placeholder/i 
+        respostaEsperada: /(\.innerHTML\s*=|\.value\s*=|\.style\s*\.)/i
       },
       {
         titulo: "Nível 5/5",
-        descricao: "Alterando HTML e CSS pelo JavaScript",
-        teoria: "",
-        extra: "",
+        descricao: "Atividade: crie um objeto e reflita suas propriedades no DOM.",
+        teoria: "Combine objetos e DOM para gerar UI dinamicamente.",
+        extra: "Ex.: const p = document.getElementById('p'); p.innerHTML = user.nome",
         codigoInicial: "",
-        respostaEsperada: /placeholder/i 
-      },
+        respostaEsperada: /(document\s*\.\s*getElementById|querySelector)[\s\S]*\.innerHTML\s*=/i
+      }
     ];
 
 
@@ -164,16 +164,16 @@
         if (docSnap.exists) {
           const data = docSnap.data();
           const xp = data.xp || 0;
-          nivelJsAtual = (data.fasesJS && data.fasesJS.fase2 && Number.isInteger(data.fasesJS.fase2.nivelAtual)) ? data.fasesJS.fase2.nivelAtual : 0;
-          fase2JaConcluida = (data.fasesJS && data.fasesJS.fase2 && data.fasesJS.fase2.status === "concluida") || false;
+          nivelJsAtual = (data.fasesJS && data.fasesJS.fase8 && Number.isInteger(data.fasesJS.fase8.nivelAtual)) ? data.fasesJS.fase8.nivelAtual : 0;
+          fase8JaConcluida = (data.fasesJS && data.fasesJS.fase8 && data.fasesJS.fase8.status === "concluida") || false;
           xpTotalSpan.textContent = `XP: ${xp}`;
           atualizarNivel();
-          if (data.fasesJS && data.fasesJS.fase2 && data.fasesJS.fase2.codigoAtual) {
-            entradaCodigo.value = data.fasesJS.fase2.codigoAtual;
-            preview.innerHTML = data.fasesJS.fase2.codigoAtual;
+          if (data.fasesJS && data.fasesJS.fase8 && data.fasesJS.fase8.codigoAtual) {
+            entradaCodigo.value = data.fasesJS.fase8.codigoAtual;
+            preview.innerHTML = data.fasesJS.fase8.codigoAtual;
           }
 
-          if (fase2JaConcluida) {
+          if (fase8JaConcluida) {
             alert("⚠️ Você já concluiu esta fase.");
             history.back()
           }
@@ -230,7 +230,7 @@
       db.collection("usuarios").doc(auth.currentUser.uid).get().then(docSnap => {
         if (docSnap.exists) {
           const dados = docSnap.data();
-          const codigoAtual = dados && dados.fasesJS && dados.fasesJS.fase2 && dados.fasesJS.fase2.codigoAtual;
+          const codigoAtual = dados && dados.fasesJS && dados.fasesJS.fase8 && dados.fasesJS.fase8.codigoAtual;
           if (codigoAtual !== undefined && codigoAtual !== null) {
             entradaCodigo.value = codigoAtual;
             mostrarVisualizacao(nivelJsAtual, codigoAtual);
@@ -252,22 +252,7 @@
     }
 
     function mostrarVisualizacao(nivel, codigo) {
-      if (nivel === 4) {
-        let output = "";
-        const originalConsoleLog = console.log;
-        console.log = function (...args) {
-          output += args.join(" ") + "<br>";
-        };
-        try {
-          eval(codigo);
-        } catch (e) {
-          output += `<span style="color:red;">${e}</span>`;
-        }
-        console.log = originalConsoleLog;
-        preview.innerHTML = output || "Nenhum resultado.";
-      } else {
-        preview.innerHTML = "A visualização aparecerá aqui.";
-      }
+      preview.innerHTML = "A visualização aparecerá aqui.";
     }
 
     function verificarNivel() {
@@ -283,21 +268,7 @@
 
       mostrarVisualizacao(nivelJsAtual, entrada);
 
-      if (nivelJsAtual === 2 || nivelJsAtual === 3 || nivelJsAtual === 4) {
-        mostrarConsoleReal();
-        setTimeout(() => {
-          if (window.eruda && eruda._devTools && eruda._devTools._tools.console) {
-            eruda._devTools._tools.console.clear();
-          }
-          try {
-            eval(entrada);
-          } catch (e) {
-            if (window.eruda && eruda._devTools && eruda._devTools._tools.console) {
-              eruda._devTools._tools.console.error(e);
-            }
-          }
-        }, 100);
-      }
+      // visualização do console desativada
 
       const passou = resposta instanceof RegExp ? resposta.test(entrada) : entrada === resposta;
 
@@ -305,8 +276,8 @@
         if (somAtivo) {
           audio.play();
         }
-        if (!fase2JaConcluida) {
-          adicionarXP(10);
+        if (!fase8JaConcluida) {
+          adicionarXP(15);
         }
         salvarCodigo(entrada);
         aguardandoAvanco = true;
@@ -317,27 +288,26 @@
       }
     }
 
-    function concluirFase() {
+    function concluirFase8() {
       const user = auth.currentUser;
       if (!user) return;
       const ref = db.collection("usuarios").doc(user.uid);
 
-      if (!fase2JaConcluida) {
+      if (!fase8JaConcluida) {
         ref.get().then(docSnap => {
           if (docSnap.exists) {
             const data = docSnap.data();
             const fases = data.fasesJS || {};
 
-            fases.fase2 = { status: "concluida" };
-            fases.fase3 = fases.fase3 || { status: "disponivel" };
-            data.nivelJsAtual++;
+            fases.fase8 = { status: "concluida" };
+            fases.fase9 = fases.fase9 || { status: "disponivel" };
 
             ref.set({
               fasesJS: fases,
-              xp: firebase.firestore.FieldValue.increment(50)
+              xp: firebase.firestore.FieldValue.increment(80)
             }, { merge: true }).then(() => {
-              fase2JaConcluida = true;
-              alert("✅ Fase 2 concluída! Fase 3 desbloqueada.");
+              fase8JaConcluida = true;
+              alert("✅ Fase 8 concluída! Fase 9 desbloqueada.");
               window.location.href = "../index.html";
             });
           }
@@ -366,7 +336,7 @@
       const ref = db.collection("usuarios").doc(user.uid);
       ref.set({
         fasesJS: {
-          fase2: {
+          fase8: {
             nivelAtual: nivel
           }
         }
@@ -379,7 +349,7 @@
       const ref = db.collection("usuarios").doc(user.uid);
       ref.set({
         fasesJS: {
-          fase2: {
+          fase8: {
             codigoAtual: codigo
           }
         }

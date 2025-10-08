@@ -10,7 +10,7 @@
   <link rel="stylesheet" href="../TelaPrincipal/style.css">
   <link rel="stylesheet" href="style.css">
   <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap">
-  <title>Proggaming | Fase 2 - JavaScript</title>
+  <title>Proggaming | Fase 10 - Projeto Final</title>
 </head>
 
 <body>
@@ -27,14 +27,13 @@
   <div class="container-nivel">
     <div class="bloco-teoria">
       <div style="display: flex; flex-direction: row; align-items: center; justify-content: space-between;">
-        <h3>Teoria - Fase 2</h3>
+        <h3>Teoria - Fase 10</h3>
         <button class="botao-som" id="botao-som" onclick="toggleSom()">🔊</button>
       </div>
       <p id="texto-teoria"></p>
       <div id="extra-teoria" style="margin-top:10px; font-weight: 600; font-size:14px; color:#ddd;"></div>
       <h2 id="titulo-nivel">Nível 1/5</h2>
-      <p id="descricao-nivel">Nesta fase você vai criar variáveis, trabalhar com tipos de dados e
-        montar frases usando concatenação e template literals.</p>
+      <p id="descricao-nivel">Sessão 10 – Projeto Final<br>Tema: consolidar Arrays, Funções, Objetos, DOM e Eventos.</p>
       <hr>
       <div style="margin: 10px 0px 10px 0px;">
         <span id="xp-total" style="font-family: 'Press Start 2P', cursive; font-weight: 600; color: #c7860e;">XP:
@@ -101,7 +100,7 @@
     const db = firebase.firestore();
 
     let nivelJsAtual = 0;
-    let fase2JaConcluida = false;
+    let fase10JaConcluida = false;
 
     const entradaCodigo = document.getElementById("entrada-codigo");
     const preview = document.getElementById("preview");
@@ -110,46 +109,46 @@
     const extraTeoria = document.getElementById("extra-teoria");
 
     const niveis = [
-    {
-        titulo: "Nível /",
-        descricao: "",
-        teoria: "",
-        extra: "",
+      {
+        titulo: "Nível 1/5",
+        descricao: "Crie um array de tarefas (objetos com id, titulo, feito).",
+        teoria: "Estruture dados do projeto em um array de objetos.",
+        extra: "Ex.: const tarefas = [{id:1,titulo:'Estudar',feito:false}]",
         codigoInicial: "",
-        respostaEsperada: /placeholder/i 
+        respostaEsperada: /\[[\s\S]*\{[\s\S]*id[\s\S]*titulo[\s\S]*feito[\s\S]*\}[\s\S]*\]/i
       },
       {
-        titulo: "Nível /",
-        descricao: "",
-        teoria: "",
-        extra: "",
+        titulo: "Nível 2/5",
+        descricao: "Implemente função addTarefa que adiciona no array.",
+        teoria: "Funções manipulam o estado do array.",
+        extra: "Ex.: function addTarefa(t){ tarefas.push(t) }",
         codigoInicial: "",
-        respostaEsperada: /placeholder/i 
+        respostaEsperada: /(function\s+addTarefa|const\s+addTarefa\s*=)\s*[\s\S]*\.push\s*\(/i
       },
       {
-        titulo: "Nível /",
-        descricao: "",
-        teoria: "",
-        extra: "",
+        titulo: "Nível 3/5",
+        descricao: "Renderize tarefas no DOM usando innerHTML e forEach.",
+        teoria: "Gere HTML a partir dos dados.",
+        extra: "Ex.: lista.innerHTML = tarefas.map(...).join('')",
         codigoInicial: "",
-        respostaEsperada: /placeholder/i 
+        respostaEsperada: /(\.forEach\s*\(|\.map\s*\()[\s\S]*\.innerHTML\s*=/i
       },
       {
-        titulo: "Nível /",
-        descricao: "",
-        teoria: "",
-        extra: "",
+        titulo: "Nível 4/5",
+        descricao: "Adicione eventos para marcar tarefa como feita.",
+        teoria: "Eventos conectam UI e dados.",
+        extra: "Ex.: el.addEventListener('click', fn)",
         codigoInicial: "",
-        respostaEsperada: /placeholder/i 
+        respostaEsperada: /addEventListener\s*\(\s*['"]click['"]/i
       },
       {
-        titulo: "Nível /",
-        descricao: "",
-        teoria: "",
-        extra: "",
+        titulo: "Nível 5/5",
+        descricao: "Finalize: adicionar, listar e alternar estado; mostre contagem.",
+        teoria: "Consolide tudo e exiba total de tarefas feitas.",
+        extra: "Ex.: const feitas = tarefas.filter(t=>t.feito).length",
         codigoInicial: "",
-        respostaEsperada: /placeholder/i 
-      },
+        respostaEsperada: /(filter\s*\(|reduce\s*\()[\s\S]*length/i
+      }
     ];
 
 
@@ -164,16 +163,16 @@
         if (docSnap.exists) {
           const data = docSnap.data();
           const xp = data.xp || 0;
-          nivelJsAtual = (data.fasesJS && data.fasesJS.fase2 && Number.isInteger(data.fasesJS.fase2.nivelAtual)) ? data.fasesJS.fase2.nivelAtual : 0;
-          fase2JaConcluida = (data.fasesJS && data.fasesJS.fase2 && data.fasesJS.fase2.status === "concluida") || false;
+          nivelJsAtual = (data.fasesJS && data.fasesJS.fase10 && Number.isInteger(data.fasesJS.fase10.nivelAtual)) ? data.fasesJS.fase10.nivelAtual : 0;
+          fase10JaConcluida = (data.fasesJS && data.fasesJS.fase10 && data.fasesJS.fase10.status === "concluida") || false;
           xpTotalSpan.textContent = `XP: ${xp}`;
           atualizarNivel();
-          if (data.fasesJS && data.fasesJS.fase2 && data.fasesJS.fase2.codigoAtual) {
-            entradaCodigo.value = data.fasesJS.fase2.codigoAtual;
-            preview.innerHTML = data.fasesJS.fase2.codigoAtual;
+          if (data.fasesJS && data.fasesJS.fase10 && data.fasesJS.fase10.codigoAtual) {
+            entradaCodigo.value = data.fasesJS.fase10.codigoAtual;
+            preview.innerHTML = data.fasesJS.fase10.codigoAtual;
           }
 
-          if (fase2JaConcluida) {
+          if (fase10JaConcluida) {
             alert("⚠️ Você já concluiu esta fase.");
             history.back()
           }
@@ -230,7 +229,7 @@
       db.collection("usuarios").doc(auth.currentUser.uid).get().then(docSnap => {
         if (docSnap.exists) {
           const dados = docSnap.data();
-          const codigoAtual = dados && dados.fasesJS && dados.fasesJS.fase2 && dados.fasesJS.fase2.codigoAtual;
+          const codigoAtual = dados && dados.fasesJS && dados.fasesJS.fase10 && dados.fasesJS.fase10.codigoAtual;
           if (codigoAtual !== undefined && codigoAtual !== null) {
             entradaCodigo.value = codigoAtual;
             mostrarVisualizacao(nivelJsAtual, codigoAtual);
@@ -252,22 +251,7 @@
     }
 
     function mostrarVisualizacao(nivel, codigo) {
-      if (nivel === 4) {
-        let output = "";
-        const originalConsoleLog = console.log;
-        console.log = function (...args) {
-          output += args.join(" ") + "<br>";
-        };
-        try {
-          eval(codigo);
-        } catch (e) {
-          output += `<span style="color:red;">${e}</span>`;
-        }
-        console.log = originalConsoleLog;
-        preview.innerHTML = output || "Nenhum resultado.";
-      } else {
-        preview.innerHTML = "A visualização aparecerá aqui.";
-      }
+      preview.innerHTML = "A visualização aparecerá aqui.";
     }
 
     function verificarNivel() {
@@ -283,21 +267,7 @@
 
       mostrarVisualizacao(nivelJsAtual, entrada);
 
-      if (nivelJsAtual === 2 || nivelJsAtual === 3 || nivelJsAtual === 4) {
-        mostrarConsoleReal();
-        setTimeout(() => {
-          if (window.eruda && eruda._devTools && eruda._devTools._tools.console) {
-            eruda._devTools._tools.console.clear();
-          }
-          try {
-            eval(entrada);
-          } catch (e) {
-            if (window.eruda && eruda._devTools && eruda._devTools._tools.console) {
-              eruda._devTools._tools.console.error(e);
-            }
-          }
-        }, 100);
-      }
+      // visualização do console desativada
 
       const passou = resposta instanceof RegExp ? resposta.test(entrada) : entrada === resposta;
 
@@ -305,8 +275,8 @@
         if (somAtivo) {
           audio.play();
         }
-        if (!fase2JaConcluida) {
-          adicionarXP(10);
+        if (!fase10JaConcluida) {
+          adicionarXP(120);
         }
         salvarCodigo(entrada);
         aguardandoAvanco = true;
@@ -317,27 +287,25 @@
       }
     }
 
-    function concluirFase() {
+    function concluirFase10() {
       const user = auth.currentUser;
       if (!user) return;
       const ref = db.collection("usuarios").doc(user.uid);
 
-      if (!fase2JaConcluida) {
+      if (!fase10JaConcluida) {
         ref.get().then(docSnap => {
           if (docSnap.exists) {
             const data = docSnap.data();
             const fases = data.fasesJS || {};
 
-            fases.fase2 = { status: "concluida" };
-            fases.fase3 = fases.fase3 || { status: "disponivel" };
-            data.nivelJsAtual++;
+            fases.fase10 = { status: "concluida" };
 
             ref.set({
               fasesJS: fases,
-              xp: firebase.firestore.FieldValue.increment(50)
+              xp: firebase.firestore.FieldValue.increment(120)
             }, { merge: true }).then(() => {
-              fase2JaConcluida = true;
-              alert("✅ Fase 2 concluída! Fase 3 desbloqueada.");
+              fase10JaConcluida = true;
+              alert("🎉 Fase 10 concluída! Projeto finalizado.");
               window.location.href = "../index.html";
             });
           }
@@ -366,7 +334,7 @@
       const ref = db.collection("usuarios").doc(user.uid);
       ref.set({
         fasesJS: {
-          fase2: {
+          fase10: {
             nivelAtual: nivel
           }
         }
@@ -379,7 +347,7 @@
       const ref = db.collection("usuarios").doc(user.uid);
       ref.set({
         fasesJS: {
-          fase2: {
+          fase10: {
             codigoAtual: codigo
           }
         }

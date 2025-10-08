@@ -10,7 +10,7 @@
   <link rel="stylesheet" href="../TelaPrincipal/style.css">
   <link rel="stylesheet" href="style.css">
   <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap">
-  <title>Proggaming | Fase 2 - JavaScript</title>
+  <title>Proggaming | Fase 9 - Eventos</title>
 </head>
 
 <body>
@@ -27,14 +27,13 @@
   <div class="container-nivel">
     <div class="bloco-teoria">
       <div style="display: flex; flex-direction: row; align-items: center; justify-content: space-between;">
-        <h3>Teoria - Fase 2</h3>
+        <h3>Teoria - Fase 9</h3>
         <button class="botao-som" id="botao-som" onclick="toggleSom()">🔊</button>
       </div>
       <p id="texto-teoria"></p>
       <div id="extra-teoria" style="margin-top:10px; font-weight: 600; font-size:14px; color:#ddd;"></div>
-      <h2 id="titulo-nivel">Nível 1/5</h2>
-      <p id="descricao-nivel">Nesta fase você vai criar variáveis, trabalhar com tipos de dados e
-        montar frases usando concatenação e template literals.</p>
+      <h2 id="titulo-nivel">Nível 1/6</h2>
+      <p id="descricao-nivel">Sessão 9 – Eventos<br>Tema: ouvir eventos e reagir com funções.</p>
       <hr>
       <div style="margin: 10px 0px 10px 0px;">
         <span id="xp-total" style="font-family: 'Press Start 2P', cursive; font-weight: 600; color: #c7860e;">XP:
@@ -101,7 +100,7 @@
     const db = firebase.firestore();
 
     let nivelJsAtual = 0;
-    let fase2JaConcluida = false;
+    let fase9JaConcluida = false;
 
     const entradaCodigo = document.getElementById("entrada-codigo");
     const preview = document.getElementById("preview");
@@ -110,54 +109,54 @@
     const extraTeoria = document.getElementById("extra-teoria");
 
     const niveis = [
-    {
+      {
         titulo: "Nível 1/6",
-        descricao: "O que são eventos",
-        teoria: "",
-        extra: "",
+        descricao: "Explique eventos: crie texto comentando e um exemplo simples.",
+        teoria: "Eventos são ações do usuário ou do sistema que disparam código.",
+        extra: "Ex.: // clique chama função; // tecla pressionada",
         codigoInicial: "",
-        respostaEsperada: /placeholder/i 
+        respostaEsperada: /(onclick|addEventListener|onchange|onmouseover)/i
       },
       {
         titulo: "Nível 2/6",
-        descricao: "Eventos onclick, onmouseover, onchange",
-        teoria: "",
-        extra: "",
+        descricao: "Use onclick, onmouseover ou onchange em um elemento.",
+        teoria: "Handlers inline ou via JS reagem ao evento.",
+        extra: "Ex.: el.onclick = ()=>{}",
         codigoInicial: "",
-        respostaEsperada: /placeholder/i 
+        respostaEsperada: /(\.onclick\s*=|\.onmouseover\s*=|\.onchange\s*=)/i
       },
       {
         titulo: "Nível 3/6",
-        descricao: "Criar funções que respondem a eventos",
-        teoria: "",
-        extra: "",
+        descricao: "Crie uma função que será chamada pelo evento.",
+        teoria: "Defina uma função separada para reutilização e teste.",
+        extra: "Ex.: function aoClicar(){ console.log('ok') }",
         codigoInicial: "",
-        respostaEsperada: /placeholder/i 
+        respostaEsperada: /function\s+\w+\s*\([\s\S]*\)\s*\{[\s\S]*\}/i
       },
       {
         titulo: "Nível 4/6",
-        descricao: "Eventos em botões, inputs, imagens",
-        teoria: "",
-        extra: "",
+        descricao: "Adicione listener via addEventListener.",
+        teoria: "addEventListener é preferível por separar estrutura e comportamento.",
+        extra: "Ex.: el.addEventListener('click', fn)",
         codigoInicial: "",
-        respostaEsperada: /placeholder/i 
+        respostaEsperada: /addEventListener\s*\(\s*['"][a-z]+['"]\s*,/i
       },
       {
         titulo: "Nível 5/6",
-        descricao: "Prevenir comportamento padrão",
-        teoria: "",
-        extra: "",
+        descricao: "Previna comportamento padrão em um submit ao clicar.",
+        teoria: "Use event.preventDefault() em formulários/links.",
+        extra: "Ex.: e.preventDefault()",
         codigoInicial: "",
-        respostaEsperada: /placeholder/i 
+        respostaEsperada: /preventDefault\s*\(\s*\)/i
       },
       {
         titulo: "Nível 6/6",
-        descricao: "Adicionar e remover eventos",
-        teoria: "",
-        extra: "",
+        descricao: "Remova um listener com removeEventListener.",
+        teoria: "Guarde a referência da função ao remover.",
+        extra: "Ex.: el.removeEventListener('click', fn)",
         codigoInicial: "",
-        respostaEsperada: /placeholder/i 
-      },
+        respostaEsperada: /removeEventListener\s*\(/i
+      }
     ];
 
 
@@ -172,16 +171,16 @@
         if (docSnap.exists) {
           const data = docSnap.data();
           const xp = data.xp || 0;
-          nivelJsAtual = (data.fasesJS && data.fasesJS.fase2 && Number.isInteger(data.fasesJS.fase2.nivelAtual)) ? data.fasesJS.fase2.nivelAtual : 0;
-          fase2JaConcluida = (data.fasesJS && data.fasesJS.fase2 && data.fasesJS.fase2.status === "concluida") || false;
+          nivelJsAtual = (data.fasesJS && data.fasesJS.fase9 && Number.isInteger(data.fasesJS.fase9.nivelAtual)) ? data.fasesJS.fase9.nivelAtual : 0;
+          fase9JaConcluida = (data.fasesJS && data.fasesJS.fase9 && data.fasesJS.fase9.status === "concluida") || false;
           xpTotalSpan.textContent = `XP: ${xp}`;
           atualizarNivel();
-          if (data.fasesJS && data.fasesJS.fase2 && data.fasesJS.fase2.codigoAtual) {
-            entradaCodigo.value = data.fasesJS.fase2.codigoAtual;
-            preview.innerHTML = data.fasesJS.fase2.codigoAtual;
+          if (data.fasesJS && data.fasesJS.fase9 && data.fasesJS.fase9.codigoAtual) {
+            entradaCodigo.value = data.fasesJS.fase9.codigoAtual;
+            preview.innerHTML = data.fasesJS.fase9.codigoAtual;
           }
 
-          if (fase2JaConcluida) {
+          if (fase9JaConcluida) {
             alert("⚠️ Você já concluiu esta fase.");
             history.back()
           }
@@ -238,7 +237,7 @@
       db.collection("usuarios").doc(auth.currentUser.uid).get().then(docSnap => {
         if (docSnap.exists) {
           const dados = docSnap.data();
-          const codigoAtual = dados && dados.fasesJS && dados.fasesJS.fase2 && dados.fasesJS.fase2.codigoAtual;
+          const codigoAtual = dados && dados.fasesJS && dados.fasesJS.fase9 && dados.fasesJS.fase9.codigoAtual;
           if (codigoAtual !== undefined && codigoAtual !== null) {
             entradaCodigo.value = codigoAtual;
             mostrarVisualizacao(nivelJsAtual, codigoAtual);
@@ -260,22 +259,7 @@
     }
 
     function mostrarVisualizacao(nivel, codigo) {
-      if (nivel === 4) {
-        let output = "";
-        const originalConsoleLog = console.log;
-        console.log = function (...args) {
-          output += args.join(" ") + "<br>";
-        };
-        try {
-          eval(codigo);
-        } catch (e) {
-          output += `<span style="color:red;">${e}</span>`;
-        }
-        console.log = originalConsoleLog;
-        preview.innerHTML = output || "Nenhum resultado.";
-      } else {
-        preview.innerHTML = "A visualização aparecerá aqui.";
-      }
+      preview.innerHTML = "A visualização aparecerá aqui.";
     }
 
     function verificarNivel() {
@@ -291,21 +275,7 @@
 
       mostrarVisualizacao(nivelJsAtual, entrada);
 
-      if (nivelJsAtual === 2 || nivelJsAtual === 3 || nivelJsAtual === 4) {
-        mostrarConsoleReal();
-        setTimeout(() => {
-          if (window.eruda && eruda._devTools && eruda._devTools._tools.console) {
-            eruda._devTools._tools.console.clear();
-          }
-          try {
-            eval(entrada);
-          } catch (e) {
-            if (window.eruda && eruda._devTools && eruda._devTools._tools.console) {
-              eruda._devTools._tools.console.error(e);
-            }
-          }
-        }, 100);
-      }
+      // visualização do console desativada
 
       const passou = resposta instanceof RegExp ? resposta.test(entrada) : entrada === resposta;
 
@@ -313,8 +283,8 @@
         if (somAtivo) {
           audio.play();
         }
-        if (!fase2JaConcluida) {
-          adicionarXP(10);
+        if (!fase9JaConcluida) {
+          adicionarXP(15);
         }
         salvarCodigo(entrada);
         aguardandoAvanco = true;
@@ -325,27 +295,26 @@
       }
     }
 
-    function concluirFase() {
+    function concluirFase9() {
       const user = auth.currentUser;
       if (!user) return;
       const ref = db.collection("usuarios").doc(user.uid);
 
-      if (!fase2JaConcluida) {
+      if (!fase9JaConcluida) {
         ref.get().then(docSnap => {
           if (docSnap.exists) {
             const data = docSnap.data();
             const fases = data.fasesJS || {};
 
-            fases.fase2 = { status: "concluida" };
-            fases.fase3 = fases.fase3 || { status: "disponivel" };
-            data.nivelJsAtual++;
+            fases.fase9 = { status: "concluida" };
+            fases.fase10 = fases.fase10 || { status: "disponivel" };
 
             ref.set({
               fasesJS: fases,
-              xp: firebase.firestore.FieldValue.increment(50)
+              xp: firebase.firestore.FieldValue.increment(90)
             }, { merge: true }).then(() => {
-              fase2JaConcluida = true;
-              alert("✅ Fase 2 concluída! Fase 3 desbloqueada.");
+              fase9JaConcluida = true;
+              alert("✅ Fase 9 concluída! Fase 10 desbloqueada.");
               window.location.href = "../index.html";
             });
           }
@@ -374,7 +343,7 @@
       const ref = db.collection("usuarios").doc(user.uid);
       ref.set({
         fasesJS: {
-          fase2: {
+          fase9: {
             nivelAtual: nivel
           }
         }
@@ -387,7 +356,7 @@
       const ref = db.collection("usuarios").doc(user.uid);
       ref.set({
         fasesJS: {
-          fase2: {
+          fase9: {
             codigoAtual: codigo
           }
         }
