@@ -121,16 +121,18 @@
                 titulo: "Nível 1/6",
                 descricao: "Crie a estrutura básica de uma tabela com duas linhas e duas células. Use `<table>`, `<tr>` e `<td>`.",
                 teoria: "A tag `<table>` cria a tabela, `<tr>` cria uma linha (table row) e `<td>` cria uma célula (table data).",
-                extra: "Exemplo: <code>&lt;table&gt; &lt;tr&gt; &lt;td&gt;célula&lt;/td&gt; &lt;/tr&gt; &lt;table&gt;</code>",
+                extra: "Exemplo: <code>&lt;table&gt; &lt;tr&gt; &lt;td&gt;célula 1&lt;/td&gt; &lt;/tr&gt; &lt;tr&gt; &lt;td&gt;célula 2&lt;/td&gt; &lt;/tr&gt; &lt;/table&gt;</code>",
                 // Regex para <table>, 2x <tr>, e 2x <td> (mínimo, pois a regex é para o documento todo)
                 respostaEsperada: /<table>[\s\S]*<tr>[\s\S]*<td>[\s\S]*<\/td>[\s\S]*<\/tr>[\s\S]*<tr>[\s\S]*<td>[\s\S]*<\/td>[\s\S]*<\/tr>[\s\S]*<\/table>/i
             },
             {
                 titulo: "Nível 2/6",
-                descricao: "Adicione um cabeçalho à sua tabela na primeira linha. Use a tag `<th>` no lugar das `<td>` nessa linha.",
-                teoria: "A tag `<th>` (table header) cria uma célula de cabeçalho, que geralmente é exibida em negrito e centralizada.",
-                extra: "Exemplo: <code>&lt;tr&gt; &lt;th&gt;Cabeçalho&lt;/th&gt; &lt;/tr&gt;</code>",
-                // Pelo menos 1 <table>, 1 <th> e 1 <td>
+                // DESCRIÇÃO AJUSTADA: Deixa claro que ele deve ter ambos
+                descricao: "Crie uma tabela com pelo menos uma célula de cabeçalho (`<th>`) e uma célula de dados (`<td>`).",
+                teoria: "A tag `<th>` cria uma célula de cabeçalho, enquanto `<td>` é para dados comuns.",
+                // EXTRA AJUSTADO: Mostra as tags de cabeçalho e dados
+                extra: "Exemplo: <code>&lt;table&gt; &lt;tr&gt;&lt;th&gt;Título&lt;/th&gt;&lt;/tr&gt; &lt;tr&gt;&lt;td&gt;Dado&lt;/td&gt;&lt;/tr&gt; &lt;/table&gt;</code>",
+                // REGEX: Mantida, pois ela já exige <th> e <td>.
                 respostaEsperada: /<table>[\s\S]*<th>[\s\S]*<\/th>[\s\S]*<td>[\s\S]*<\/td>[\s\S]*<\/table>/i
             },
             {
@@ -158,12 +160,12 @@
                 respostaEsperada: /<tr><\/tr>/i
             },
             {
-                titulo: "Nível 6/6 (Desafio)",
-                descricao: "Desafio: Crie uma tabela de horários simples com 2 colunas ('Horário' e 'Atividade') e 3 linhas de dados. **Use as tags semânticas `<thead>` e `<tbody>`**.",
-                teoria: "O `<thead>` define a seção de cabeçalho da tabela (onde vão os `<th>`) e o `<tbody>` define o corpo da tabela (onde vão os dados).",
-                extra: "Sua tabela deve ter um `<thead>` com um `<tr>` de `<th>` e um `<tbody>` com 3 `<tr>` de `<td>`.",
-                // Regex para <table>, <thead> com <tr><th><th>, e <tbody> com 3x <tr><td><td>
-                respostaEsperada: /<table[^>]*>[\s\S]*<thead[\s\S]*>[\s\S]*<tr>[\s\S]*<th[\s\S]*>[\s\S]*<\/th>[\s\S]*<th[\s\S]*>[\s\S]*<\/th>[\s\S]*<\/tr>[\s\S]*<\/thead>[\s\S]*<tbody[\s\S]*>[\s\S]*(?:<tr>[\s\S]*<td>[\s\S]*<\/td>[\s\S]*<td>[\s\S]*<\/td>[\s\S]*<\/tr>[\s\S]*){3,}<\/tbody>[\s\S]*<\/table>/i
+                titulo: "Nível 6/6 (Desafio - Fácil)",
+                descricao: "Desafio: Crie uma tabela básica com apenas 1 coluna ('Item') e pelo menos 1 linha de dados. **Use as tags semânticas `<thead>` e `<tbody>`**.",
+                teoria: "O `<thead>` define o cabeçalho (`<th>`) e o `<tbody>` define o corpo (os dados `<td>`).",
+                extra: "Sua tabela deve ter um `<thead>` com **1** `<th>` e um `<tbody>` com pelo menos uma `<tr>` com **1** `<td>`.",
+                // Regex para <table>, <thead> com 1 <th>, e <tbody> com 1+ <tr> de 1 <td>
+                respostaEsperada: /<table[\s\S]*<thead>[\s\S]*<tr>[\s\S]*<th[\s\S]*>[\s\S]*<\/th>[\s\S]*<\/tr>[\s\S]*<\/thead>[\s\S]*<tbody>[\s\S]*(?:<tr>[\s\S]*<td[\s\S]*>[\s\S]*<\/td>[\s\S]*<\/tr>[\s\S]*){1,}[\s\S]*<\/tbody>[\s\S]*<\/table>/i
             }
         ];
 

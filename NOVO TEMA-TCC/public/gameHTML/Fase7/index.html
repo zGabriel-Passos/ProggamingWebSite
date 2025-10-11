@@ -75,6 +75,18 @@
             botaoSom.innerText = somAtivo ? "🔊" : "🔇";
         }
 
+        function normalizeCode(code) {
+            let normalized = code.replace(/[\n\r\t]/g, ' ');
+            normalized = normalized.replace(/\s*([<>{}()\[\];:])\s*/g, '$1');
+            normalized = normalized.replace(/\s+/g, ' ');
+            return normalized.trim();
+        }
+
+        function cleanCodeForRegex(code) {
+            return code.replace(/[\n\r\t]/g, ' ').replace(/\s{2,}/g, ' ').trim();
+        }
+
+
         const firebaseConfig = {
             apiKey: "AIzaSyClRHfJuTSogkbWLaaUKsSBGN1KiT5xuUc",
             authDomain: "proggamingpage.firebaseapp.com",
@@ -106,13 +118,13 @@
         const extraTeoria = document.getElementById("extra-teoria");
         const xpSpan = document.getElementById("xp-total");
 
-        // =================== FASE 7: FORMULÁRIOS ===================
         const niveis = [
             {
                 titulo: "Nível 1/6",
                 descricao: "Crie a estrutura básica de um formulário com um campo de texto e um botão de envio.",
                 teoria: "A tag `<form>` agrupa os elementos do formulário. `<input>` cria campos de entrada de dados, e `<button>` cria um botão.",
                 extra: "Exemplo: <code>&lt;form&gt; &lt;input type='text'&gt; &lt;button type='submit'&gt;Enviar&lt;/button&gt; &lt;/form&gt;</code>",
+                // A regex original já estava boa, pois o '[\s\S]*' ignora tudo.
                 respostaEsperada: /<form[\s\S]*><input[\s\S]*><button[\s\S]*>[\s\S]*<\/button>[\s\S]*<\/form>/i
             },
             {
@@ -141,7 +153,8 @@
                 descricao: "Quiz: Qual atributo usamos em um `<input>` para definir o tipo de campo?",
                 teoria: "O atributo `type` é usado para definir se o campo é de texto, senha, email, etc.",
                 extra: "Digite apenas o nome do atributo. Ex: <code>type</code>",
-                respostaEsperada: /^\s*type\s*$/i
+                // A regex precisa de correspondência exata após a normalização (normalizeCode)
+                respostaEsperada: /^type$/i
             },
             {
                 titulo: "Nível 6/6 (Desafio)",
@@ -152,7 +165,6 @@
             }
         ];
 
-        // =================== AUTENTICAÇÃO & PROGRESSO ===================
         auth.onAuthStateChanged(async user => {
             if (user) {
                 userDocRef = db.collection("usuarios").doc(user.uid);
@@ -166,14 +178,12 @@
 
                 const data = doc.data();
 
-                // Precisa da fase 6 concluída para liberar
                 if (!data.fasesHTML || data.fasesHTML.fase6?.status !== "concluida") {
                     alert("Você precisa concluir a Fase 6 antes!");
                     location.href = "../";
                     return;
                 }
 
-                // Se fase 7 já concluída
                 if (data.fasesHTML?.fase7?.status === "concluida") {
                     alert("⚠️ Você já concluiu esta fase.");
                     window.location.href = "../";
@@ -207,11 +217,25 @@
         });
 
         function verificarNivel() {
-            const entrada = entradaCodigo.value.trim();
+            const entradaOriginal = entradaCodigo.value;
             const audio = document.getElementById("audio-sucesso");
+
+            let entradaParaTeste = entradaOriginal;
+
+            // SE FOR O QUIZ (NÍVEL 5, que é o índice 4)
+            if (nivelAtual === 4) {
+                // Usamos a normalização agressiva (remove espaços, quebras de linha e excesso de espaços)
+                entradaParaTeste = normalizeCode(entradaOriginal);
+            } else {
+                // SE FOR NÍVEL DE CÓDIGO (1 a 4 e 6)
+                // Usamos a limpeza leve apenas para lidar com quebras de linha e espaços múltiplos, 
+                // tornando a entrada mais "limpa" para as regex de tags.
+                entradaParaTeste = cleanCodeForRegex(entradaOriginal);
+            }
+
             const regex = niveis[nivelAtual].respostaEsperada;
 
-            if (regex.test(entrada)) {
+            if (regex.test(entradaParaTeste)) {
                 if (somAtivo) {
                     audio.play();
                 }
@@ -243,6 +267,7 @@
             document.getElementById("descricao-nivel").textContent = nivel.descricao;
             document.getElementById("texto-teoria").textContent = nivel.teoria;
             extraTeoria.innerHTML = nivel.extra;
+            // Limpa o editor para o novo nível
             entradaCodigo.value = "";
             preview.innerHTML = "A visualização aparecerá aqui.";
             barraProgresso.style.width = `${((nivelAtual + 1) / niveis.length) * 100}%`;
@@ -260,10 +285,10 @@
                 });
 
                 document.querySelector(".resultado").innerHTML = `
-                    <h2>Parabéns!</h2>
-                    <p>Você concluiu a Fase 7 de HTML! +60XP</p>
-                    <button onclick="location.href='../'">Concluir a fase</button>
-    `;
+                <h2>Parabéns!</h2>
+                <p>Você concluiu a Fase 7 de HTML! +60XP</p>
+                <button onclick="location.href='../'">Concluir a fase</button>
+            `;
             } catch (e) {
                 console.error("Erro ao salvar fase 7:", e);
                 alert("Erro ao salvar progresso. Tente novamente!");

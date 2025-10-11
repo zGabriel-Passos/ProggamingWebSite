@@ -5,8 +5,9 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css">
-    <link rel="apple-touch-icon" href="/public/icon_512x512.png">
-    <link rel="icon" type="image/png" href="/public/icon_512x512.png">
+    <link rel="apple-touch-icon" href="./../icon_512x512.png">
+    <link rel="icon" type="image/png" href="./../icon_512x512.png">
+    <link rel="stylesheet" href="../TelaPrincipal/style.css">
     <link rel="stylesheet" href="style.css">
     <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap">
     <title>Proggaming | Fase 8 HTML</title>
@@ -36,7 +37,7 @@
             <hr>
             <span id="xp-total" style="font-family: 'Press Start 2P', cursive; font-weight: 600; color: #c7860e;">XP:
                 0</span>
-            <a href="/public/gameHTML/index.html" style="float: right; margin: 10px;">
+            <a href="../" style="float: right; margin: 10px;">
                 <button class="voltar">
                     <i class='bx bx-arrow-back'></i>
                     <span style="font-size: 12px;">Voltar</span>
@@ -59,7 +60,7 @@
         </div>
     </div>
 
-    <audio id="audio-sucesso" src="/public/Green Screen + Efeito Sonoro (Acerto).mp3"></audio>
+    <audio id="audio-sucesso" src="../Green Screen + Efeito Sonoro (Acerto).mp3"></audio>
 
     <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-app-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-auth-compat.js"></script>
@@ -73,6 +74,26 @@
             const botaoSom = document.getElementById("botao-som");
             botaoSom.innerText = somAtivo ? "🔊" : "🔇";
         }
+
+        // 1. Função de normalização agressiva (Para o QUIZ NÍVEL 1)
+        function normalizeCode(code) {
+            // Remove quebras de linha/tabulações e substitui por um único espaço
+            let normalized = code.replace(/[\n\r\t]/g, ' ');
+            // Remove espaços extras ao redor de caracteres de sintaxe
+            normalized = normalized.replace(/\s*([<>{}()\[\];:])\s*/g, '$1');
+            // Substitui múltiplos espaços por um único espaço
+            normalized = normalized.replace(/\s+/g, ' ');
+            // Remove espaços no início e no fim
+            return normalized.trim();
+        }
+
+        // 2. Função de limpeza de código (Para NÍVEIS DE CÓDIGO)
+        // Remove quebras de linha/tabulações e substitui por um único espaço
+        function cleanCodeForRegex(code) {
+            return code.replace(/[\n\r\t]/g, ' ').replace(/\s{2,}/g, ' ').trim();
+        }
+        // ====================================================
+
 
         const firebaseConfig = {
             apiKey: "AIzaSyClRHfJuTSogkbWLaaUKsSBGN1KiT5xuUc",
@@ -105,14 +126,15 @@
         const extraTeoria = document.getElementById("extra-teoria");
         const xpSpan = document.getElementById("xp-total");
 
-        // =================== FASE 8: ESTRUTURA SEMÂNTICA ===================
+        // =================== FASE 8: TAGS SEMÂNTICAS ===================
         const niveis = [
             {
                 titulo: "Nível 1/6 (Quiz)",
                 descricao: "O que é 'semântica' no HTML?",
                 teoria: "HTML Semântico é o uso de tags HTML para dar significado e estrutura ao conteúdo, tornando-o mais compreensível para navegadores e leitores de tela. Em vez de usar apenas `<div>`, usamos `<header>`, `<main>`, `<nav>`, etc.",
                 extra: "Digite a palavra que melhor define a função do HTML semântico. Dica: Começa com 'S'.",
-                respostaEsperada: /^\s*significado\s*$/i
+                // A regex espera 'significado' após a normalização (que remove espaços desnecessários)
+                respostaEsperada: /^significado$/i
             },
             {
                 titulo: "Nível 2/6",
@@ -147,11 +169,14 @@
                 descricao: "Desafio: Monte a estrutura completa de uma página usando `<header>`, `<nav>`, `<main>`, `<article>` e `<footer>`.",
                 teoria: "Coloque `<nav>` dentro de `<header>`. Dentro de `<main>`, inclua pelo menos um `<article>`. Por fim, adicione o `<footer>`.",
                 extra: "Sua página deve conter todas as tags semânticas mencionadas, na ordem correta, aninhadas adequadamente.",
-                respostaEsperada: /<header[\s\S]*><nav[\s\S]*>[\s\S]*<\/nav>[\s\S]*<\/header>[\s\S]*<main[\s\S]*><article[\s\S]*>[\s\S]*<\/article>[\s\S]*<\/main>[\s\S]*<footer>[\s\S]*<\/footer>/i
+                // REGEX OTIMIZADA: Mais robusta para aninhamento e atributos.
+                respostaEsperada: /<header[^>]*>[\s\S]*<nav[^>]*>[\s\S]*<\/nav>[\s\S]*<\/header>[\s\S]*<main[^>]*>[\s\S]*<article[^>]*>[\s\S]*<\/article>[\s\S]*<\/main>[\s\S]*<footer[^>]*>[\s\S]*<\/footer>/i
             }
         ];
+        // ====================================================
+        // CÓDIGO DE AUTENTICAÇÃO E LÓGICA DE PROGRESSO
+        // ====================================================
 
-        // =================== AUTENTICAÇÃO & PROGRESSO ===================
         auth.onAuthStateChanged(async user => {
             if (user) {
                 userDocRef = db.collection("usuarios").doc(user.uid);
@@ -159,28 +184,29 @@
 
                 if (!doc.exists) {
                     alert("Usuário não encontrado!");
-                    location.href = "/public/gameHTML/index.html";
+                    location.href = "../";
                     return;
                 }
 
                 const data = doc.data();
 
-                // Precisa da fase 7 concluída para liberar
+                // Verifica dependência da fase 7
                 if (!data.fasesHTML || data.fasesHTML.fase7?.status !== "concluida") {
                     alert("Você precisa concluir a Fase 7 antes!");
-                    location.href = "/public/gameHTML/index.html";
+                    location.href = "../";
                     return;
                 }
 
                 // Se fase 8 já concluída
                 if (data.fasesHTML?.fase8?.status === "concluida") {
                     alert("⚠️ Você já concluiu esta fase.");
-                    window.location.href = "/public/gameHTML/index.html";
+                    window.location.href = "../";
                     return;
                 }
 
                 nivelAtual = data.fasesHTML?.fase8?.nivelAtual || 0;
                 xpTotal = data.xp || 0;
+                // ATUALIZAÇÃO: Busca o código da fase 8
                 entradaCodigo.value = data.fasesHTML?.fase8?.codigoAtual || "";
                 xpSpan.textContent = `XP: ${xpTotal}`;
 
@@ -196,21 +222,33 @@
                         .replace(/on\w+=".*?"/gi, "");
                     preview.innerHTML = input || "A visualização aparecerá aqui.";
 
+                    // ATUALIZAÇÃO: Salva o código na fase 8
                     userDocRef.update({
                         "fasesHTML.fase8.codigoAtual": entradaCodigo.value
                     });
                 });
             } else {
-                location.href = "/public/login.html";
+                location.href = "./../";
             }
         });
 
         function verificarNivel() {
-            const entrada = entradaCodigo.value.trim();
+            const entradaOriginal = entradaCodigo.value;
             const audio = document.getElementById("audio-sucesso");
+
+            let entradaParaTeste;
+
+            // Nível 1 (índice 0) é o quiz que precisa da normalização agressiva.
+            if (nivelAtual === 0) {
+                entradaParaTeste = normalizeCode(entradaOriginal);
+            } else {
+                // Outros níveis são de código: limpeza leve para facilitar a regex.
+                entradaParaTeste = cleanCodeForRegex(entradaOriginal);
+            }
+
             const regex = niveis[nivelAtual].respostaEsperada;
 
-            if (regex.test(entrada)) {
+            if (regex.test(entradaParaTeste)) {
                 if (somAtivo) {
                     audio.play();
                 }
@@ -219,6 +257,7 @@
                 xpTotal += 10;
                 xpSpan.textContent = `XP: ${xpTotal}`;
 
+                // ATUALIZAÇÃO: Salva o progresso na fase 8
                 userDocRef.update({
                     "fasesHTML.fase8.nivelAtual": nivelAtual,
                     "fasesHTML.fase8.codigoAtual": entradaCodigo.value,
@@ -250,6 +289,7 @@
         async function concluirFase() {
             try {
                 await userDocRef.update({
+                    // ATUALIZAÇÃO: Conclusão e XP da fase 8
                     "fasesHTML.fase8.status": "concluida",
                     "fasesHTML.fase8.codigoAtual": entradaCodigo.value,
                     "fasesHTML.fase8.nivelAtual": nivelAtual,
@@ -259,10 +299,10 @@
                 });
 
                 document.querySelector(".resultado").innerHTML = `
-        <h2>Parabéns!</h2>
-        <p>Você concluiu a Fase 8 de HTML! +60XP</p>
-        <button onclick="location.href='/public/gameHTML/index.html'">Concluir a fase</button>
-    `;
+                <h2>Parabéns!</h2>
+                <p>Você concluiu a Fase 8 de HTML! +60XP</p>
+                <button onclick="location.href='../'">Concluir a fase</button>
+            `;
             } catch (e) {
                 console.error("Erro ao salvar fase 8:", e);
                 alert("Erro ao salvar progresso. Tente novamente!");
