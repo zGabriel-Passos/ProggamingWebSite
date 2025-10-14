@@ -35,4 +35,49 @@ function carregarPagina(arquivo) {
         });
 }
 
-mostrarSecao("home");
+const itemsContainer = document.getElementById('tabs-sections'); 
+
+const categoryMap = {
+    'html': 'filehtml',
+    'css': 'filecss',
+    'javascript': 'filejs', 
+};
+
+fetch("data.json")
+    .then(response => {
+        if (!response.ok) {
+            throw new Error('Não foi possível carregar o arquivo data.json. Verifique se ele existe.');
+        }
+        return response.json();
+    })
+    .then(itemsData => {
+        itemsData.forEach(item => {
+            const itemCard = document.createElement('div');
+            itemCard.className = 'itemCard';
+
+            itemCard.innerHTML = `
+                <img src="${item.imagem}"/>
+                <span class="title">${item.titulo}</span>
+                <span class="category">Categoria: ${item.category}</span>
+                <a href="${item.link}" target="_blank">Ver</a>
+            `;
+
+            const containerId = categoryMap[item.category];
+
+            let targetContainer = null;
+            if (containerId) {
+                targetContainer = document.getElementById(containerId);
+            }
+
+            if (targetContainer) {
+                targetContainer.appendChild(itemCard);
+            } else {
+                console.warn(`Container para a categoria '${item.category}' não encontrado. Anexando ao container principal.`);
+                itemsContainer.appendChild(itemCard);
+            }
+        });
+    })
+    .catch(error => {
+        itemsContainer.innerHTML = `<p class="text-red-600 text-center">${error.message}</p>`;
+        console.error('Houve um erro:', error);
+    });

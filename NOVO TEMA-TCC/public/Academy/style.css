@@ -95,19 +95,16 @@ main .container {
 main .container .tabs {
     display: flex;
     align-items: center;
-    justify-content: center;
     flex-wrap: wrap;
     max-width: 560px;
     margin: 0px 20px 0px 20px;
     gap: 10px;
-    background-color: #c7c7c739;
-    border-left: 1px solid #c7c7c7ce;
-    border-right: 1px solid #c7c7c7ce;
 }
 
 main .container .tabs a {
     border: 1px solid #c0c0c0ce;
     padding: 6px;
+    background-color: #c7c7c723;
     color: #898989;
     text-decoration: none;
     transition: 0.3s;
@@ -116,18 +113,13 @@ main .container .tabs a {
     gap: 5px;
 }
 
-main .container .tabs a:last-child {
-    color: #000000d2;
-}
-
 .container .tabs a:focus {
     transition: 0.2s;
     background-color: #ffffffc1;
-    color: #474747;
+    color: #252525;
 }
 
 section {
-    display: none;
     height: 100%;
     padding: 0 0px 0px 15px;
     display: flex;
@@ -135,4 +127,20 @@ section {
     max-width: 100%;
     animation: slideUp 1.2s ease-out forwards;
     justify-content: center;
+}
+
+.page {
+    display: none;
+}
+
+.itemCard {
+    display: flex;
+    width: 200px;
+    padding: 10px;
+    align-items: center;
+    flex-direction: column;
+}
+
+.itemCard img{
+    width: 100%;
 }
