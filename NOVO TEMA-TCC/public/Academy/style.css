@@ -143,7 +143,7 @@ section {
     gap: 1rem;
     align-items: flex-start;
     padding: 20px;
-    border-top: 2px solid #e0e0e0;
+    border-top: 2px solid #e0e0e0be;
     margin-top: 20px;
 }
 
@@ -184,7 +184,7 @@ section {
 
 .item-card:hover {
     transform: translateY(-4px);
-    box-shadow: 0 6px 18px rgba(0, 0, 0, 0.12);
+    box-shadow: 0 6px 18px rgba(0, 0, 0, 0.212);
 }
 
 .item-card__img {

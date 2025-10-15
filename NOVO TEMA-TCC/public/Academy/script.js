@@ -33,7 +33,7 @@ window.addEventListener("DOMContentLoaded", () => {
     setTimeout(() => {
         document.body.classList.add("loaded");
         setTimeout(() => {
-            document.body.style.overflow = "auto"; // libera rolagem após o overlay sumir
+            document.body.style.overflow = "auto";
         }, 300);
     }, 300);
 });
@@ -67,7 +67,6 @@ fetch('data.json')
         return response.json();
     })
     .then(itemsData => {
-        // limpa grids existentes
         Object.values(categoryMap).forEach(id => {
             const sec = document.getElementById(id);
             if (sec) {
@@ -79,7 +78,6 @@ fetch('data.json')
         itemsData.forEach(item => {
             const card = document.createElement('article');
             card.className = 'item-card';
-            // suporta tanto item.titulo (pt-BR) quanto item.title (en)
             const itemTitle = (item.titulo || item.title || '').toString();
             if (itemTitle) card.setAttribute('data-title', itemTitle);
             if (item.category) card.setAttribute('data-category', item.category);
@@ -144,7 +142,7 @@ function abrirModal() {
                 <span class="close-button" onclick="fecharModal()" style="cursor: pointer; color: red;">&times;</span>
                 <h2>Olá! Eu sou o Prota!</h2>
                 <p>Bem-vindo à nossa Academia de Programação! Aqui, você encontrará uma variedade de cursos e recursos para aprimorar suas habilidades em desenvolvimento web e muito mais. Explore nossas seções de HTML, CSS, JavaScript, e outras tecnologias. Vamos codar juntos!</p>
-                <span>Já conhece nosso site oficial? Lá você consegue aprender, testar e ganhar xp.</span> <a href="https://proggamingpage.web.app" target="_blank" style="color: blue; text-decoration: underline;">proggaming.com.br</a>
+                <span>Já conhece nosso site oficial? Lá você consegue aprender, testar e ganhar XP:</span> <a href="https://proggamingpage.web.app" target="_blank" style="color: blue; text-decoration: underline;">proggaming.com.br</a>
             </div>
         `;
     }
