@@ -1,25 +1,19 @@
 function mostrarSecao(id) {
-    document.querySelectorAll(".page").forEach((secao) => {
-        secao.style.display = "none";
-    });
+    document.querySelectorAll('.page').forEach(secao => secao.classList.remove('active'));
 
     const secaoSelecionada = document.getElementById(id);
-    if (secaoSelecionada) {
-        secaoSelecionada.style.display = "block";
-    }
+    if (secaoSelecionada) secaoSelecionada.classList.add('active');
 
-    if (id !== "conteudo") {
-        document.getElementById("conteudo").innerHTML = "";
+    if (id !== 'conteudo') {
+        const conteudoEl = document.getElementById('conteudo');
+        if (conteudoEl) conteudoEl.innerHTML = '';
     }
 }
 
 function carregarPagina(arquivo) {
-    document.querySelectorAll(".page").forEach((secao) => {
-        secao.style.display = "none";
-    });
-
-    const conteudo = document.getElementById("conteudo");
-    conteudo.style.display = "block";
+    document.querySelectorAll('.page').forEach(secao => secao.classList.remove('active'));
+    const conteudo = document.getElementById('conteudo');
+    if (conteudo) conteudo.classList.add('active');
 
     fetch(arquivo)
         .then((res) => {
@@ -27,23 +21,45 @@ function carregarPagina(arquivo) {
             return res.text();
         })
         .then((html) => {
-            conteudo.innerHTML = html;
+            if (conteudo) conteudo.innerHTML = html;
         })
         .catch((err) => {
-            conteudo.innerHTML = "<p>Erro ao carregar a página.</p>";
+            if (conteudo) conteudo.innerHTML = "<p>Erro ao carregar a página.</p>";
             console.error(err);
         });
 }
 
-const itemsContainer = document.getElementById('tabs-sections'); 
+window.addEventListener("DOMContentLoaded", () => {
+    setTimeout(() => {
+        document.body.classList.add("loaded");
+        setTimeout(() => {
+            document.body.style.overflow = "auto"; // libera rolagem após o overlay sumir
+        }, 300);
+    }, 300);
+});
+
+const itemsContainer = document.querySelector('.tabs-sections');
 
 const categoryMap = {
     'html': 'filehtml',
     'css': 'filecss',
-    'javascript': 'filejs', 
+    'javascript': 'filejs',
+    'python': 'moretech',
+    'outros': 'moretech'
 };
 
-fetch("data.json")
+function getOrCreateGrid(sectionEl) {
+    if (!sectionEl) return null;
+    let grid = sectionEl.querySelector('.items-grid');
+    if (!grid) {
+        grid = document.createElement('div');
+        grid.className = 'items-grid';
+        sectionEl.appendChild(grid);
+    }
+    return grid;
+}
+
+fetch('data.json')
     .then(response => {
         if (!response.ok) {
             throw new Error('Não foi possível carregar o arquivo data.json. Verifique se ele existe.');
@@ -51,33 +67,69 @@ fetch("data.json")
         return response.json();
     })
     .then(itemsData => {
-        itemsData.forEach(item => {
-            const itemCard = document.createElement('div');
-            itemCard.className = 'itemCard';
+        // limpa grids existentes
+        Object.values(categoryMap).forEach(id => {
+            const sec = document.getElementById(id);
+            if (sec) {
+                const existing = sec.querySelector('.items-grid');
+                if (existing) existing.innerHTML = '';
+            }
+        });
 
-            itemCard.innerHTML = `
-                <img src="${item.imagem}"/>
-                <span class="title">${item.titulo}</span>
-                <span class="category">Categoria: ${item.category}</span>
-                <a href="${item.link}" target="_blank">Ver</a>
-            `;
+        itemsData.forEach(item => {
+            const card = document.createElement('article');
+            card.className = 'item-card';
+            // suporta tanto item.titulo (pt-BR) quanto item.title (en)
+            const itemTitle = (item.titulo || item.title || '').toString();
+            if (itemTitle) card.setAttribute('data-title', itemTitle);
+            if (item.category) card.setAttribute('data-category', item.category);
+
+            const img = document.createElement('img');
+            img.className = 'item-card__img';
+            img.src = item.imagem || '';
+            img.alt = itemTitle || 'imagem';
+
+            const body = document.createElement('div');
+            body.className = 'item-card__body';
+
+            const title = document.createElement('h3');
+            title.className = 'item-card__title';
+            title.textContent = itemTitle || '';
+
+            const meta = document.createElement('p');
+            meta.className = 'item-card__meta';
+            meta.textContent = item.category ? `Categoria: ${item.category}` : '';
+
+            const link = document.createElement('a');
+            link.className = 'item-card__link';
+            link.href = item.link || '#';
+            link.target = '_blank';
+            link.rel = 'noopener noreferrer';
+            link.textContent = 'Ver';
+
+            body.appendChild(title);
+            body.appendChild(meta);
+            body.appendChild(link);
+
+            card.appendChild(img);
+            card.appendChild(body);
 
             const containerId = categoryMap[item.category];
+            let targetSection = null;
+            if (containerId) targetSection = document.getElementById(containerId);
 
-            let targetContainer = null;
-            if (containerId) {
-                targetContainer = document.getElementById(containerId);
-            }
-
-            if (targetContainer) {
-                targetContainer.appendChild(itemCard);
+            if (targetSection) {
+                const grid = getOrCreateGrid(targetSection);
+                grid.appendChild(card);
             } else {
                 console.warn(`Container para a categoria '${item.category}' não encontrado. Anexando ao container principal.`);
-                itemsContainer.appendChild(itemCard);
+                const fallbackGrid = getOrCreateGrid(itemsContainer);
+                if (fallbackGrid) fallbackGrid.appendChild(card);
+                else itemsContainer.appendChild(card);
             }
         });
     })
     .catch(error => {
-        itemsContainer.innerHTML = `<p class="text-red-600 text-center">${error.message}</p>`;
+        if (itemsContainer) itemsContainer.innerHTML = `<p class="text-error">${error.message}</p>`;
         console.error('Houve um erro:', error);
     });

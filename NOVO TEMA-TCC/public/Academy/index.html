@@ -7,14 +7,17 @@
     <link rel="stylesheet" href="style.css">
     <link href='https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css' rel='stylesheet'>
     <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap" rel="stylesheet">
-    <link rel="apple-touch-icon" href="./../icon_512x512.png">
-    <link rel="icon" type="image/png" href="./../icon_512x512.png">
+    <link rel="apple-touch-icon" href="graduacao.png">
+    <link rel="icon" type="image/png" href="graduacao.png">
     <meta name="mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-capable" content="yes">
     <title>Proggaming - Academy</title>
 </head>
 
 <body>
+    <div class="overlay">
+        <img src="../logo_rotating.gif">
+    </div>
     <header>
         <div class="left">
             <i class='bx bx-network-chart'></i>
@@ -27,12 +30,8 @@
 
     <main>
         <span class="title-main">Arquivos, tutoriais, repositórios e muito mais sobre Programação básica.</span>
-        <div class="search">
-            <i class='bx bx-search'></i>
-            <input type="text" id="input-search" placeholder="Pesquisar...">
-        </div>
 
-        <div class="container">
+        <div class="container" style="margin-top: 10px;">
             <div class="tabs">
                 <a href="#" onclick="mostrarSecao('filehtml')">
                     <i class='bx bxl-html5'></i>file-html</a>
@@ -44,23 +43,19 @@
                     <i class='bx bx-code-alt'></i>More Tech</a>
             </div>
 
-            <div class="tabs-sections" id="tabs-sections">
-                <section id="filehtml" class="page">
+            <div class="tabs-sections">
+                <section id="filehtml" class="page"></section>
 
-                </section>
-                <section id="filecss" class="page">
+                <section id="filecss" class="page"></section>
 
-                </section>
-                <section id="filejs" class="page">
+                <section id="filejs" class="page"></section>
 
-                </section>
-                <section id="moretech" class="page">
-
-                </section>
+                <section id="moretech" class="page"></section>
             </div>
         </div>
     </main>
 
+    <div class="icon"><img src="../avatares/prota-dançando.gif" alt=""></div>
 
     <!-- <footer>
         <a href="https://www.youtube.com/@ProggamingPage" target="_blank"><i class='bx bxl-youtube'></i></a>

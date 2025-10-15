@@ -12,18 +12,20 @@ def main():
     except (IOError, json.JSONDecodeError):
         pass
 
-
     titulo = input("Titulo do pdf: ")
     time.sleep(0.5)
-    categoria = input("Categoria de linguagem do pdf: (Ex: html, css..) ").lower()
+    categoria = input("Categoria de linguagem do pdf - (Ex: html, css..): ").lower()
     time.sleep(0.5)
-    imagem = "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRWNCIOzCTMHDgisT277c7K_HheShHKJc1XbQ&s"
+    url = input("Coloque o caminho do pdf que esta na pasta do Academy: ")
+    time.sleep(0.5)
+    imagem = "png-pdf.png"
 
     lista.append(
         {
             "titulo": titulo,
             "imagem": imagem,
             "category": categoria,
+            "link": url,
         }
     )
 
