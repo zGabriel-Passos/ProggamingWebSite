@@ -172,6 +172,7 @@ section {
     background: rgba(0, 0, 0, 0.03);
     border: 1px solid rgba(0, 0, 0, 0.06);
     box-shadow: 2px 5px 25px 3px #0760b449;
+    animation: slideUp 0.6s ease-out forwards;
     border-radius: 8px;
     overflow: hidden;
     transition: transform .15s ease, box-shadow .15s ease;
@@ -229,6 +230,19 @@ section {
     color: white;
     transition: background-color 0.3s ease;
 }
+
+@keyframes slideUp {
+    0% {
+        transform: translateY(100px);
+        opacity: 0;
+    }
+
+    100% {
+        transform: translateY(0);
+        opacity: 1;
+    }
+}
+
 
 @media (max-width: 480px) {
     .item-card__img {
