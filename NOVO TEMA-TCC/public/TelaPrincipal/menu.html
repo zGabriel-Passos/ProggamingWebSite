@@ -16,7 +16,7 @@
 
         .container {
             padding: 15px 0px 0px 0px;
-            margin-top: 10px;
+            margin-top: 20px;
             max-width: 100%;
             display: flex;
             flex-direction: column;
@@ -92,9 +92,18 @@
             padding: 7px 15px;
         }
 
+        .link {
+            font-size: 14px;
+        }
+
         @media (max-width: 768px) {
             .desc {
                 font-size: 10px;
+            }
+
+            .link {
+                font-size: 12px;
+                font-family: Arial, Helvetica, sans-serif;
             }
         }
     </style>
@@ -130,7 +139,7 @@
                 <a href="../gameJS/"><button class="btn-play">Jogar</button></a>
             </div>
         </div>
-        <span style="text-align: center;">Acesse o Academy do Proggaming também! <a href="../Academy/"
+        <span style="text-align: center;" class="link">Acesse o Academy do Proggaming também! <a href="../Academy/"
                 style="color: #008cff; font-weight: 900;">Cliqui aqui</a>.</span>
     </div>
 </body>
