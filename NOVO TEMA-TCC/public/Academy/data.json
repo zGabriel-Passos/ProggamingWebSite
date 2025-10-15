@@ -12,6 +12,12 @@
         "link": "files/js-aula.pdf"
     },
     {
+        "titulo": "Instalando VS-Code",
+        "imagem": "png-pdf.png",
+        "category": "outros",
+        "link": "files/vs-code.pdf"
+    },
+    {
         "titulo": "CSS Básico - Pdf 1",
         "imagem": "png-pdf.png",
         "category": "css",
