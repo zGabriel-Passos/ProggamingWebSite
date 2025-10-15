@@ -43,7 +43,7 @@ const itemsContainer = document.querySelector('.tabs-sections');
 const categoryMap = {
     'html': 'filehtml',
     'css': 'filecss',
-    'javascript': 'filejs',
+    'js': 'filejs',
     'python': 'moretech',
     'outros': 'moretech'
 };

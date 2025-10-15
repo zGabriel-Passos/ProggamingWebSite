@@ -6,6 +6,12 @@
         "link": "files/html-aula.pdf"
     },
     {
+        "titulo": "JavaScript Básico - Pdf 1",
+        "imagem": "png-pdf.png",
+        "category": "js",
+        "link": "files/js-aula.pdf"
+    },
+    {
         "titulo": "CSS Básico - Pdf 1",
         "imagem": "png-pdf.png",
         "category": "css",

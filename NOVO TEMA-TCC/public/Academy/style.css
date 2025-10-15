@@ -104,6 +104,7 @@ main .container .tabs {
 
 main .container .tabs a {
     border: 1px solid #c0c0c0ce;
+    border-radius: 2px;
     padding: 6px;
     background-color: #c7c7c723;
     color: #898989;
