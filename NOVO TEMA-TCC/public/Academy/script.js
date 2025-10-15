@@ -133,3 +133,27 @@ fetch('data.json')
         if (itemsContainer) itemsContainer.innerHTML = `<p class="text-error">${error.message}</p>`;
         console.error('Houve um erro:', error);
     });
+
+
+function abrirModal() {
+    const modal = document.getElementById('modal');
+    if (modal) {
+        modal.classList.remove('hidden');
+        modal.innerHTML = `
+            <div class="modal-content">
+                <span class="close-button" onclick="fecharModal()" style="cursor: pointer; color: red;">&times;</span>
+                <h2>Olá! Eu sou o Prota!</h2>
+                <p>Bem-vindo à nossa Academia de Programação! Aqui, você encontrará uma variedade de cursos e recursos para aprimorar suas habilidades em desenvolvimento web e muito mais. Explore nossas seções de HTML, CSS, JavaScript, e outras tecnologias. Vamos codar juntos!</p>
+                <span>Já conhece nosso site oficial? Lá você consegue aprender, testar e ganhar xp.</span> <a href="https://proggamingpage.web.app" target="_blank" style="color: blue; text-decoration: underline;">proggaming.com.br</a>
+            </div>
+        `;
+    }
+}
+
+function fecharModal() {
+    const modal = document.getElementById('modal');
+    if (modal) {
+        modal.classList.add('hidden');
+        modal.innerHTML = '';
+    }
+}
