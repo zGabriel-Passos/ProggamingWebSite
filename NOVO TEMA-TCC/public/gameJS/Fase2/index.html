@@ -32,6 +32,8 @@
       </div>
       <p id="texto-teoria"></p>
       <div id="extra-teoria" style="margin-top:10px; font-weight: 600; font-size:14px; color:#ddd;"></div>
+      <button id="btn-extra-exemplo" class="voltar" style="margin-top:8px; display:none;"
+        onclick="toggleExemplo()">Exibir exemplo</button>
       <h2 id="titulo-nivel">Nível 1/5</h2>
       <p id="descricao-nivel">Nesta fase você vai criar variáveis, trabalhar com tipos de dados e
         montar frases usando concatenação e template literals.</p>
@@ -48,7 +50,7 @@
       </a>
     </div>
 
-    <div class="resultado" id="preview">A visualização aparecerá aqui.</div>
+    <div class="resultado" id="preview" style="display:none;"></div>
 
     <div class="editor-container">
       <div class="editor-header">
@@ -108,6 +110,9 @@
     const barraProgresso = document.getElementById("barra-progresso");
     const xpTotalSpan = document.getElementById("xp-total");
     const extraTeoria = document.getElementById("extra-teoria");
+    const botaoExemplo = document.getElementById("btn-extra-exemplo");
+    let extraVisivel = false;
+    let extraHtmlAtual = "";
 
     const niveis = [
       {
@@ -166,6 +171,18 @@
           const xp = data.xp || 0;
           nivelJsAtual = (data.fasesJS && data.fasesJS.fase2 && Number.isInteger(data.fasesJS.fase2.nivelAtual)) ? data.fasesJS.fase2.nivelAtual : 0;
           fase2JaConcluida = (data.fasesJS && data.fasesJS.fase2 && data.fasesJS.fase2.status === "concluida") || false;
+          const faseDoc = data.fasesJS && data.fasesJS.fase2 ? data.fasesJS.fase2 : {};
+          if (fase2JaConcluida && ("codigoAtual" in faseDoc || "nivelAtual" in faseDoc)) {
+            db.collection("usuarios").doc(user.uid).set({
+              fasesJS: {
+                fase2: {
+                  codigoAtual: firebase.firestore.FieldValue.delete(),
+                  nivelAtual: firebase.firestore.FieldValue.delete()
+                }
+              }
+            }, { merge: true });
+            nivelJsAtual = 0;
+          }
           xpTotalSpan.textContent = `XP: ${xp}`;
           atualizarNivel();
           if (data.fasesJS && data.fasesJS.fase2 && data.fasesJS.fase2.codigoAtual) {
@@ -173,10 +190,7 @@
             preview.innerHTML = data.fasesJS.fase2.codigoAtual;
           }
 
-          if (fase2JaConcluida) {
-            alert("⚠️ Você já concluiu esta fase.");
-            history.back()
-          }
+          // Fase concluída pode ser repetida; sem XP extra (já tratado em verificarNivel)
         } else {
           atualizarNivel();
         }
@@ -205,7 +219,9 @@
       if (nivelJsAtual < niveis.length) {
         atualizarNivel();
       } else {
-        document.querySelector('.resultado').innerHTML = `
+        const resultado = document.querySelector('.resultado');
+        resultado.style.display = 'block';
+        resultado.innerHTML = `
       <h2>Parabéns!</h2>
       <p>Você concluiu a Fase 2 de JavaScript! ${fase2JaConcluida ? "Pode refazer, mas não ganhará XP extra." : "+50XP"}</p>
       <button onclick="concluirFase()">Concluir a fase</button>
@@ -225,7 +241,15 @@
         extra = extra.replace(/;\s*/g, ';<br>');
         extra = extra.replace(/(<br>\s*){2,}/g, '<br>');
       }
-      extraTeoria.innerHTML = extra;
+      extraHtmlAtual = extra || "";
+      extraVisivel = false;
+      extraTeoria.innerHTML = "";
+      if (extraHtmlAtual) {
+        botaoExemplo.style.display = 'inline-flex';
+        botaoExemplo.innerText = 'Exibir exemplo';
+      } else {
+        botaoExemplo.style.display = 'none';
+      }
 
       db.collection("usuarios").doc(auth.currentUser.uid).get().then(docSnap => {
         if (docSnap.exists) {
@@ -244,15 +268,13 @@
       barraProgresso.style.width = `${(nivelJsAtual / niveis.length) * 100}%`;
 
       const resultado = document.querySelector('.resultado');
-      if (nivelJsAtual === 0 || nivelJsAtual === 1) {
-        resultado.style.display = 'none';
-      } else {
-        resultado.style.display = 'block';
-      }
+      resultado.style.display = 'none';
     }
 
     function mostrarVisualizacao(nivel, codigo) {
-      preview.innerHTML = "A visualização aparecerá aqui.";
+      // Fase 2 sem visualização
+      preview.style.display = 'none';
+      preview.innerHTML = "";
     }
 
     function verificarNivel() {
@@ -268,7 +290,6 @@
 
       mostrarVisualizacao(nivelJsAtual, entrada);
 
-      // visualização do console desativada
 
       const passou = resposta instanceof RegExp ? resposta.test(entrada) : entrada === resposta;
 
@@ -301,7 +322,6 @@
 
             fases.fase2 = { status: "concluida" };
             fases.fase3 = fases.fase3 || { status: "disponivel" };
-            data.nivelJsAtual++;
 
             ref.set({
               fasesJS: fases,
@@ -329,6 +349,12 @@
         t.set(ref, { xp: xpAtual + qtd }, { merge: true });
         xpTotalSpan.textContent = `XP: ${xpAtual + qtd}`;
       });
+    }
+
+    function toggleExemplo() {
+      extraVisivel = !extraVisivel;
+      extraTeoria.innerHTML = extraVisivel ? extraHtmlAtual : "";
+      botaoExemplo.innerText = extraVisivel ? 'Ocultar exemplo' : 'Exibir exemplo';
     }
 
     function salvarProgresso(nivel) {

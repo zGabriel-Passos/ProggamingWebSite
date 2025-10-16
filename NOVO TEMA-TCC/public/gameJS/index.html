@@ -266,9 +266,7 @@
                 const userRef = doc(db, "usuarios", user.uid);
 
                 await updateDoc(userRef, {
-                    fasesJS: deleteField(),
-                    nivelJsAtual: 0,
-                    codigoJsAtual: "",
+                    fasesJS: deleteField()
                 });
 
                 console.log("Progresso do usuário reiniciado com sucesso.");

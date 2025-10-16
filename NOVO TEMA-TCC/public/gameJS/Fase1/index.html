@@ -32,6 +32,8 @@
       </div>
       <p id="texto-teoria"></p>
       <div id="extra-teoria" style="margin-top:10px; font-weight: 600; font-size:14px; color:#ddd;"></div>
+      <button id="btn-extra-exemplo" class="voltar" style="margin-top:8px; display:none;"
+        onclick="toggleExemplo()">Exibir exemplo</button>
       <h2 id="titulo-nivel">Nível 1/5</h2>
       <p id="descricao-nivel">JavaScript é uma linguagem de programação essencial e a mais popular
         para o desenvolvimento web, responsável por adicionar interatividade e dinamismo a páginas web,
@@ -104,12 +106,16 @@
 
     let nivelJsAtual = 0;
     let fase1JsJaConcluida = false;
+    let ultimoCodigoDigitado = "";
 
     const entradaCodigo = document.getElementById("entrada-codigo");
     const preview = document.getElementById("preview");
     const barraProgresso = document.getElementById("barra-progresso");
     const xpTotalSpan = document.getElementById("xp-total");
     const extraTeoria = document.getElementById("extra-teoria");
+    const botaoExemplo = document.getElementById("btn-extra-exemplo");
+    let extraVisivel = false;
+    let extraHtmlAtual = "";
 
     const niveis = [
       {
@@ -134,7 +140,7 @@
         teoria: "O método console.log() é usado para exibir mensagens no console do navegador, o que é útil para depuração e verificação de valores durante o desenvolvimento. Para imprimir o valor de uma variável, você simplesmente passa o nome da variável como argumento para console.log(). Por exemplo, se você tem uma variável chamada mensagem, você pode exibir seu valor no console com console.log(mensagem);",
         extra: "Exemplo: console.log(mensagem)",
         codigoInicial: "let mensagem = 'Olá, Mundo!'",
-        respostaEsperada: /let\s+\w+\s*=\s*'.*';?\s*console\.log\(\s*\w+\s*\);?/i
+        respostaEsperada: /let\s+mensagem\s*=\s*['"][\s\S]*?['"]\s*;?\s*console\.log\(\s*mensagem\s*\)\s*;?/i
       },
       {
         titulo: "Nível 4/5",
@@ -168,6 +174,19 @@
           const xp = data.xp || 0;
           nivelJsAtual = (data.fasesJS && data.fasesJS.fase1 && Number.isInteger(data.fasesJS.fase1.nivelAtual)) ? data.fasesJS.fase1.nivelAtual : 0;
           fase1JsJaConcluida = (data.fasesJS && data.fasesJS.fase1 && data.fasesJS.fase1.status === "concluida") || false;
+          // Se a fase já foi concluída e há vestígios de progresso, limpar para repetir do início
+          const faseDoc = data.fasesJS && data.fasesJS.fase1 ? data.fasesJS.fase1 : {};
+          if (fase1JsJaConcluida && ("codigoAtual" in faseDoc || "nivelAtual" in faseDoc)) {
+            db.collection("usuarios").doc(user.uid).set({
+              fasesJS: {
+                fase1: {
+                  codigoAtual: firebase.firestore.FieldValue.delete(),
+                  nivelAtual: firebase.firestore.FieldValue.delete()
+                }
+              }
+            }, { merge: true });
+            nivelJsAtual = 0;
+          }
           xpTotalSpan.textContent = `XP: ${xp}`;
           atualizarNivel();
           if (data.fasesJS && data.fasesJS.fase1 && data.fasesJS.fase1.codigoAtual) {
@@ -175,10 +194,6 @@
             preview.innerHTML = data.fasesJS.fase1.codigoAtual;
           }
 
-          if (fase1JsJaConcluida) {
-            alert("⚠️ Você já concluiu esta fase.");
-            history.back()
-          }
         } else {
           atualizarNivel();
         }
@@ -216,7 +231,23 @@
     }
 
     function mostrarVisualizacao(nivel, codigo) {
+      // Nível 4 (index 3): nenhuma visualização
+      if (nivel === 3) {
+        preview.innerHTML = "A visualização aparecerá aqui.";
+        return;
+      }
+
       preview.innerHTML = "A visualização aparecerá aqui.";
+      if (nivel === 2) {
+        const regra = niveis[2].respostaEsperada;
+        const passouNivel3 = regra instanceof RegExp ? regra.test(codigo) : codigo === regra;
+        if (passouNivel3) {
+          const matchMensagem = codigo.match(/let\s+mensagem\s*=\s*['"]([^'\"]*)['"]/i);
+          if (matchMensagem && matchMensagem[1] !== undefined) {
+            preview.innerHTML = matchMensagem[1];
+          }
+        }
+      }
     }
 
     function verificarNivel() {
@@ -294,7 +325,15 @@
         extra = extra.replace(/;\s*/g, ';<br>');
         extra = extra.replace(/(<br>\s*)+/g, '<br>');
       }
-      extraTeoria.innerHTML = extra;
+      extraHtmlAtual = extra || "";
+      extraVisivel = false;
+      extraTeoria.innerHTML = "";
+      if (extraHtmlAtual) {
+        botaoExemplo.style.display = 'inline-flex';
+        botaoExemplo.innerText = 'Exibir exemplo';
+      } else {
+        botaoExemplo.style.display = 'none';
+      }
 
       db.collection("usuarios").doc(auth.currentUser.uid).get().then(docSnap => {
         if (docSnap.exists) {
@@ -306,7 +345,12 @@
             return;
           }
         }
-        entradaCodigo.value = "";
+
+        if ((nivelJsAtual === 2 || nivelJsAtual === 3) && ultimoCodigoDigitado) {
+          entradaCodigo.value = ultimoCodigoDigitado;
+        } else {
+          entradaCodigo.value = "";
+        }
         preview.innerHTML = "A visualização aparecerá aqui.";
       });
 
@@ -332,6 +376,12 @@
       });
     }
 
+    function toggleExemplo() {
+      extraVisivel = !extraVisivel;
+      extraTeoria.innerHTML = extraVisivel ? extraHtmlAtual : "";
+      botaoExemplo.innerText = extraVisivel ? 'Ocultar exemplo' : 'Exibir exemplo';
+    }
+
     function salvarProgresso(nivel) {
       const user = auth.currentUser;
       if (!user) return;
@@ -348,6 +398,7 @@
     function salvarCodigo(codigo) {
       const user = auth.currentUser;
       if (!user) return;
+      ultimoCodigoDigitado = codigo;
       const ref = db.collection("usuarios").doc(user.uid);
       ref.set({
         fasesJS: {

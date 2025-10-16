@@ -32,6 +32,8 @@
       </div>
       <p id="texto-teoria"></p>
       <div id="extra-teoria" style="margin-top:10px; font-weight: 600; font-size:14px; color:#ddd;"></div>
+      <button id="btn-extra-exemplo" class="voltar" style="margin-top:8px; display:none;"
+        onclick="toggleExemplo()">Exibir exemplo</button>
       <h2 id="titulo-nivel">Nível 1/6</h2>
       <p id="descricao-nivel">Sessão 9 – Eventos<br>Tema: ouvir eventos e reagir com funções.</p>
       <hr>
@@ -107,6 +109,9 @@
     const barraProgresso = document.getElementById("barra-progresso");
     const xpTotalSpan = document.getElementById("xp-total");
     const extraTeoria = document.getElementById("extra-teoria");
+    const botaoExemplo = document.getElementById("btn-extra-exemplo");
+    let extraVisivel = false;
+    let extraHtmlAtual = "";
 
     const niveis = [
       {
@@ -173,6 +178,18 @@
           const xp = data.xp || 0;
           nivelJsAtual = (data.fasesJS && data.fasesJS.fase9 && Number.isInteger(data.fasesJS.fase9.nivelAtual)) ? data.fasesJS.fase9.nivelAtual : 0;
           fase9JaConcluida = (data.fasesJS && data.fasesJS.fase9 && data.fasesJS.fase9.status === "concluida") || false;
+          const faseDoc = data.fasesJS && data.fasesJS.fase9 ? data.fasesJS.fase9 : {};
+          if (fase9JaConcluida && ("codigoAtual" in faseDoc || "nivelAtual" in faseDoc)) {
+            db.collection("usuarios").doc(user.uid).set({
+              fasesJS: {
+                fase9: {
+                  codigoAtual: firebase.firestore.FieldValue.delete(),
+                  nivelAtual: firebase.firestore.FieldValue.delete()
+                }
+              }
+            }, { merge: true });
+            nivelJsAtual = 0;
+          }
           xpTotalSpan.textContent = `XP: ${xp}`;
           atualizarNivel();
           if (data.fasesJS && data.fasesJS.fase9 && data.fasesJS.fase9.codigoAtual) {
@@ -180,10 +197,7 @@
             preview.innerHTML = data.fasesJS.fase9.codigoAtual;
           }
 
-          if (fase9JaConcluida) {
-            alert("⚠️ Você já concluiu esta fase.");
-            history.back()
-          }
+          // Fase concluída pode ser repetida; sem XP extra (já tratado em verificarNivel)
         } else {
           atualizarNivel();
         }
@@ -232,7 +246,15 @@
         extra = extra.replace(/;\s*/g, ';<br>');
         extra = extra.replace(/(<br>\s*){2,}/g, '<br>');
       }
-      extraTeoria.innerHTML = extra;
+      extraHtmlAtual = extra || "";
+      extraVisivel = false;
+      extraTeoria.innerHTML = "";
+      if (extraHtmlAtual) {
+        botaoExemplo.style.display = 'inline-flex';
+        botaoExemplo.innerText = 'Exibir exemplo';
+      } else {
+        botaoExemplo.style.display = 'none';
+      }
 
       db.collection("usuarios").doc(auth.currentUser.uid).get().then(docSnap => {
         if (docSnap.exists) {
@@ -260,6 +282,12 @@
 
     function mostrarVisualizacao(nivel, codigo) {
       preview.innerHTML = "A visualização aparecerá aqui.";
+    }
+
+    function toggleExemplo() {
+      extraVisivel = !extraVisivel;
+      extraTeoria.innerHTML = extraVisivel ? extraHtmlAtual : "";
+      botaoExemplo.innerText = extraVisivel ? 'Ocultar exemplo' : 'Exibir exemplo';
     }
 
     function verificarNivel() {

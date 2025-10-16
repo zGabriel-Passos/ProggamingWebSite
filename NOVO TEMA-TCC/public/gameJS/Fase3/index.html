@@ -11,6 +11,32 @@
   <link rel="stylesheet" href="style.css">
   <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap">
   <title>Proggaming | Fase 3 - Operadores e Expressões</title>
+
+  <style>
+    /* Pequeno estilo para a visualização de resultados */
+    #preview {
+      background: #0b0b0b;
+      color: #e6e6e6;
+      padding: 12px;
+      min-height: 180px;
+      overflow: auto;
+      white-space: pre-wrap;
+      font-family: monospace;
+      font-size: 14px;
+    }
+
+    .output-log {
+      color: #9ad1ff;
+    }
+
+    .output-result {
+      color: #b2f59b;
+    }
+
+    .output-error {
+      color: #ff9b9b;
+    }
+  </style>
 </head>
 
 <body>
@@ -32,6 +58,8 @@
       </div>
       <p id="texto-teoria"></p>
       <div id="extra-teoria" style="margin-top:10px; font-weight: 600; font-size:14px; color:#ddd;"></div>
+      <button id="btn-extra-exemplo" class="voltar" style="margin-top:8px; display:none;"
+        onclick="toggleExemplo()">Exibir exemplo</button>
       <h2 id="titulo-nivel">Nível 1/6</h2>
       <p id="descricao-nivel">Sessão 3 – Operadores e Expressões<br>Tema: Operações matemáticas e lógicas</p>
       <hr>
@@ -47,7 +75,7 @@
       </a>
     </div>
 
-    <div class="resultado" id="preview">A visualização aparecerá aqui.</div>
+    <div class="resultado active" id="preview">A visualização aparecerá aqui.</div>
 
     <div class="editor-container">
       <div class="editor-header">
@@ -81,7 +109,8 @@
       document.querySelectorAll('.bloco-teoria, .resultado, .editor-container')
         .forEach(el => el.classList.remove('active'));
 
-      document.querySelector('.' + id).classList.add('active');
+      const el = document.querySelector('.' + id);
+      if (el) el.classList.add('active');
     }
 
     mostrarTela('bloco-teoria');
@@ -107,6 +136,9 @@
     const barraProgresso = document.getElementById("barra-progresso");
     const xpTotalSpan = document.getElementById("xp-total");
     const extraTeoria = document.getElementById("extra-teoria");
+    const botaoExemplo = document.getElementById("btn-extra-exemplo");
+    let extraVisivel = false;
+    let extraHtmlAtual = "";
 
     const niveis = [
       {
@@ -159,7 +191,6 @@
       }
     ];
 
-
     auth.onAuthStateChanged(user => {
       if (!user) window.location.href = "./../";
       else carregarProgresso(user);
@@ -173,16 +204,23 @@
           const xp = data.xp || 0;
           nivelJsAtual = (data.fasesJS && data.fasesJS.fase3 && Number.isInteger(data.fasesJS.fase3.nivelAtual)) ? data.fasesJS.fase3.nivelAtual : 0;
           fase3JaConcluida = (data.fasesJS && data.fasesJS.fase3 && data.fasesJS.fase3.status === "concluida") || false;
+          const faseDoc = data.fasesJS && data.fasesJS.fase3 ? data.fasesJS.fase3 : {};
+          if (fase3JaConcluida && ("codigoAtual" in faseDoc || "nivelAtual" in faseDoc)) {
+            db.collection("usuarios").doc(user.uid).set({
+              fasesJS: {
+                fase3: {
+                  codigoAtual: firebase.firestore.FieldValue.delete(),
+                  nivelAtual: firebase.firestore.FieldValue.delete()
+                }
+              }
+            }, { merge: true });
+            nivelJsAtual = 0;
+          }
           xpTotalSpan.textContent = `XP: ${xp}`;
           atualizarNivel();
           if (data.fasesJS && data.fasesJS.fase3 && data.fasesJS.fase3.codigoAtual) {
             entradaCodigo.value = data.fasesJS.fase3.codigoAtual;
             preview.innerHTML = data.fasesJS.fase3.codigoAtual;
-          }
-
-          if (fase3JaConcluida) {
-            alert("⚠️ Você já concluiu esta fase.");
-            history.back()
           }
         } else {
           atualizarNivel();
@@ -233,7 +271,15 @@
         extra = extra.replace(/;\s*/g, ';<br>');
         extra = extra.replace(/(<br>\s*)+/g, '<br>');
       }
-      extraTeoria.innerHTML = extra;
+      extraHtmlAtual = extra || "";
+      extraVisivel = false;
+      extraTeoria.innerHTML = "";
+      if (extraHtmlAtual) {
+        botaoExemplo.style.display = 'inline-flex';
+        botaoExemplo.innerText = 'Exibir exemplo';
+      } else {
+        botaoExemplo.style.display = 'none';
+      }
 
       db.collection("usuarios").doc(auth.currentUser.uid).get().then(docSnap => {
         if (docSnap.exists) {
@@ -252,15 +298,167 @@
       barraProgresso.style.width = `${(nivelJsAtual / niveis.length) * 100}%`;
 
       const resultado = document.querySelector('.resultado');
-      if (nivelJsAtual === 0 || nivelJsAtual === 1) {
-        resultado.style.display = 'none';
-      } else {
-        resultado.style.display = 'block';
-      }
+      resultado.style.display = 'block';
     }
 
     function mostrarVisualizacao(nivel, codigo) {
-      preview.innerHTML = "A visualização aparecerá aqui.";
+      const resultados = [];
+      const logs = [];
+      const errors = [];
+
+      // console falso que grava logs (log/info/error)
+      const fakeConsole = {
+        log: (...args) => {
+          try {
+            logs.push(args.map(v => typeof v === 'object' ? JSON.stringify(v) : String(v)).join(' '));
+          } catch (_) {
+            logs.push(args.join(' '));
+          }
+        },
+        info: (...args) => fakeConsole.log(...args),
+        error: (...args) => {
+          try {
+            errors.push(args.map(v => typeof v === 'object' ? JSON.stringify(v) : String(v)).join(' '));
+          } catch (_) {
+            errors.push(args.join(' '));
+          }
+        }
+      };
+
+      const sanitizeDecls = (src) => {
+        let out = src
+          // transforma declarações em propriedades de sandbox, para que variáveis fiquem acessíveis depois
+          .replace(/\b(var|let|const)\s+([a-zA-Z_$][\w$]*)\s*=\s*/g, 'sandbox.$2 = ')
+          .replace(/\b(var|let|const)\s+([a-zA-Z_$][\w$]*)\s*(;|\n|$)/g, 'sandbox.$2 = undefined$3');
+        return out;
+      };
+
+      try {
+        const sandbox = {};
+        const transformed = sanitizeDecls(String(codigo));
+
+        // execução inicial (torna variáveis/expressões com efeito colateral disponíveis no sandbox)
+        try {
+          const runAll = new Function('sandbox', 'console', `with(sandbox){ try{ ${transformed} }catch(e){ console.error('Exec error:', e && e.message ? e.message : String(e)); } return sandbox; }`);
+          runAll(sandbox, fakeConsole);
+        } catch (e) {
+          // se erro global, registra para exibir
+          errors.push(String(e && e.message ? e.message : e));
+        }
+
+        // análise linha a linha: tenta avaliar expressões e coletar resultados
+        const linhasOrig = String(codigo).split(/\r?\n/);
+        const linhas = linhasOrig.map(s => s.trim()).filter(Boolean);
+
+        for (let i = 0; i < linhas.length; i++) {
+          const linha = linhas[i];
+          if (/^\/\//.test(linha)) continue;
+          if (/^\*|^\//.test(linha)) continue;
+          if (/^(if|for|while|switch|function|return|break|continue|class|try|catch|finally)\b/.test(linha)) continue;
+          if (/^\{|\}$/.test(linha)) continue;
+          if (/^(let|const|var)\b/.test(linha)) continue;
+
+          // tenta avaliar como expressão entre parênteses ou literal
+          try {
+            const evalFn = new Function('sandbox', 'console', `with(sandbox){ try{ return (${linha.replace(/;$/, '')}); }catch(e){ throw e; } }`);
+            const valor = evalFn(sandbox, fakeConsole);
+            if (valor !== undefined) resultados.push({ linha: linha, valor: valor });
+          } catch (e) {
+            // se falhar, tenta avaliar sem parênteses (caso seja uma comparação simples etc.)
+            try {
+              const evalFn2 = new Function('sandbox', 'console', `with(sandbox){ try{ return ${linha.replace(/;$/, '')}; }catch(e){ throw e; } }`);
+              const val2 = evalFn2(sandbox, fakeConsole);
+              if (val2 !== undefined) resultados.push({ linha: linha, valor: val2 });
+            } catch (e2) {
+              // ignora linha se não for uma expressão avaliada
+            }
+          }
+        }
+
+        // fragments por ponto e vírgula (fallback)
+        if (resultados.length === 0) {
+          const porPontoEVirgula = String(codigo).split(';').map(s => s.trim()).filter(Boolean);
+          for (const frag of porPontoEVirgula) {
+            if (!frag) continue;
+            if (/^(let|const|var|if|for|while|switch|function|class|try|catch|finally|return|break|continue)\b/.test(frag)) continue;
+            try {
+              const evalFrag = new Function('sandbox', 'console', `with(sandbox){ return (${frag}); }`);
+              const val = evalFrag(sandbox, fakeConsole);
+              if (val !== undefined) resultados.push({ linha: frag, valor: val });
+            } catch (_) { }
+          }
+        }
+
+        // se ainda vazio, tenta avaliar todo o bloco como expressão
+        if (resultados.length === 0) {
+          try {
+            const evalAll = new Function('sandbox', 'console', `with(sandbox){ return (${String(codigo)}); }`);
+            const valAll = evalAll(sandbox, fakeConsole);
+            if (valAll !== undefined) resultados.push({ linha: '(bloco)', valor: valAll });
+          } catch (_) { }
+        }
+
+        // se houver variáveis no sandbox, mostra algumas chaves úteis
+        if (resultados.length === 0) {
+          try {
+            const chaves = Object.keys(sandbox || {});
+            for (const k of chaves) {
+              const v = sandbox[k];
+              if (typeof v === 'number' || typeof v === 'boolean' || typeof v === 'string') {
+                resultados.push({ linha: k, valor: v });
+              }
+            }
+          } catch (_) { }
+        }
+
+      } catch (e) {
+        errors.push(String(e && e.message ? e.message : e));
+      }
+
+      // montar html de saída: logs primeiro, erros, depois results
+      const partes = [];
+
+      // logs
+      for (const l of logs) {
+        partes.push(`<div class="output-log">console.log → ${escapeHtml(String(l))}</div>`);
+      }
+      // errors
+      for (const er of errors) {
+        partes.push(`<div class="output-error">Error → ${escapeHtml(String(er))}</div>`);
+      }
+      // resultados avaliados
+      for (const r of resultados) {
+        const valorStr = formatValue(r.valor);
+        partes.push(`<div class="output-result">${escapeHtml(String(r.linha))} => ${escapeHtml(valorStr)}</div>`);
+      }
+
+      preview.innerHTML = partes.length ? partes.join('') : "A visualização aparecerá aqui.";
+      preview.scrollTop = preview.scrollHeight;
+
+      // helpers locais
+      function formatValue(v) {
+        if (typeof v === 'string') return `"${v}"`;
+        if (v === null) return 'null';
+        if (v === undefined) return 'undefined';
+        if (typeof v === 'object') {
+          try { return JSON.stringify(v); } catch (_) { return String(v); }
+        }
+        return String(v);
+      }
+      function escapeHtml(str) {
+        return (str + '')
+          .replace(/&/g, '&amp;')
+          .replace(/</g, '&lt;')
+          .replace(/>/g, '&gt;')
+          .replace(/"/g, '&quot;')
+          .replace(/'/g, '&#039;');
+      }
+    }
+
+    function toggleExemplo() {
+      extraVisivel = !extraVisivel;
+      extraTeoria.innerHTML = extraVisivel ? extraHtmlAtual : "";
+      botaoExemplo.innerText = extraVisivel ? 'Ocultar exemplo' : 'Exibir exemplo';
     }
 
     function verificarNivel() {
@@ -275,8 +473,7 @@
       }
 
       mostrarVisualizacao(nivelJsAtual, entrada);
-
-      // visualização do console desativada
+      try { mostrarTela('resultado'); } catch (_) { }
 
       const passou = resposta instanceof RegExp ? resposta.test(entrada) : entrada === resposta;
 
