@@ -211,7 +211,7 @@ footer a:hover {
     display: flex;
     flex-direction: column;
     background: rgba(0, 0, 0, 0.03);
-    border: 1px solid rgba(0, 0, 0, 0.06);
+    border: 1px solid #00000071;
     box-shadow: 2px 5px 25px 3px #0760b449;
     animation: slideUp 0.6s ease-out forwards;
     border-radius: 8px;
