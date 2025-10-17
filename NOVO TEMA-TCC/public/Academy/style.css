@@ -136,7 +136,7 @@ main .container .tabs a {
 }
 
 .container .tabs a:focus #tech {
-    color: #b9066e;
+    color: #06b974;
     text-shadow: 0 2px 2px rgba(0, 0, 0, 0.301);
     transition: 0.2s;
 }
