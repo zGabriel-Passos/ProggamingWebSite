@@ -18,7 +18,7 @@ def main():
     time.sleep(0.5)
     url = input("Coloque o caminho do pdf que esta na pasta do Academy: ")
     time.sleep(0.5)
-    imagem = f"bg-{categoria}.jpg"
+    imagem = f"bg-{categoria}.png"
 
     lista.append(
         {
