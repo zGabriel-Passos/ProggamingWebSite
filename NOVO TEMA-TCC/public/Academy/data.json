@@ -1,25 +1,25 @@
 [
     {
         "titulo": "HTML Básico - Pdf 1",
-        "imagem": "png-pdf.png",
+        "imagem": "bg-html.jpg",
         "category": "html",
         "link": "files/html-aula.pdf"
     },
     {
         "titulo": "JavaScript Básico - Pdf 1",
-        "imagem": "png-pdf.png",
+        "imagem": "bg-image.jpg",
         "category": "js",
         "link": "files/js-aula.pdf"
     },
     {
         "titulo": "Instalando VSCode",
-        "imagem": "png-pdf.png",
+        "imagem": "bg-image.jpg",
         "category": "outros",
         "link": "files/vs-code.pdf"
     },
     {
         "titulo": "CSS Básico - Pdf 1",
-        "imagem": "png-pdf.png",
+        "imagem": "bg-image.jpg",
         "category": "css",
         "link": "files/css-aula.pdf"
     }
