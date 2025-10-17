@@ -64,6 +64,7 @@ header .right button {
 header .right button:hover {
     background-color: #e7e7e744;
     transition: 0.3s;
+    border-radius: 6px;
 }
 
 main {
