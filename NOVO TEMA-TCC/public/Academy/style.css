@@ -9,6 +9,11 @@ body {
     height: 100vh;
 }
 
+.opaco {
+    filter: blur(1.5px);
+    transition: all 0.4s;
+}
+
 header {
     display: flex;
     align-items: center;

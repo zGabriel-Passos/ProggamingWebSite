@@ -135,7 +135,9 @@ fetch('data.json')
 
 function abrirModal() {
     const modal = document.getElementById('modal');
+    const body = document.getElementById('body');
     if (modal) {
+        body.classList.add('opaco');
         modal.classList.remove('hidden');
         modal.innerHTML = `
             <div class="modal-content">
@@ -152,6 +154,7 @@ function fecharModal() {
     const modal = document.getElementById('modal');
     if (modal) {
         modal.classList.add('hidden');
+        body.classList.remove('opaco');
         modal.innerHTML = '';
     }
 }
