@@ -91,7 +91,7 @@ main .container .tabs {
 }
 
 main .container .tabs a {
-    border: 1px solid #c0c0c0ce;
+    border: 1px solid #c0c0c062;
     border-radius: 20px;
     padding: 6px 10px;
     background-color: #c7c7c723;
@@ -105,7 +105,7 @@ main .container .tabs a {
 
 .container .tabs a:hover {
     border: 1px solid #0059ff5d;
-    box-shadow: 0 4px 22px #0000001a;
+    box-shadow: 0 4px 22px #3d4be81a;
     transition: 0.4s;
 }
 
