@@ -104,7 +104,8 @@ main .container .tabs a {
 }
 
 .container .tabs a:hover {
-    border: 1px solid #0059ff65;
+    border: 1px solid #0059ff5d;
+    box-shadow: 0 4px 22px #0000001a;
     transition: 0.4s;
 }
 
@@ -112,7 +113,7 @@ main .container .tabs a {
     border: 1px solid #1d77ffce;
     box-shadow: 0 4px 8px #1d77ff2e;
     transition: 0.3s;
-    background-color: #ffffff9f;
+    background-color: #ffffffda;
     color: #252525;
 }
 
@@ -163,6 +164,35 @@ section {
     flex-direction: column;
     align-items: stretch;
     animation: slideUp 1.2s ease-out forwards;
+}
+
+footer {
+    position: fixed;
+    display: flex;
+    align-items: center;
+    flex-direction: column;
+    border-radius: 10px;
+    font-size: 22px;
+    color: white;
+    background-color: #cecece8f;
+    bottom: 95px;
+    right: 20px;
+    width: 50px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.226);
+    border: 2px dashed #7e7e7ede;
+    transition: background-color 0.3s ease;
+}
+
+footer a {
+    color: rgb(65, 65, 65);
+    text-decoration: none;
+    transition: 0.4s ease;
+}
+
+footer a:hover {
+    color: #0180ff;
+    transition: 0.4s ease;
+    transform: scale(1.2);
 }
 
 .page.active {
@@ -290,7 +320,7 @@ section {
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.521);
     border: 1px solid #7e7e7ede;
     cursor: pointer;
-    transition: background-color 0.3s ease;
+    transition: 0.3s ease;
 }
 
 .icon img {
@@ -299,33 +329,9 @@ section {
     border-radius: 50%;
 }
 
-.icon2 {
-    position: fixed;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    font-size: 34px;
-    font-weight: 600;
-    color: white;
-    bottom: 80px;
-    right: 20px;
-    width: 50px;
-    height: 50px;
-    background: linear-gradient(140deg, gray, black);
-    border-radius: 50%;
-    text-shadow: 0 2px 4px rgb(0, 0, 0);
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.521);
-    border: 1px solid #7e7e7ede;
-    cursor: pointer;
-    transition: background-color 0.3s ease;
+.icon:hover {
+    transform: scale(1.1);
 }
-
-.icon2 img {
-    width: 100%;
-    height: 100%;
-    border-radius: 50%;
-}
-
 
 .overlay {
     position: fixed;
