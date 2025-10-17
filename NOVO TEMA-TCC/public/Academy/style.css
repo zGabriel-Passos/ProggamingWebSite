@@ -145,8 +145,8 @@ main .container .tabs a {
     gap: 1rem;
     align-items: flex-start;
     padding: 20px;
-    border-top: 2px solid #e0e0e0be;
-    margin-top: 20px;
+    border-top: 1.5px solid #e0e0e0be;
+    margin-top: 15px;
 }
 
 section {
