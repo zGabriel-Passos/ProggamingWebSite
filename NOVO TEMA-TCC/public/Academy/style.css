@@ -93,7 +93,7 @@ main .container .tabs {
 main .container .tabs a {
     border: 1px solid #c0c0c0ce;
     border-radius: 20px;
-    padding: 6px;
+    padding: 6px 10px;
     background-color: #c7c7c723;
     color: #898989;
     text-decoration: none;
