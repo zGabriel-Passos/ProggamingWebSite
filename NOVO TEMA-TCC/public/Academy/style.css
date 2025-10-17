@@ -203,7 +203,12 @@ footer a:hover #ytb {
 }
 
 footer a:hover #instagram {
-    background-image: linear-gradient(230deg, rgb(153, 0, 255), rgb(76, 0, 255), orange, #fffb00);
+    background-image: linear-gradient(45deg,
+            #FFD600 0%,
+            #FF7A00 25%,
+            #FF0069 50%,
+            #D300C5 75%,
+            #7638FA 100%);
     -webkit-background-clip: text;
     background-clip: text;
     color: transparent;
