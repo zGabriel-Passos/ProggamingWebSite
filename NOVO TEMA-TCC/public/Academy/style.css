@@ -51,7 +51,7 @@ header .right button {
 }
 
 header .right button:hover {
-    background-color: rgba(231, 231, 231, 0.911);
+    background-color: #e7e7e744;
     transition: 0.3s;
 }
 
@@ -73,42 +73,66 @@ main .container {
 
 main .container .tabs {
     display: flex;
+    justify-content: center;
     align-items: center;
     flex-wrap: wrap;
     max-width: 560px;
     margin: 0px 20px 0px 20px;
     gap: 10px;
+    padding: 3px;
+    background-color: #c7c7c723;
+    border: 1px solid #c0c0c05b;
+    border-radius: 20px;
 }
 
 main .container .tabs a {
     border: 1px solid #c0c0c0ce;
-    border-radius: 2px;
+    border-radius: 20px;
     padding: 6px;
     background-color: #c7c7c723;
     color: #898989;
     text-decoration: none;
-    transition: 0.3s;
+    transition: 0.4s;
     display: flex;
     align-items: center;
     gap: 5px;
 }
 
+.container .tabs a:hover {
+    border: 1px solid #0059ff65;
+    transition: 0.4s;
+}
+
 .container .tabs a:focus {
     border: 1px solid #1d77ffce;
     box-shadow: 0 4px 8px #1d77ff2e;
-    transition: 0.2s;
-    background-color: #ffffffc1;
+    transition: 0.3s;
+    background-color: #ffffff9f;
     color: #252525;
 }
 
-section {
-    height: 100%;
-    padding: 0 0px 0px 15px;
-    display: flex;
-    align-items: center;
-    max-width: 100%;
-    animation: slideUp 1.2s ease-out forwards;
-    justify-content: center;
+.container .tabs a:focus #html {
+    color: #ff5125;
+    text-shadow: 0 2px 2px rgba(0, 0, 0, 0.301);
+    transition: 0.2s;
+}
+
+.container .tabs a:focus #css {
+    color: #0077ff;
+    text-shadow: 0 2px 2px rgba(0, 0, 0, 0.301);
+    transition: 0.2s;
+}
+
+.container .tabs a:focus #js {
+    color: #ffdb0c;
+    text-shadow: 0 2px 2px rgb(0, 0, 0);
+    transition: 0.2s;
+}
+
+.container .tabs a:focus #tech {
+    color: #b9066e;
+    text-shadow: 0 2px 2px rgba(0, 0, 0, 0.301);
+    transition: 0.2s;
 }
 
 .page {
@@ -204,13 +228,13 @@ section {
     border-radius: 6px;
     font-weight: 600;
     text-align: center;
-    transition: background-color 0.3s ease;
+    transition: background-color 0.5s ease;
 }
 
 .item-card__link:hover {
     background: #094f96;
     color: white;
-    transition: background-color 0.3s ease;
+    transition: background-color 0.5s ease;
 }
 
 @keyframes slideUp {
@@ -269,6 +293,34 @@ section {
     height: 100%;
     border-radius: 50%;
 }
+
+.icon2 {
+    position: fixed;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 34px;
+    font-weight: 600;
+    color: white;
+    bottom: 80px;
+    right: 20px;
+    width: 50px;
+    height: 50px;
+    background: linear-gradient(140deg, gray, black);
+    border-radius: 50%;
+    text-shadow: 0 2px 4px rgb(0, 0, 0);
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.521);
+    border: 1px solid #7e7e7ede;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+}
+
+.icon2 img {
+    width: 100%;
+    height: 100%;
+    border-radius: 50%;
+}
+
 
 .overlay {
     position: fixed;

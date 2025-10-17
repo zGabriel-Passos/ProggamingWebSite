@@ -34,8 +34,8 @@ window.addEventListener("DOMContentLoaded", () => {
         document.body.classList.add("loaded");
         setTimeout(() => {
             document.body.style.overflow = "auto";
-        }, 300);
-    }, 300);
+        }, 500);
+    }, 500);
 });
 
 const itemsContainer = document.querySelector('.tabs-sections');

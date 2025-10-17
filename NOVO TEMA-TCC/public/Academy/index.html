@@ -34,13 +34,13 @@
         <div class="container" style="margin-top: 10px;">
             <div class="tabs">
                 <a href="#" onclick="mostrarSecao('filehtml')">
-                    <i class='bx bxl-html5'></i>file-html</a>
+                    <i class='bx bxl-html5' id="html"></i>file-html</a>
                 <a href="#" onclick="mostrarSecao('filecss')">
-                    <i class='bx bxl-css3'></i>file-css</a>
+                    <i class='bx bxl-css3' id="css"></i>file-css</a>
                 <a href="#" onclick="mostrarSecao('filejs')">
-                    <i class='bx bxl-javascript'></i>file-js</a>
+                    <i class='bx bxl-javascript' id="js"></i>file-js</a>
                 <a href="#" onclick="mostrarSecao('moretech')">
-                    <i class='bx bx-code-alt'></i>More Tech</a>
+                    <i class='bx bx-code-alt' id="tech"></i>More Tech</a>
             </div>
             <div class="tabs-sections">
                 <section id="filehtml" class="page"></section>
@@ -54,17 +54,22 @@
         </div>
     </main>
 
+    <div class="modal hidden" id="modal"></div>
+
     <div class="icon">
         <img src="../avatares/prota-dançando.gif" alt="Nosso protagonista dançando" onclick="abrirModal()">
     </div>
 
-    <div class="modal hidden" id="modal">
-        
-    </div>
     <!-- <footer>
-        <a href="https://www.youtube.com/@ProggamingPage" target="_blank"><i class='bx bxl-youtube'></i></a>
-        <a href="https://www.instagram.com/proggaming_/" target="_blank"><i class='bx bxl-instagram-alt'></i></a>
+        <div>
+            <h2>&copy; 2025 by Proggaming, Inc.</h2>
+        </div>
+        <div>
+            <a href="https://www.youtube.com/@ProggamingPage" target="_blank"><i class='bx bxl-youtube'></i></a>
+            <a href="https://www.instagram.com/proggaming_/" target="_blank"><i class='bx bxl-instagram-alt'></i></a>
+        </div>
     </footer> -->
+
     <script src="script.js"></script>
 </body>
 
