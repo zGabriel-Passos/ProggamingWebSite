@@ -50,7 +50,7 @@ header .right {
 
 header .right button {
     font-family: "Poppins", monospace;
-    border: 1px solid #c7c7c7ce;
+    border: 1px solid #c7c7c7b6;
     padding: 5px 15px;
     border-radius: 2px;
     cursor: pointer;
@@ -62,9 +62,14 @@ header .right button {
 }
 
 header .right button:hover {
+    padding: 5px 13px;
     background-color: #e7e7e744;
     transition: 0.3s;
     border-radius: 6px;
+}
+
+header .right button i {
+    font-size: 16px;
 }
 
 main {
@@ -100,7 +105,7 @@ main .container .tabs {
 main .container .tabs a {
     border: 1px solid #c0c0c062;
     border-radius: 20px;
-    padding: 6px 10px;
+    padding: 4px 10px;
     background-color: #c7c7c723;
     color: #898989;
     text-decoration: none;
@@ -232,7 +237,7 @@ section {
     display: flex;
     flex-direction: column;
     background: rgba(0, 0, 0, 0.03);
-    border: 1px solid #00000071;
+    border: 1px solid #0000004b;
     box-shadow: 2px 5px 25px 3px #0760b449;
     animation: slideUp 0.6s ease-out forwards;
     border-radius: 8px;
@@ -279,13 +284,24 @@ section {
     color: #666;
 }
 
+.item-card__by {
+    display: flex;
+    margin: 2px;
+    align-items: center;
+    color: #000000e3;
+    gap: 5px;
+}
+
 .item-card__link {
     margin-top: auto;
-    display: inline-block;
+    display: flex;
+    align-items: center;
+    justify-content: center;
     text-decoration: none;
-    padding: 0.4rem 0.6rem;
+    padding: 0.2rem 0.4rem;
     background: #ffffff;
     border: 2px solid #094f96;
+    height: 20px;
     color: #094f96;
     border-radius: 6px;
     font-weight: 600;
@@ -297,6 +313,23 @@ section {
     background: #094f96;
     color: white;
     transition: background-color 0.5s ease;
+}
+
+.item-card__link i {
+    display: none;
+    transition: display 0.5s ease;
+}
+
+.item-card__link:hover i {
+    display: block;
+    font-size: 22px;
+    color: #ffffff;
+    animation: slideUp 0.3s ease-out forwards;
+}
+
+.item-card__link:hover span {
+    animation: slideDown 0.5s ease-out;
+    display: none;
 }
 
 @keyframes slideUp {

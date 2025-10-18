@@ -14,7 +14,9 @@ def main():
 
     titulo = input("Titulo do pdf: ")
     time.sleep(0.5)
-    categoria = input("Categoria de linguagem do pdf - (Ex: html, css, js, outros): ").lower()
+    categoria = input(
+        "Categoria de linguagem do pdf - (Ex: html, css, js, outros): "
+    ).lower()
     time.sleep(0.5)
     url = input("Coloque o caminho do pdf que esta na pasta do Academy: ")
     time.sleep(0.5)
@@ -26,6 +28,7 @@ def main():
             "imagem": imagem,
             "category": categoria,
             "link": url,
+            "by": "Oficial Proggaming",
         }
     )
 
