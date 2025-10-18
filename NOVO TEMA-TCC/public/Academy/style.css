@@ -173,7 +173,7 @@ section {
     animation: slideUp 1.2s ease-out forwards;
 }
 
-footer {
+.social-media {
     position: fixed;
     display: flex;
     align-items: center;
@@ -190,19 +190,19 @@ footer {
     transition: background-color 0.3s ease;
 }
 
-footer a {
+.social-media a {
     color: rgb(65, 65, 65);
     text-decoration: none;
     transition: 0.4s ease;
 }
 
-footer a:hover #ytb {
+.social-media a:hover #ytb {
     color: #ff0101;
     transition: 0.4s ease;
     transform: scale(1.2);
 }
 
-footer a:hover #instagram {
+.social-media a:hover #instagram {
     background-image: linear-gradient(45deg,
             #FFD600 0%,
             #FF7A00 25%,
@@ -237,12 +237,17 @@ footer a:hover #instagram {
     animation: slideUp 0.6s ease-out forwards;
     border-radius: 8px;
     overflow: hidden;
-    transition: margin .3s ease, box-shadow .15s ease;
+    transition: transform .15s ease, box-shadow .15s ease;
 }
 
 .item-card:hover {
-    margin: -2px;
-    box-shadow: 0 6px 18px rgba(0, 0, 0, 0.212);
+    box-shadow: 0 6px 18px rgba(0, 0, 0, 0.301);
+    transition: 0.3s;
+}
+
+.item-card:hover img {
+    transform: scale(1.05);
+    transition: transform 0.5s ease;
 }
 
 .item-card__img {
@@ -251,6 +256,7 @@ footer a:hover #instagram {
     object-fit: cover;
     display: block;
     background: #ddd;
+    transition: transform 0.5s ease;
 }
 
 .item-card__body {
@@ -447,4 +453,29 @@ body.loaded .site-content {
         transform: translate(-50%, -50%);
         opacity: 1;
     }
+}
+
+footer {
+    display: flex;
+    align-items: center;
+    flex-direction: column;
+    justify-content: center;
+    margin-top: 20px;
+}
+
+@media (max-width: 768px) {
+    footer {
+        font-size: 14px;
+    }
+}
+
+.direitos a {
+    color: rgb(0, 0, 0);
+    font-weight: 600;
+    transition: 0.2s;
+}
+
+.direitos a:hover {
+    opacity: 0.7;
+    transition: 0.2s;
 }

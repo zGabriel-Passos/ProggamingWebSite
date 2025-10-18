@@ -132,7 +132,6 @@ fetch('data.json')
         console.error('Houve um erro:', error);
     });
 
-
 function abrirModal() {
     const modal = document.getElementById('modal');
     const body = document.getElementById('body');
@@ -145,9 +144,18 @@ function abrirModal() {
                 <h2>Olá! Eu sou o Prota!</h2>
                 <p>Bem-vindo à nossa Academia de Programação! Aqui, você encontrará uma variedade de cursos e recursos para aprimorar suas habilidades em desenvolvimento web e muito mais. Explore nossas seções de HTML, CSS, JavaScript, e outras tecnologias. Vamos codar juntos!</p>
                 <span>Já conhece nosso site oficial? Lá você consegue aprender, testar e ganhar XP:</span> <a href="https://proggamingpage.web.app" target="_blank" style="color: blue; text-decoration: underline;">proggamingpage.web.app</a>
+                <footer>
+                    <span><strong>&copy; <span id="anoAtual"></span> Proggaming.</strong> All rights reserved.</span>
+                      <div class="direitos"><a href="../Termos_de_uso.pdf" target="_blank">Termos de Uso</a> e <a
+                href="../politica_privacidade.pdf" target="_blank">Privacidade.</a></div>
+                </footer>
             </div>
         `;
     }
+    const elementoAno = document.getElementById("anoAtual");
+    const dataAtual = new Date();
+    const ano = dataAtual.getFullYear();
+    elementoAno.innerHTML = ano;
 }
 
 function fecharModal() {

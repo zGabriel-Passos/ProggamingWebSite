@@ -100,3 +100,9 @@ document.getElementById("btnInstalar").addEventListener("click", () => {
     });
   }
 });
+
+// O script que atualiza o ano
+const elementoAno = document.getElementById("anoAtual");
+const dataAtual = new Date();
+const ano = dataAtual.getFullYear();
+elementoAno.innerHTML = ano;

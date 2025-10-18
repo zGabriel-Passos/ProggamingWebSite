@@ -20,7 +20,8 @@
     </div>
     <header>
         <div class="left">
-            <i onclick="location.href=''" style="cursor: url(./cursors/Link.cur), pointer !important;" class='bx bx-network-chart'></i>
+            <i onclick="location.href=''" style="cursor: url(./cursors/Link.cur), pointer !important;"
+                class='bx bx-network-chart'></i>
             <h1>Proggaming Academy</h1>
         </div>
         <div class="right">
@@ -61,12 +62,20 @@
             onclick="abrirModal()">
     </div>
 
-    <footer>
+    <div class="social-media">
         <a href="https://www.youtube.com/@ProggamingPage" target="_blank"><i class='bx bxl-youtube' id="ytb"></i></a>
-        <a href="https://www.instagram.com/proggaming_/" target="_blank"><i class='bx bxl-instagram-alt' id="instagram"></i></a>
-    </footer>
+        <a href="https://www.instagram.com/proggaming_/" target="_blank"><i class='bx bxl-instagram-alt'
+                id="instagram"></i></a>
+    </div>
 
     <script src="script.js"></script>
+    <script>
+        // O script que atualiza o ano
+        const elementoAno = document.getElementById("anoAtual");
+        const dataAtual = new Date();
+        const ano = dataAtual.getFullYear();
+        elementoAno.innerHTML = ano;
+    </script>
 </body>
 
 </html>
