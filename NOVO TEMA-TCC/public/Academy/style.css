@@ -202,7 +202,7 @@ section {
     right: 20px;
     width: 50px;
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.226);
-    border: 2px dashed #7e7e7ede;
+    border: 2px solid #7e7e7ede;
     transition: background-color 0.3s ease;
 }
 
