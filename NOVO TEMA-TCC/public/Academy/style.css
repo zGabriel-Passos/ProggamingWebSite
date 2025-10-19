@@ -102,6 +102,17 @@ main .container .tabs {
     border-radius: 20px;
 }
 
+main .container .tabs a:last-child {
+    color: #ff000050;
+}
+
+main .container .tabs a:last-child:hover,
+main .container .tabs a:last-child:focus {
+    border: 1px solid lightgray;
+    background: transparent;
+    box-shadow: none;
+}
+
 main .container .tabs a {
     border: 1px solid #c0c0c062;
     border-radius: 20px;
@@ -148,7 +159,7 @@ main .container .tabs a {
 }
 
 .container .tabs a:focus #tech {
-    color: #06b974;
+    color: #008b56;
     text-shadow: 0 2px 2px rgba(0, 0, 0, 0.301);
     transition: 0.2s;
 }
