@@ -18,44 +18,46 @@
     <div class="overlay">
         <img src="../logo_rotating.gif">
     </div>
-    <header>
-        <div class="left">
-            <i class='bx bx-network-chart'></i>
-            <h1>Proggaming Academy</h1>
-        </div>
-        <div class="right">
-            <button onclick="location.href='../TelaPrincipal'">Início<i class='bx bx-right-arrow-alt'></i></button>
-        </div>
-    </header>
-
-    <main id="body">
-        <span class="title-main">Arquivos, tutoriais, repositórios e muito mais sobre programação básica.</span>
-
-        <div class="container" style="margin-top: 10px;">
-            <div class="tabs">
-                <a href="#" onclick="mostrarSecao('filehtml')">
-                    <i class='bx bxl-html5' id="html"></i>File HTML</a>
-                <a href="#" onclick="mostrarSecao('filecss')">
-                    <i class='bx bxl-css3' id="css"></i>File CSS</a>
-                <a href="#" onclick="mostrarSecao('filejs')">
-                    <i class='bx bxl-javascript' id="js"></i>File JS</a>
-                <a href="#" onclick="mostrarSecao('moretech')">
-                    <i class='bx bx-code-alt' id="tech"></i>More Tech</a>
-                <a href="#" onclick="mostrarSecao('nada')">
-                    <i class='bx bx-window-close'></i></a>
+    <div id="conteudo-dinamico">
+        <header>
+            <div class="left">
+                <i class='bx bx-network-chart'></i>
+                <h1>Proggaming Academy</h1>
             </div>
-            <div class="tabs-sections">
-                <section id="nada" class="page"></section>
-
-                <section id="filehtml" class="page"></section>
-
-                <section id="filecss" class="page"></section>
-
-                <section id="filejs" class="page"></section>
-
-                <section id="moretech" class="page"></section>
+            <div class="right">
+                <button onclick="location.href='../TelaPrincipal'">Início<i class='bx bx-right-arrow-alt'></i></button>
             </div>
-        </div>
+        </header>
+
+        <main id="body">
+            <span class="title-main">Arquivos, tutoriais, repositórios e muito mais sobre programação básica.</span>
+
+            <div class="container" style="margin-top: 10px;">
+                <div class="tabs">
+                    <a href="#" onclick="mostrarSecao('filehtml')">
+                        <i class='bx bxl-html5' id="html"></i>File HTML</a>
+                    <a href="#" onclick="mostrarSecao('filecss')">
+                        <i class='bx bxl-css3' id="css"></i>File CSS</a>
+                    <a href="#" onclick="mostrarSecao('filejs')">
+                        <i class='bx bxl-javascript' id="js"></i>File JS</a>
+                    <a href="#" onclick="mostrarSecao('moretech')">
+                        <i class='bx bx-code-alt' id="tech"></i>More Tech</a>
+                    <a href="#" onclick="mostrarSecao('nada')">
+                        <i class='bx bx-window-close'></i></a>
+                </div>
+                <div class="tabs-sections">
+                    <section id="nada" class="page"></section>
+
+                    <section id="filehtml" class="page"></section>
+
+                    <section id="filecss" class="page"></section>
+
+                    <section id="filejs" class="page"></section>
+
+                    <section id="moretech" class="page"></section>
+                </div>
+            </div>
+    </div>
     </main>
 
     <div class="modal hidden" id="modal"></div>
@@ -64,6 +66,10 @@
         <img src="../avatares/prota-dançando.gif" alt="Nosso protagonista dançando" title="Prota dançando"
             onclick="abrirModal()">
     </div>
+
+    <button onclick="alternarConteudo(this)" class="icon2">
+        <i class="bx bx-message-dots"></i>
+    </button>
 
     <div class="social-media">
         <a href="https://www.youtube.com/@ProggamingPage" target="_blank"><i class='bx bxl-youtube' id="ytb"></i></a>
