@@ -171,59 +171,13 @@ function fecharModal() {
     }
 }
 
-const PAGINA_A = 'index.html';
-const PAGINA_B = 'chatbot.html';
-const TARGET_ID = 'conteudo-dinamico';
-let paginaAtual = PAGINA_A;
-
-function carregarConteudo(url, targetId) {
-    return fetch(url)
-        .then(response => {
-            if (!response.ok) {
-                throw new Error(`Status ${response.status}`);
-            }
-            return response.text();
-        })
+function carregarConteudo(url) {
+    fetch(url)
+        .then(response => response.text())
         .then(html => {
-            const targetElement = document.getElementById(targetId);
-            if (targetElement) {
-                targetElement.innerHTML = html;
-            } else {
-                console.error(`Elemento com ID '${targetId}' não encontrado.`);
-            }
+            document.getElementById('conteudo-dinamico').innerHTML = html;
         })
         .catch(error => {
-            console.error('Falha ao carregar o conteúdo:', error);
-            const targetElement = document.getElementById(targetId);
-            if (targetElement) {
-                targetElement.innerHTML = `<p style="color: red;">Erro: ${error.message}</p>`;
-            }
-            throw error;
+            console.error('Erro ao carregar a página:', error);
         });
 }
-
-function alternarConteudo(botao) {
-    let proximaPagina;
-    let textoBotao;
-
-    if (paginaAtual === PAGINA_A) {
-        proximaPagina = PAGINA_B;
-        textoBotao = '<i class="bx bx-home-alt-2"></i>';
-    } else {
-        proximaPagina = PAGINA_A;
-        textoBotao = '<i class="bx bx-message-dots"></i>';
-    }
-
-    carregarConteudo(proximaPagina, TARGET_ID)
-        .then(() => {
-            paginaAtual = proximaPagina;
-            botao.innerHTML = textoBotao;
-        })
-        .catch(() => {
-            console.warn('Alternância cancelada devido a erro de carregamento.');
-        });
-}
-
-document.addEventListener('DOMContentLoaded', () => {
-    carregarConteudo(PAGINA_A, TARGET_ID);
-});
