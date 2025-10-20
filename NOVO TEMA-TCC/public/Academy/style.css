@@ -117,7 +117,7 @@ main .container .tabs a {
     border: 1px solid #c0c0c062;
     border-radius: 20px;
     padding: 4px 10px;
-    background-color: #c7c7c723;
+    background-color: #e6e6e623;
     color: #898989;
     text-decoration: none;
     transition: 0.4s;
@@ -127,7 +127,7 @@ main .container .tabs a {
 }
 
 .container .tabs a:hover {
-    border: 1px solid #0059ff5d;
+    border: 1px solid #0059ff4b;
     box-shadow: 0 4px 22px #3d4be81a;
     transition: 0.4s;
 }
@@ -159,7 +159,7 @@ main .container .tabs a {
 }
 
 .container .tabs a:focus #tech {
-    color: #008b56;
+    color: #4ca800;
     text-shadow: 0 2px 2px rgba(0, 0, 0, 0.301);
     transition: 0.2s;
 }
