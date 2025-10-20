@@ -170,3 +170,14 @@ function fecharModal() {
         modal.innerHTML = '';
     }
 }
+
+function carregarConteudo(url) {
+    fetch(url)
+        .then(response => response.text())
+        .then(html => {
+            document.getElementById('conteudo-dinamico').innerHTML = html;
+        })
+        .catch(error => {
+            console.error('Erro ao carregar a página:', error);
+        });
+}
