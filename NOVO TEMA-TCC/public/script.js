@@ -133,3 +133,46 @@ window.onload = () => {
     setTimeout(mostrarAviso, delayPrimeiraExibicao);
   }
 };
+
+document.addEventListener('DOMContentLoaded', (event) => {
+  const aviso = document.getElementById('aviso-lateral');
+  const botaoFechar = document.getElementById('fechar-aviso'); // Novo elemento
+
+  // Tempo em milissegundos
+  const TEMPO_EXIBICAO = 15000; // 15 segundos visível
+  const INTERVALO_REPETICAO = 1 * 60 * 1000; // 2 minutos
+
+  // Variável para armazenar o ID do temporizador de desaparecimento
+  let timeoutID;
+
+  function esconderAviso() {
+    // Remove a classe 'visivel' e adiciona 'oculto'
+    aviso.classList.remove('visivel');
+    aviso.classList.add('oculto');
+
+    // Garante que o temporizador automático de desaparecimento seja cancelado
+    clearTimeout(timeoutID);
+  }
+
+  function mostrarAviso() {
+    // Mostrar o aviso
+    aviso.classList.remove('oculto');
+    aviso.classList.add('visivel');
+
+    // Agendar o desaparecimento após TEMPO_EXIBICAO (se não for fechado manualmente)
+    // O ID do temporizador é salvo na variável 'timeoutID'
+    timeoutID = setTimeout(esconderAviso, TEMPO_EXIBICAO);
+  }
+
+  function cicloAviso() {
+    mostrarAviso();
+    // O desaparecimento é agendado dentro de 'mostrarAviso'
+  }
+
+  // ADICIONA O EVENTO DE CLIQUE PARA O BOTÃO 'X'
+  botaoFechar.addEventListener('click', esconderAviso);
+
+  // Iniciar o ciclo imediatamente e repetir a cada INTERVALO_REPETICAO
+  cicloAviso();
+  setInterval(cicloAviso, INTERVALO_REPETICAO);
+});
