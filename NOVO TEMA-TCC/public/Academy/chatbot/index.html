@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="style.css">
+    <title>Academy - Proggaming Chatbot</title>
+</head>
+
+<body>
+    <details style="margin-bottom: 10px; cursor: pointer;">
+        <div class="aviso">
+            ⚠️ Este é um simulador de um modelo de IA de 2022, treinado até setembro de 2021.
+            Ele responde apenas a perguntas pré-definidas. Exemplos:
+            <ul>
+                <li>Quem foi campeão do campeonato brasileiro de 2022?</li>
+                <li>Você sabe o que é o Google Bard?</li>
+                <li>Que horas são?</li>
+                <li>Me conta uma piada</li>
+                <li>Qual seu nome?</li>
+                <li>Qual a capital da França?</li>
+                <li>Quando foi a Segunda Guerra Mundial?</li>
+                <li>Quem criou o Facebook?</li>
+                <li>Você tem sentimentos?</li>
+                <li>Qual é o maior planeta?</li>
+            </ul>
+        </div>
+    </details>
+
+    <div class="chat-container">
+        <div class="chat-box" id="chat-box">
+        </div>
+        <div class="chat-input">
+            <input type="text" id="user-input" placeholder="Digite aqui...">
+            <button onclick="enviar()">Enviar</button>
+        </div>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+
+</html>
