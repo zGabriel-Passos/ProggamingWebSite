@@ -140,3 +140,17 @@ function trocarTema() {
 }
 
 document.addEventListener('DOMContentLoaded', carregarTemaSalvo);
+
+// function trocarTema() {
+//     const body = document.body;
+
+//     if (body.classList.contains('tema-claro')) {
+//         body.classList.remove('tema-claro');
+//         body.classList.add('tema-escuro');
+//         console.log("Tema alterado para Escuro");
+//     } else {
+//         body.classList.remove('tema-escuro');
+//         body.classList.add('tema-claro');
+//         console.log("Tema alterado para Claro");
+//     }
+// }
