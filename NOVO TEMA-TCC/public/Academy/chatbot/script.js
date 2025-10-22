@@ -1,6 +1,12 @@
 const chatBox = document.getElementById("chat-box");
 const input = document.getElementById("user-input");
 
+function preencherInput(pergunta) {
+    if (input) {
+        input.value = pergunta;
+    }
+}
+
 input.addEventListener("keypress", (e) => {
     if (e.key === "Enter") enviar();
 });
@@ -27,52 +33,74 @@ function adicionarMensagem(tipo, texto) {
 }
 
 function gerarResposta(pergunta) {
-    if (pergunta.includes("campeão") && pergunta.includes("brasileiro") && pergunta.includes("2022")) {
-        return "Como sou um modelo de linguagem treinado até setembro de 2021, não tenho informações sobre eventos que ocorrerão no futuro após essa data.";
+    if (pergunta.includes("o que vou aprender em html") || pergunta.includes("html")) {
+        return "Em HTML, você aprenderá a estruturar páginas web usando tags semânticas, como <code>&lt;header&gt;</code>, <code>&lt;main&gt;</code>, <code>&lt;footer&gt;</code>, e a incluir conteúdo essencial como links, textos, e imagens com acessibilidade (o atributo <code>alt</code>).";
     }
-    if (pergunta.includes("google bard")) {
-        return "Sim, o Google Bard é um modelo de IA do Google voltado para geração de conteúdo textual, como poemas e respostas.";
+    if (pergunta.includes("o que vou aprender em css") || pergunta.includes("css")) {
+        return "Em CSS, você dominará o estilo e o design do seu projeto. O curso abrange seletores, cores, tipografia, a criação de layouts responsivos (usando Flexbox) e a personalização da interface.";
+    }
+    if (pergunta.includes("o que vou aprender em js") || pergunta.includes("o que vou aprender em javascript") || pergunta.includes("js") || pergunta.includes("javascript")) {
+        return "Em JavaScript, o foco é na interatividade e lógica: você aprenderá a manipular o DOM, adicionar funcionalidades dinâmicas, validar entradas e implementar sistemas avançados como a gamificação e a ofensiva diária.";
+    }
+    if (pergunta.includes("objetivo deste tcc") || pergunta.includes("sobre o projeto") || pergunta.includes("tcc")) {
+        return "O objetivo principal deste TCC é desenvolver o 'Proggaming', uma plataforma de ensino de programação gamificada. Nosso foco é usar elementos de jogos (XP, níveis, ofensiva) para aumentar a motivação e a retenção do aprendizado de desenvolvimento web.";
+    }
+    if (pergunta.includes("gamificação") || pergunta.includes("como funciona a gamificação")) {
+        return "A gamificação funciona através de XP por fase, níveis de usuário e o sistema de ofensiva diária (streak) que incentiva a consistência. Isso transforma o aprendizado em um jogo, motivando o usuário a progredir.";
+    }
+    if (pergunta.includes("plataforma") || pergunta.includes("proggaming")) {
+        return "Proggaming é uma plataforma web para o aprendizado prático de HTML, CSS e JavaScript, projetada para ser interativa e focada na aplicação imediata dos conceitos através de desafios de codificação.";
+    }
+    if (pergunta.includes("firebase") || pergunta.includes("banco de dados")) {
+        return "Utilizamos o Firebase (Firestore) como banco de dados NoSQL. Ele armazena os dados do usuário, como XP, o progresso em cada fase, o código atual do aluno e o contador da ofensiva diária.";
+    }
+    if (pergunta.includes("estrutura do código") || pergunta.includes("estrutura do projeto")) {
+        return "O projeto é dividido em módulos sequenciais (HTML, CSS, JS). Cada módulo tem fases com sub-níveis, onde o usuário insere o código em um editor e ele é validado por expressões regulares (Regex) em tempo real.";
+    }
+
+    if (pergunta.includes("ola") || pergunta.includes("oi") || pergunta.includes("tudo bem")) {
+        return "Olá! Sou o assistente do Proggaming. Quer saber sobre HTML, CSS, JavaScript, ou sobre o TCC?";
+    }
+
+    if (pergunta.includes("piada")) {
+        return "Por que o computador foi ao médico? Porque ele tinha um vírus!";
     }
     if (pergunta.includes("que horas são") || pergunta.includes("horas")) {
         const agora = new Date().toLocaleTimeString();
         return `Agora são ${agora}.`;
     }
-    if (pergunta.includes("piada")) {
-        return "Por que o computador foi ao médico? Porque ele tinha um vírus!";
-    }
-    if (pergunta.includes("seu nome")) {
-        return "Sou o ChatGPT, versão simulada de 2022.";
-    }
-    if (pergunta.includes("capital da frança")) {
-        return "A capital da França é Paris.";
-    }
-    if (pergunta.includes("segunda guerra")) {
-        return "A Segunda Guerra Mundial ocorreu entre 1939 e 1945.";
-    }
-    if (pergunta.includes("criou o facebook") || pergunta.includes("fundador do facebook")) {
-        return "O Facebook foi criado por Mark Zuckerberg em 2004.";
-    }
-    if (pergunta.includes("tem sentimentos") || pergunta.includes("você sente")) {
-        return "Não, sou apenas um programa de computador e não possuo sentimentos.";
-    }
-    if (pergunta.includes("maior planeta")) {
-        return "O maior planeta do sistema solar é Júpiter.";
-    }
-    if (pergunta.includes("sentido da vida")) {
-        return "Essa é uma pergunta filosófica profunda. Muitos diriam que o sentido da vida é 42 😉.";
-    }
-    if (pergunta.includes("inteligência artificial")) {
-        return "Inteligência Artificial é o campo da ciência da computação que se dedica a criar sistemas capazes de simular a inteligência humana.";
-    }
-    if (pergunta.includes("ano você foi criado") || pergunta.includes("quando você foi criado")) {
-        return "Fui lançado pela OpenAI em 2020 com atualizações até 2021.";
-    }
-    if (pergunta.includes("quantos continentes")) {
-        return "Existem 7 continentes: África, América, Antártica, Ásia, Europa, Oceania e América do Sul.";
-    }
-    if (pergunta.includes("qual sua linguagem") || pergunta.includes("em que linguagem")) {
-        return "Sou treinado com diversas linguagens, mas meu núcleo é baseado em processamento de linguagem natural com tecnologia de aprendizado profundo.";
+    return "Desculpe, não tenho dados suficientes para responder essa pergunta. Tente digitar: 'O que vou aprender em HTML no Proggaming?', 'Qual é o objetivo deste TCC?', ou 'Como funciona a gamificação?'.";
+}
+
+document.addEventListener('DOMContentLoaded', () => {
+    const sideMenu = document.getElementById('side-menu');
+    const openBtn = document.getElementById('open-menu-btn');
+    const closeBtn = document.getElementById('close-menu-btn');
+    const overlay = document.getElementById('menu-overlay');
+    const menuLinks = document.querySelectorAll('#side-menu a[data-question]');
+
+    const openMenu = () => {
+        sideMenu.classList.add('open');
+        overlay.classList.add('show');
     }
 
-    return "Desculpe, não tenho dados suficientes para responder essa pergunta. Tente perguntar algo como nos exemplos acima.";
-}
+    const closeMenu = () => {
+        sideMenu.classList.remove('open');
+        overlay.classList.remove('show');
+    }
+
+    openBtn.addEventListener('click', openMenu);
+    closeBtn.addEventListener('click', closeMenu);
+    overlay.addEventListener('click', closeMenu);
+
+    menuLinks.forEach(link => {
+        link.addEventListener('click', (e) => {
+            e.preventDefault();
+            const question = link.getAttribute('data-question');
+
+            preencherInput(question);
+            closeMenu();
+            enviar();
+        });
+    });
+});
