@@ -167,10 +167,6 @@ body.tema-escuro .chat-container #botoes-atalho button {
     color: white;
 }
 
-.chat-container #botoes-atalho button i {
-    margin-top: 2px;
-}
-
 .chat-container #botoes-atalho button:hover,
 body.tema-escuro .chat-container #botoes-atalho button:hover {
     background-color: #0267ff5b;
