@@ -10,6 +10,36 @@ body {
     justify-content: center;
     flex-direction: column;
     align-items: center;
+    transition: background-color 0.3s, color 0.3s;
+}
+
+.tema-claro {
+    background-color: #f0f0f0;
+    color: #333;
+}
+
+.tema-escuro {
+    background-color: #1a1a19;
+    color: #f0f0f0;
+}
+
+.btn-theme {
+    position: fixed;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 24px;
+    font-weight: 600;
+    color: white;
+    bottom: 20px;
+    right: 20px;
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.521);
+    border: 1px solid #7e7e7ede;
+    cursor: url(./cursors/Link.cur), pointer !important;
+    transition: 0.3s ease;
 }
 
 .chat-container {
@@ -21,7 +51,7 @@ body {
 
 .chat-container .chat-box {
     height: 300px;
-    overflow-y: auto;
+    overflow-y: unset;
     overflow-x: hidden;
 }
 
@@ -30,7 +60,7 @@ body {
     flex-wrap: wrap;
     justify-content: center;
     gap: 10px;
-    background-color: #ffffffb6;
+    background-color: transparent;
     width: 500px;
     border: none;
     border-radius: 15px;
@@ -39,7 +69,7 @@ body {
 }
 
 .chat-container .chat-input textarea {
-    border: 1px solid #b8b8b880;
+    border: 2px solid #b8b8b827;
     background-color: #e9e9e9;
     color: black;
     width: 100%;
@@ -52,8 +82,13 @@ body {
     transition: all 0.4s;
 }
 
+body.tema-escuro .chat-container .chat-input textarea {
+    background-color: #1a1a19;
+    color: white;
+}
+
 .chat-container .chat-input textarea:hover {
-    border: 1px solid #0267ff6e;
+    border: 2px solid #0267ff6e;
     box-shadow: -2px 0px 18px 0px #0267ff9d;
 }
 
@@ -99,6 +134,11 @@ body {
     font-family: 'Roboto', monospace;
     cursor: pointer;
     transition: all 0.3s;
+}
+
+body.tema-escuro .chat-container #botoes-atalho button {
+    background-color: #1a1a19;
+    color: white;
 }
 
 .chat-container #botoes-atalho button i {

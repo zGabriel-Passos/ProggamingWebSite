@@ -14,7 +14,7 @@
     <title>Academy - Proggaming Chatbot</title>
 </head>
 
-<body>
+<body class="tema-claro">
     <div class="overlay">
         <img src="../../logo_rotating.gif">
     </div>
@@ -91,9 +91,13 @@
             <button onclick="preencherInput('Qual é o objetivo deste TCC?');">Sobre o Projeto</button>
             <button onclick="location.href='../'"><span style="color: #0077ff;">Voltar ao Academy </span><i
                     class='bx bx-right-arrow-alt'></i></button>
+            <button onclick="trocarTema()" class="btn-theme"><i class='bx bx-bulb'></i></button>
         </div>
     </div>
 
+    <footer style="font-size: 14px;">
+        <span><strong>&copy; <span id="anoAtual"></span> Proggaming.</strong> All rights reserved.</span>
+    </footer>
     <script src="script.js"></script>
     <script>
         window.addEventListener("DOMContentLoaded", () => {
@@ -104,6 +108,11 @@
                 }, 500);
             }, 500);
         });
+
+        const elementoAno = document.getElementById("anoAtual");
+        const dataAtual = new Date();
+        const ano = dataAtual.getFullYear();
+        elementoAno.innerHTML = ano;
     </script>
 </body>
 
