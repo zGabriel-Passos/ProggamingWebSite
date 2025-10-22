@@ -96,6 +96,7 @@ button {
     font-size: 16px;
     font-family: 'Poppins';
     transition: all 0.4s;
+    overflow-y: hidden;
 }
 
 body.tema-escuro .chat-container .chat-input textarea {
