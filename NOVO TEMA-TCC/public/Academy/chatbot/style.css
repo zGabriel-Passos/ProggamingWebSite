@@ -61,6 +61,16 @@ button {
     overflow-x: hidden;
 }
 
+.chat-container .chat-box::-webkit-scrollbar {
+    width: 7px;
+    background-color: #d3d3d341;
+}
+
+.chat-container .chat-box::-webkit-scrollbar-thumb {
+    background-color: #888;
+    border-radius: 5px;
+}
+
 .chat-container .chat-input {
     display: flex;
     flex-wrap: wrap;
