@@ -115,6 +115,11 @@ body.tema-escuro .chat-container .chat-input textarea {
     padding: 10px;
     background-color: #0267ffb0;
     border-radius: 50%;
+    transition: all 0.4s;
+}
+
+.chat-container .chat-input button:hover {
+    transform: scale(1.05);
 }
 
 .chat-container .chat-input button i {
