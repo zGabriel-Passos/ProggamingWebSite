@@ -44,7 +44,7 @@ button {
     border-radius: 50%;
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.521);
     border: 1px solid #7e7e7ede;
-    cursor: url(./cursors/Link.cur), pointer !important;
+    cursor: url(../cursors/Link.cur), pointer !important;
     transition: 0.3s ease;
 }
 
@@ -233,7 +233,7 @@ body.tema-escuro .chat-container #botoes-atalho button:hover {
 }
 
 .menu-list {
-    height: 100%;
+    height: 120vh;
     list-style-type: none;
     padding: 0;
     margin: 0;
