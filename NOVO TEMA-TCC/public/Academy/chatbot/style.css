@@ -99,6 +99,9 @@ body.tema-escuro .chat-container .chat-input textarea {
 }
 
 .chat-container .chat-input button {
+    display: flex;
+    justify-content: flex;
+    align-items: center;
     cursor: pointer;
     border: none;
     margin-bottom: 10px;
@@ -110,6 +113,7 @@ body.tema-escuro .chat-container .chat-input textarea {
 
 .chat-container .chat-input button i {
     font-size: 18px;
+    padding-left: 0.3px;
     text-align: center;
     color: white;
 }
@@ -145,7 +149,8 @@ body.tema-escuro .chat-container #botoes-atalho button {
     margin-top: 2px;
 }
 
-.chat-container #botoes-atalho button:hover {
+.chat-container #botoes-atalho button:hover,
+body.tema-escuro .chat-container #botoes-atalho button:hover {
     background-color: #0267ff5b;
 }
 

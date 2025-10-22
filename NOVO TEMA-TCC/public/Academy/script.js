@@ -146,7 +146,7 @@ function abrirModal() {
             <div class="modal-content">
                 <span class="close-button" onclick="fecharModal()" style="cursor: url(./cursors/Link.cur), pointer !important; color: red; font-size: 24px">&times;</span>
                 <h2>Olá! Eu sou o Prota!</h2>
-                <p>Bem-vindo à nossa Academia de Programação! Aqui, você encontrará uma variedade de cursos e recursos para aprimorar suas habilidades em desenvolvimento web e muito mais. Explore nossas seções de HTML, CSS, JavaScript, e outras tecnologias. Vamos codar juntos!</p>
+                <p>Bem-vindo à nossa Academia de Programação! Aqui, você encontrará uma variedade de cursos e recursos para aprimorar suas habilidades em desenvolvimento web e muito mais. Explore nossas seções de HTML, CSS, JavaScript, e nosso ChatBot, e outras tecnologias. Vamos codar juntos!</p>
                 <span>Já conhece nosso site oficial? Lá você consegue aprender, testar e ganhar XP:</span> <a href="https://proggamingpage.web.app" target="_blank" style="color: blue; text-decoration: underline;">proggamingpage.web.app</a>
                 <footer>
                     <span><strong>&copy; <span id="anoAtual"></span> Proggaming.</strong> All rights reserved.</span>
