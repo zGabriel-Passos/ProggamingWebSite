@@ -105,16 +105,38 @@ document.addEventListener('DOMContentLoaded', () => {
     });
 });
 
+function carregarTemaSalvo() {
+    const temaSalvo = localStorage.getItem('userTheme');
+    const body = document.body;
+
+    if (temaSalvo) {
+        body.classList.remove('tema-claro', 'tema-escuro');
+        body.classList.add(temaSalvo);
+        console.log(`Tema carregado do Local Storage: ${temaSalvo}`);
+    } else {
+        if (!body.classList.contains('tema-claro') && !body.classList.contains('tema-escuro')) {
+            body.classList.add('tema-claro');
+        }
+        console.log("Nenhum tema salvo. Usando o tema padrão.");
+    }
+}
+
 function trocarTema() {
     const body = document.body;
+    let novoTema;
 
     if (body.classList.contains('tema-claro')) {
         body.classList.remove('tema-claro');
         body.classList.add('tema-escuro');
+        novoTema = 'tema-escuro';
         console.log("Tema alterado para Escuro");
     } else {
         body.classList.remove('tema-escuro');
         body.classList.add('tema-claro');
+        novoTema = 'tema-claro';
         console.log("Tema alterado para Claro");
     }
+    localStorage.setItem('userTheme', novoTema);
 }
+
+document.addEventListener('DOMContentLoaded', carregarTemaSalvo);
