@@ -130,7 +130,7 @@ body.tema-escuro .chat-container .chat-input textarea {
 }
 
 .chat-container .chat-input button:hover {
-    transform: scale(1.05);
+    background-color: #0267ffd8;
 }
 
 .chat-container .chat-input button i {
