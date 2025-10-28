@@ -231,22 +231,140 @@
     }
 
     function mostrarVisualizacao(nivel, codigo) {
-      // Nível 4 (index 3): nenhuma visualização
-      if (nivel === 3) {
-        preview.innerHTML = "A visualização aparecerá aqui.";
-        return;
-      }
+      const resultados = [];
+      const logs = [];
+      const errors = [];
 
-      preview.innerHTML = "A visualização aparecerá aqui.";
-      if (nivel === 2) {
-        const regra = niveis[2].respostaEsperada;
-        const passouNivel3 = regra instanceof RegExp ? regra.test(codigo) : codigo === regra;
-        if (passouNivel3) {
-          const matchMensagem = codigo.match(/let\s+mensagem\s*=\s*['"]([^'\"]*)['"]/i);
-          if (matchMensagem && matchMensagem[1] !== undefined) {
-            preview.innerHTML = matchMensagem[1];
+      const fakeConsole = {
+        log: (...args) => {
+          try {
+            logs.push(args.map(v => typeof v === 'object' ? JSON.stringify(v) : String(v)).join(' '));
+          } catch (_) {
+            logs.push(args.join(' '));
+          }
+        },
+        info: (...args) => fakeConsole.log(...args),
+        error: (...args) => {
+          try {
+            errors.push(args.map(v => typeof v === 'object' ? JSON.stringify(v) : String(v)).join(' '));
+          } catch (_) {
+            errors.push(args.join(' '));
           }
         }
+      };
+
+      const sanitizeDecls = (src) => {
+        let out = src
+          .replace(/\b(var|let|const)\s+([a-zA-Z_$][\w$]*)\s*=\s*/g, 'sandbox.$2 = ')
+          .replace(/\b(var|let|const)\s+([a-zA-Z_$][\w$]*)\s*(;|\n|$)/g, 'sandbox.$2 = undefined$3');
+        return out;
+      };
+
+      try {
+        const sandbox = {};
+        const transformed = sanitizeDecls(String(codigo));
+
+        try {
+          const runAll = new Function('sandbox', 'console', `with(sandbox){ try{ ${transformed} }catch(e){ console.error('Exec error:', e && e.message ? e.message : String(e)); } return sandbox; }`);
+          runAll(sandbox, fakeConsole);
+        } catch (e) {
+          errors.push(String(e && e.message ? e.message : e));
+        }
+
+        const linhasOrig = String(codigo).split(/\r?\n/);
+        const linhas = linhasOrig.map(s => s.trim()).filter(Boolean);
+
+        for (let i = 0; i < linhas.length; i++) {
+          const linha = linhas[i];
+          if (/^\/\//.test(linha)) continue;
+          if (/^\*|^\//.test(linha)) continue;
+          if (/^(if|for|while|switch|function|return|break|continue|class|try|catch|finally)\b/.test(linha)) continue;
+          if (/^\{|\}$/.test(linha)) continue;
+          if (/^(let|const|var)\b/.test(linha)) continue;
+
+          try {
+            const evalFn = new Function('sandbox', 'console', `with(sandbox){ try{ return (${linha.replace(/;$/, '')}); }catch(e){ throw e; } }`);
+            const valor = evalFn(sandbox, fakeConsole);
+            if (valor !== undefined) resultados.push({ linha: linha, valor: valor });
+          } catch (e) {
+            try {
+              const evalFn2 = new Function('sandbox', 'console', `with(sandbox){ try{ return ${linha.replace(/;$/, '')}; }catch(e){ throw e; } }`);
+              const val2 = evalFn2(sandbox, fakeConsole);
+              if (val2 !== undefined) resultados.push({ linha: linha, valor: val2 });
+            } catch (e2) {
+            }
+          }
+        }
+
+        if (resultados.length === 0) {
+          const porPontoEVirgula = String(codigo).split(';').map(s => s.trim()).filter(Boolean);
+          for (const frag of porPontoEVirgula) {
+            if (!frag) continue;
+            if (/^(let|const|var|if|for|while|switch|function|class|try|catch|finally|return|break|continue)\b/.test(frag)) continue;
+            try {
+              const evalFrag = new Function('sandbox', 'console', `with(sandbox){ return (${frag}); }`);
+              const val = evalFrag(sandbox, fakeConsole);
+              if (val !== undefined) resultados.push({ linha: frag, valor: val });
+            } catch (_) { }
+          }
+        }
+
+        if (resultados.length === 0) {
+          try {
+            const evalAll = new Function('sandbox', 'console', `with(sandbox){ return (${String(codigo)}); }`);
+            const valAll = evalAll(sandbox, fakeConsole);
+            if (valAll !== undefined) resultados.push({ linha: '(bloco)', valor: valAll });
+          } catch (_) { }
+        }
+
+        if (resultados.length === 0) {
+          try {
+            const chaves = Object.keys(sandbox || {});
+            for (const k of chaves) {
+              const v = sandbox[k];
+              if (typeof v === 'number' || typeof v === 'boolean' || typeof v === 'string') {
+                resultados.push({ linha: k, valor: v });
+              }
+            }
+          } catch (_) { }
+        }
+
+      } catch (e) {
+        errors.push(String(e && e.message ? e.message : e));
+      }
+
+      const partes = [];
+
+      for (const l of logs) {
+        partes.push(`<div class="output-log">console.log → ${escapeHtml(String(l))}</div>`);
+      }
+      for (const er of errors) {
+        partes.push(`<div class="output-error">Error → ${escapeHtml(String(er))}</div>`);
+      }
+      for (const r of resultados) {
+        const valorStr = formatValue(r.valor);
+        partes.push(`<div class="output-result">${escapeHtml(String(r.linha))} => ${escapeHtml(valorStr)}</div>`);
+      }
+
+      preview.innerHTML = partes.length ? partes.join('') : "A visualização aparecerá aqui.";
+      preview.scrollTop = preview.scrollHeight;
+
+      function formatValue(v) {
+        if (typeof v === 'string') return `"${v}"`;
+        if (v === null) return 'null';
+        if (v === undefined) return 'undefined';
+        if (typeof v === 'object') {
+          try { return JSON.stringify(v); } catch (_) { return String(v); }
+        }
+        return String(v);
+      }
+      function escapeHtml(str) {
+        return (str + '')
+          .replace(/&/g, '&amp;')
+          .replace(/</g, '&lt;')
+          .replace(/>/g, '&gt;')
+          .replace(/"/g, '&quot;')
+          .replace(/'/g, '&#039;');
       }
     }
 
@@ -263,7 +381,6 @@
 
       mostrarVisualizacao(nivelJsAtual, entrada);
 
-      // visualização do console desativada
 
       const passou = resposta instanceof RegExp ? resposta.test(entrada) : entrada === resposta;
 
