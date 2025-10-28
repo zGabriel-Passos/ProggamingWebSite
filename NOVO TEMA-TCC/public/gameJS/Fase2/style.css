@@ -67,6 +67,7 @@ button {
 }
 
 .resultado {
+    display: none;
     font-family: "Roboto", sans-serif;
     min-height: 500px;
     width: 100%;
@@ -154,6 +155,29 @@ button:hover {
 
 .navbar {
     display: none;
+}
+
+#preview {
+    background: #0b0b0b;
+    color: #e6e6e6;
+    padding: 12px;
+    min-height: 180px;
+    overflow: auto;
+    white-space: pre-wrap;
+    font-family: monospace;
+    font-size: 14px;
+}
+
+.output-log {
+    color: #9ad1ff;
+}
+
+.output-result {
+    color: #b2f59b;
+}
+
+.output-error {
+    color: #ff9b9b;
 }
 
 @media (max-width: 1068px) {

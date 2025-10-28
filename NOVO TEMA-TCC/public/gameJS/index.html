@@ -181,7 +181,7 @@
             fase3: { status: "bloqueada", nome: "Operadores e expressões" },
             fase4: { status: "bloqueada", nome: "Estruturas condicionais" },
             fase5: { status: "bloqueada", nome: "Laços de repetição" },
-            fase6: { status: "bloqueada", nome: "Arrays" },
+            fase6: { status: "bloqueada", nome: "Vetores" },
             fase7: { status: "bloqueada", nome: "Funções" },
             fase8: { status: "bloqueada", nome: "Objetos e manipulação de DOM" },
             fase9: { status: "bloqueada", nome: "Eventos" },
@@ -266,9 +266,7 @@
                 const userRef = doc(db, "usuarios", user.uid);
 
                 await updateDoc(userRef, {
-                    fasesJS: deleteField(),
-                    nivelJsAtual: 0,
-                    codigoJsAtual: "",
+                    fasesJS: deleteField()
                 });
 
                 console.log("Progresso do usuário reiniciado com sucesso.");

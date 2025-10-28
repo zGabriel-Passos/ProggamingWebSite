@@ -10,7 +10,7 @@
   <link rel="stylesheet" href="../TelaPrincipal/style.css">
   <link rel="stylesheet" href="style.css">
   <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap">
-  <title>Proggaming | Fase 1 - JavaScript</title>
+  <title>Proggaming | Fase 5 - Laços de Repetição</title>
 </head>
 
 <body>
@@ -27,18 +27,15 @@
   <div class="container-nivel">
     <div class="bloco-teoria">
       <div style="display: flex; flex-direction: row; align-items: center; justify-content: space-between;">
-        <h3>Teoria - Fase 1</h3>
+        <h3>Teoria - Fase 5</h3>
         <button class="botao-som" id="botao-som" onclick="toggleSom()">🔊</button>
       </div>
       <p id="texto-teoria"></p>
       <div id="extra-teoria" style="margin-top:10px; font-weight: 600; font-size:14px; color:#ddd;"></div>
       <button id="btn-extra-exemplo" class="voltar" style="margin-top:8px; display:none;"
         onclick="toggleExemplo()">Exibir exemplo</button>
-      <h2 id="titulo-nivel">Nível 1/5</h2>
-      <p id="descricao-nivel">JavaScript é uma linguagem de programação essencial e a mais popular
-        para o desenvolvimento web, responsável por adicionar interatividade e dinamismo a páginas web,
-        como mapas interativos, animações e atualizações de conteúdo em tempo real. Ele é uma das três tecnologias
-        fundamentais da web, juntamente com HTML (estrutura) e CSS (estilo)</p>
+      <h2 id="titulo-nivel">Nível 1/6</h2>
+      <p id="descricao-nivel">Sessão 5 – Laços de Repetição<br>Tema: Repetir ações com for, while</p>
       <hr>
       <div style="margin: 10px 0px 10px 0px;">
         <span id="xp-total" style="font-family: 'Press Start 2P', cursive; font-weight: 600; color: #c7860e;">XP:
@@ -105,8 +102,7 @@
     const db = firebase.firestore();
 
     let nivelJsAtual = 0;
-    let fase1JsJaConcluida = false;
-    let ultimoCodigoDigitado = "";
+    let fase5JaConcluida = false;
 
     const entradaCodigo = document.getElementById("entrada-codigo");
     const preview = document.getElementById("preview");
@@ -119,44 +115,52 @@
 
     const niveis = [
       {
-        titulo: "Nível 1/5",
-        descricao: "JavaScript é uma linguagem de programação essencial e a mais popular para o desenvolvimento web, responsável por adicionar interatividade e dinamismo a páginas web, como mapas interativos, animações e atualizações de conteúdo em tempo real. Ele é uma das três tecnologias fundamentais da web, juntamente com HTML (estrutura) e CSS (estilo)",
-        teoria: "",
-        extra: "",
+        titulo: "Nível 1/6",
+        descricao: "Utilize a estrutura for para repetir ações.",
+        teoria: "O for permite repetir um bloco de código um número definido de vezes.",
+        extra: "Exemplo:<br><code>for (let i = 0; i < 5; i++) {<br>console.log(i);<br>}</code>",
         codigoInicial: "",
-        respostaEsperada: "",
+        respostaEsperada: /for\s*\([\s\S]*;[\s\S]*;[\s\S]*\)\s*\{[\s\S]*\}/i
       },
       {
-        titulo: "Nível 2/5",
-        descricao: "Declare uma variável chamada 'mensagem' e atribua a ela o valor 'Olá, mundo!'.",
-        teoria: "Para armazenar dados com Javascript, ultilizamos uma estrutura chamada variável. Para declararmos uma variavel que tem como valor um texto, ultlizamos a declaração let nomeDaVariavel = 'valor';<br> No exemplo, 'let' é a palavra reservada que indica que estamos declarando uma variável, 'nomeDaVariavel' é o nome que escolhemos para a variável (que deve seguir certas regras, como não começar com números ou usar espaços) e 'valor' é o conteúdo que estamos atribuindo à variável, que no caso é um texto (string) e por isso está entre aspas simples.",
-        extra: "Exemplo: let texto = 'Olá, mundo!';",
+        titulo: "Nível 2/6",
+        descricao: "Utilize while e do...while para repetir enquanto uma condição for verdadeira.",
+        teoria: "O while repete enquanto a condição for verdadeira. O do...while garante pelo menos uma execução.",
+        extra: "Exemplo:<br><code>let i = 0;<br>while (i < 3) {<br>console.log(i);<br>i++;<br>}<br>do {<br>console.log(i);<br>i++;<br>} while (i < 5);</code>",
         codigoInicial: "",
-        respostaEsperada: /let\s+mensagem\s*=\s*'Olá, mundo!'\s*;?\s*/i
+        respostaEsperada: /(while\s*\([\s\S]*\)\s*\{[\s\S]*\}|do\s*\{[\s\S]*\}\s*while\s*\([\s\S]*\);)/i
       },
       {
-        titulo: "Nível 3/5",
-        descricao: "Use o metodo console.log para imprimir a variável mensagem",
-        teoria: "O método console.log() é usado para exibir mensagens no console do navegador, o que é útil para depuração e verificação de valores durante o desenvolvimento. Para imprimir o valor de uma variável, você simplesmente passa o nome da variável como argumento para console.log(). Por exemplo, se você tem uma variável chamada mensagem, você pode exibir seu valor no console com console.log(mensagem);",
-        extra: "Exemplo: console.log(mensagem)",
-        codigoInicial: "let mensagem = 'Olá, Mundo!'",
-        respostaEsperada: /let\s+mensagem\s*=\s*['"][\s\S]*?['"]\s*;?\s*console\.log\(\s*mensagem\s*\)\s*;?/i
-      },
-      {
-        titulo: "Nível 4/5",
-        descricao: "Transforme o comando console.log anterior em um comentário.",
-        teoria: "Para comentar um comando em JavaScript, basta adicionar // antes dele ou envolver com /* ... */. Isso faz com que o comando não seja executado.",
-        extra: "Exemplo: // console.log(mensagem) ou /* console.log(mensagem) */",
-        codigoInicial: "let mensagem = 'Olá, Mundo!'<br>console.log(mensagem)",
-        respostaEsperada: /(\/\/\s*console\.log\(.*\)|\/\*\s*console\.log\(.*\)\s*\*\/)/i
-      },
-      {
-        titulo: "Nível 5/5",
-        descricao: "Utilize o método alert ou outro método da window para exibir uma mensagem.",
-        teoria: "O objeto window representa a janela do navegador e possui vários métodos úteis, como alert(), prompt(), confirm(), entre outros. O método alert exibe uma caixa de diálogo com uma mensagem para o usuário.",
-        extra: "Exemplo: alert('Olá!') ou window.alert('Bem-vindo!')",
+        titulo: "Nível 3/6",
+        descricao: "Faça uma contagem crescente e decrescente usando laços.",
+        teoria: "Você pode controlar o valor da variável de controle para contar para cima ou para baixo.",
+        extra: "Exemplo:<br><code>for (let i = 1; i <= 5; i++) {<br>console.log(i);<br>}<br>for (let i = 5; i >= 1; i--) {<br>console.log(i);<br>}</code>",
         codigoInicial: "",
-        respostaEsperada: /(window\s*\.\s*alert\s*\(.*\)|alert\s*\(.*\))/i
+        respostaEsperada: /(for\s*\([\s\S]*;\s*i\s*(<=|>=)\s*\d+;[\s\S]*\)\s*\{[\s\S]*\})/i
+      },
+      {
+        titulo: "Nível 4/6",
+        descricao: "Interrompa ou pule uma repetição usando break ou continue.",
+        teoria: "O break encerra o laço. O continue pula para a próxima iteração.",
+        extra: "Exemplo:<br><code>for (let i = 0; i < 5; i++) {<br>if (i === 2) break;<br>console.log(i);<br>}<br>for (let i = 0; i < 5; i++) {<br>if (i === 2) continue;<br>console.log(i);<br>}</code>",
+        codigoInicial: "",
+        respostaEsperada: /(break|continue)/i
+      },
+      {
+        titulo: "Nível 5/6",
+        descricao: "Utilize loops aninhados para criar padrões.",
+        teoria: "Um laço dentro de outro permite criar estruturas como tabelas ou padrões.",
+        extra: "Exemplo:<br><code>for (let i = 1; i <= 3; i++) {<br>for (let j = 1; j <= 3; j++) {<br>console.log(i, j);<br>}<br>}</code>",
+        codigoInicial: "",
+        respostaEsperada: /for\s*\([\s\S]*\)\s*\{[\s\S]*for\s*\([\s\S]*\)\s*\{[\s\S]*\}/i
+      },
+      {
+        titulo: "Nível 6/6",
+        descricao: "Atividade: gere a tabuada de um número usando for.",
+        teoria: "Use o for para multiplicar um número por valores de 1 a 10 e mostrar o resultado.",
+        extra: "Exemplo:<br><code>let n = 5;<br>for (let i = 1; i <= 10; i++) {<br>console.log(n + ' x ' + i + ' = ' + (n * i));<br>}</code>",
+        codigoInicial: "",
+        respostaEsperada: /for\s*\([\s\S]*i\s*<=\s*10;[\s\S]*\)\s*\{[\s\S]*n\s*\*\s*i[\s\S]*\}/i
       }
     ];
 
@@ -172,14 +176,13 @@
         if (docSnap.exists) {
           const data = docSnap.data();
           const xp = data.xp || 0;
-          nivelJsAtual = (data.fasesJS && data.fasesJS.fase1 && Number.isInteger(data.fasesJS.fase1.nivelAtual)) ? data.fasesJS.fase1.nivelAtual : 0;
-          fase1JsJaConcluida = (data.fasesJS && data.fasesJS.fase1 && data.fasesJS.fase1.status === "concluida") || false;
-          // Se a fase já foi concluída e há vestígios de progresso, limpar para repetir do início
-          const faseDoc = data.fasesJS && data.fasesJS.fase1 ? data.fasesJS.fase1 : {};
-          if (fase1JsJaConcluida && ("codigoAtual" in faseDoc || "nivelAtual" in faseDoc)) {
+          nivelJsAtual = (data.fasesJS && data.fasesJS.fase5 && Number.isInteger(data.fasesJS.fase5.nivelAtual)) ? data.fasesJS.fase5.nivelAtual : 0;
+          fase5JaConcluida = (data.fasesJS && data.fasesJS.fase5 && data.fasesJS.fase5.status === "concluida") || false;
+          const faseDoc = data.fasesJS && data.fasesJS.fase5 ? data.fasesJS.fase5 : {};
+          if (fase5JaConcluida && ("codigoAtual" in faseDoc || "nivelAtual" in faseDoc)) {
             db.collection("usuarios").doc(user.uid).set({
               fasesJS: {
-                fase1: {
+                fase5: {
                   codigoAtual: firebase.firestore.FieldValue.delete(),
                   nivelAtual: firebase.firestore.FieldValue.delete()
                 }
@@ -189,11 +192,12 @@
           }
           xpTotalSpan.textContent = `XP: ${xp}`;
           atualizarNivel();
-          if (data.fasesJS && data.fasesJS.fase1 && data.fasesJS.fase1.codigoAtual) {
-            entradaCodigo.value = data.fasesJS.fase1.codigoAtual;
-            preview.innerHTML = data.fasesJS.fase1.codigoAtual;
+          if (data.fasesJS && data.fasesJS.fase5 && data.fasesJS.fase5.codigoAtual) {
+            entradaCodigo.value = data.fasesJS.fase5.codigoAtual;
+            preview.innerHTML = data.fasesJS.fase5.codigoAtual;
           }
 
+          // Fase concluída pode ser repetida; sem XP extra (já tratado em verificarNivel)
         } else {
           atualizarNivel();
         }
@@ -223,10 +227,57 @@
         atualizarNivel();
       } else {
         document.querySelector('.resultado').innerHTML = `
-      <h2>Parabéns!</h2>
-      <p>Você concluiu a Fase 1 de JavaScript! ${fase1JsJaConcluida ? "Pode refazer, mas não ganhará XP extra." : "+50XP"}</p>
-      <button onclick="concluirFase1()">Concluir a fase</button>
-    `;
+          <h2>Parabéns!</h2>
+          <p>Você concluiu a Fase 5 de Laços de Repetição! ${fase5JaConcluida ? "Pode refazer, mas não ganhará XP extra." : "+70XP"}</p>
+          <button onclick="concluirFase5()">Concluir a fase</button>
+        `;
+      }
+    }
+
+    function atualizarNivel() {
+      if (nivelJsAtual >= niveis.length) return;
+      const nivel = niveis[nivelJsAtual];
+      document.getElementById("titulo-nivel").textContent = nivel.titulo;
+      document.getElementById("descricao-nivel").textContent = nivel.descricao;
+      document.getElementById("texto-teoria").textContent = nivel.teoria;
+
+      let extra = nivel.extra;
+      if (extra) {
+        extra = extra.replace(/<\/code>\s*/g, '</code><br>');
+        extra = extra.replace(/;\s*/g, ';<br>');
+        extra = extra.replace(/(<br>\s*)+/g, '<br>');
+      }
+      extraHtmlAtual = extra || "";
+      extraVisivel = false;
+      extraTeoria.innerHTML = "";
+      if (extraHtmlAtual) {
+        botaoExemplo.style.display = 'inline-flex';
+        botaoExemplo.innerText = 'Exibir exemplo';
+      } else {
+        botaoExemplo.style.display = 'none';
+      }
+
+      db.collection("usuarios").doc(auth.currentUser.uid).get().then(docSnap => {
+        if (docSnap.exists) {
+          const dados = docSnap.data();
+          const codigoAtual = dados && dados.fasesJS && dados.fasesJS.fase5 && dados.fasesJS.fase5.codigoAtual;
+          if (codigoAtual !== undefined && codigoAtual !== null) {
+            entradaCodigo.value = codigoAtual;
+            mostrarVisualizacao(nivelJsAtual, codigoAtual);
+            return;
+          }
+        }
+        entradaCodigo.value = "";
+        preview.innerHTML = "A visualização aparecerá aqui.";
+      });
+
+      barraProgresso.style.width = `${(nivelJsAtual / niveis.length) * 100}%`;
+
+      const resultado = document.querySelector('.resultado');
+      if (nivelJsAtual === 0 || nivelJsAtual === 1) {
+        resultado.style.display = 'none';
+      } else {
+        resultado.style.display = 'block';
       }
     }
 
@@ -368,6 +419,12 @@
       }
     }
 
+    function toggleExemplo() {
+      extraVisivel = !extraVisivel;
+      extraTeoria.innerHTML = extraVisivel ? extraHtmlAtual : "";
+      botaoExemplo.innerText = extraVisivel ? 'Ocultar exemplo' : 'Exibir exemplo';
+    }
+
     function verificarNivel() {
       const entrada = entradaCodigo.value;
       const audio = document.getElementById("audio-sucesso");
@@ -381,6 +438,7 @@
 
       mostrarVisualizacao(nivelJsAtual, entrada);
 
+      // visualização do console desativada
 
       const passou = resposta instanceof RegExp ? resposta.test(entrada) : entrada === resposta;
 
@@ -388,8 +446,8 @@
         if (somAtivo) {
           audio.play();
         }
-        if (!fase1JsJaConcluida) {
-          adicionarXP(10);
+        if (!fase5JaConcluida) {
+          adicionarXP(12);
         }
         salvarCodigo(entrada);
         aguardandoAvanco = true;
@@ -400,26 +458,24 @@
       }
     }
 
-    function concluirFase1() {
+    function concluirFase5() {
       const user = auth.currentUser;
       if (!user) return;
       const ref = db.collection("usuarios").doc(user.uid);
 
-      if (!fase1JsJaConcluida) {
+      if (!fase5JaConcluida) {
         ref.get().then(docSnap => {
           if (docSnap.exists) {
             const data = docSnap.data();
             const fases = data.fasesJS || {};
-
-            fases.fase1 = { status: "concluida" };
-            fases.fase2 = { status: "disponivel" };
-
+            fases.fase5 = { status: "concluida" };
+            fases.fase6 = fases.fase6 || { status: "disponivel" };
             ref.set({
               fasesJS: fases,
-              xp: firebase.firestore.FieldValue.increment(50)
+              xp: firebase.firestore.FieldValue.increment(70)
             }, { merge: true }).then(() => {
-              fase1JsJaConcluida = true;
-              alert("✅ Fase 1 concluída! Fase 2 desbloqueada.");
+              fase5JaConcluida = true;
+              alert("✅ Fase 5 concluída! Fase 6 desbloqueada.");
               window.location.href = "../index.html";
             });
           }
@@ -427,57 +483,6 @@
       } else {
         alert("⚠️ Você já concluiu esta fase. Pode revisar, mas não ganha XP.");
         window.location.href = "../index.html";
-      }
-    }
-
-    function atualizarNivel() {
-      if (nivelJsAtual >= niveis.length) return;
-      const nivel = niveis[nivelJsAtual];
-      document.getElementById("titulo-nivel").textContent = nivel.titulo;
-      document.getElementById("descricao-nivel").textContent = nivel.descricao;
-      document.getElementById("texto-teoria").textContent = nivel.teoria;
-
-      let extra = nivel.extra;
-      if (extra) {
-        extra = extra.replace(/;\s*/g, ';<br>');
-        extra = extra.replace(/(<br>\s*)+/g, '<br>');
-      }
-      extraHtmlAtual = extra || "";
-      extraVisivel = false;
-      extraTeoria.innerHTML = "";
-      if (extraHtmlAtual) {
-        botaoExemplo.style.display = 'inline-flex';
-        botaoExemplo.innerText = 'Exibir exemplo';
-      } else {
-        botaoExemplo.style.display = 'none';
-      }
-
-      db.collection("usuarios").doc(auth.currentUser.uid).get().then(docSnap => {
-        if (docSnap.exists) {
-          const dados = docSnap.data();
-          const codigoAtual = dados && dados.fasesJS && dados.fasesJS.fase1 && dados.fasesJS.fase1.codigoAtual;
-          if (codigoAtual !== undefined && codigoAtual !== null) {
-            entradaCodigo.value = codigoAtual;
-            mostrarVisualizacao(nivelJsAtual, codigoAtual);
-            return;
-          }
-        }
-
-        if ((nivelJsAtual === 2 || nivelJsAtual === 3) && ultimoCodigoDigitado) {
-          entradaCodigo.value = ultimoCodigoDigitado;
-        } else {
-          entradaCodigo.value = "";
-        }
-        preview.innerHTML = "A visualização aparecerá aqui.";
-      });
-
-      barraProgresso.style.width = `${(nivelJsAtual / niveis.length) * 100}%`;
-
-      const resultado = document.querySelector('.resultado');
-      if (nivelJsAtual === 0 || nivelJsAtual === 1) {
-        resultado.style.display = 'none';
-      } else {
-        resultado.style.display = 'block';
       }
     }
 
@@ -493,19 +498,13 @@
       });
     }
 
-    function toggleExemplo() {
-      extraVisivel = !extraVisivel;
-      extraTeoria.innerHTML = extraVisivel ? extraHtmlAtual : "";
-      botaoExemplo.innerText = extraVisivel ? 'Ocultar exemplo' : 'Exibir exemplo';
-    }
-
     function salvarProgresso(nivel) {
       const user = auth.currentUser;
       if (!user) return;
       const ref = db.collection("usuarios").doc(user.uid);
       ref.set({
         fasesJS: {
-          fase1: {
+          fase5: {
             nivelAtual: nivel
           }
         }
@@ -515,11 +514,10 @@
     function salvarCodigo(codigo) {
       const user = auth.currentUser;
       if (!user) return;
-      ultimoCodigoDigitado = codigo;
       const ref = db.collection("usuarios").doc(user.uid);
       ref.set({
         fasesJS: {
-          fase1: {
+          fase5: {
             codigoAtual: codigo
           }
         }

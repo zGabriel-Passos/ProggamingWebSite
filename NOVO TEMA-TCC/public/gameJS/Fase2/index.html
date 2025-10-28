@@ -27,22 +27,22 @@
   <div class="container-nivel">
     <div class="bloco-teoria">
       <div style="display: flex; flex-direction: row; align-items: center; justify-content: space-between;">
-        <h3>Teoria - Fase 1</h3>
+        <h3>Teoria - Fase 2</h3>
         <button class="botao-som" id="botao-som" onclick="toggleSom()">🔊</button>
       </div>
       <p id="texto-teoria"></p>
       <div id="extra-teoria" style="margin-top:10px; font-weight: 600; font-size:14px; color:#ddd;"></div>
-      <h2 id="titulo-nivel">Nível 1/6</h2>
-      <p id="descricao-nivel">JavaScript é uma linguagem de programação essencial e a mais popular 
-        para o desenvolvimento web, responsável por adicionar interatividade e dinamismo a páginas web, 
-        como mapas interativos, animações e atualizações de conteúdo em tempo real. Ele é uma das três tecnologias
-         fundamentais da web, juntamente com HTML (estrutura) e CSS (estilo)</p>
+      <button id="btn-extra-exemplo" class="voltar" style="margin-top:8px; display:none;"
+        onclick="toggleExemplo()">Exibir exemplo</button>
+      <h2 id="titulo-nivel">Nível 1/5</h2>
+      <p id="descricao-nivel">Nesta fase você vai criar variáveis, trabalhar com tipos de dados e
+        montar frases usando concatenação e template literals.</p>
       <hr>
       <div style="margin: 10px 0px 10px 0px;">
         <span id="xp-total" style="font-family: 'Press Start 2P', cursive; font-weight: 600; color: #c7860e;">XP:
           0</span>
       </div>
-      <a href="../" style="float: right; margin: 10px;">
+      <a href="../index.html" style="float: right; margin: 10px;">
         <button class="voltar">
           <i class='bx bx-arrow-back'></i>
           <span style="font-size: 12px;">Voltar</span>
@@ -50,7 +50,7 @@
       </a>
     </div>
 
-    <div class="resultado" id="preview" style="display:none;">A visualização aparecerá aqui.</div>
+    <div class="resultado" id="preview">A visualização aparecerá aqui.</div>
 
     <div class="editor-container">
       <div class="editor-header">
@@ -59,8 +59,8 @@
         <span class="dot green"></span>
         <span class="editor-title">index.html</span>
       </div>
-      <textarea id="entrada-codigo" class="code-editor" spellcheck="false" placeholder="Digite o código HTML aqui..."
-        style="height: 90%;"></textarea>
+      <textarea id="entrada-codigo" class="code-editor" spellcheck="false"
+        placeholder="Digite o código JavaScript aqui..." style="height: 90%;"></textarea>
       <button onclick="verificarNivel()">Testar Código</button>
     </div>
   </div>
@@ -72,7 +72,7 @@
   <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore-compat.js"></script>
   <script>
     let somAtivo = true;
-
+    let aguardandoAvanco = false;
 
     function toggleSom() {
       somAtivo = !somAtivo;
@@ -102,57 +102,58 @@
     const auth = firebase.auth();
     const db = firebase.firestore();
 
-    let nivelAtual = 0;
-    let fase1JsJaConcluida = false;
+    let nivelJsAtual = 0;
+    let fase2JaConcluida = false;
 
     const entradaCodigo = document.getElementById("entrada-codigo");
     const preview = document.getElementById("preview");
     const barraProgresso = document.getElementById("barra-progresso");
     const xpTotalSpan = document.getElementById("xp-total");
     const extraTeoria = document.getElementById("extra-teoria");
+    const botaoExemplo = document.getElementById("btn-extra-exemplo");
+    let extraVisivel = false;
+    let extraHtmlAtual = "";
 
     const niveis = [
       {
-        titulo: "Nível 1/6",
-        descricao: "Digite a tag HTML que representa um título principal. (Escreva o código no editor)",
-        teoria: "",
-        extra: "",
-        respostaEsperada: /.*/i
+        titulo: "Nível 1/5",
+        descricao: "Declare uma variável com var, outra com let e outra com const.",
+        teoria: "var foi a forma original de declarar variáveis em JS e tem escopo de função (vaza de blocos). let tem escopo de bloco e é a escolha moderna para valores que mudam. const também tem escopo de bloco e impede reatribuição do identificador (o conteúdo de objetos/arrays ainda pode ser mutado). Prefira let e const no dia a dia.",
+        extra: "Exemplo: var a = 1; let b = 2; const c = 3;",
+        codigoInicial: "",
+        respostaEsperada: /(?=[\s\S]*\bvar\s+\w+\s*=)(?=[\s\S]*\blet\s+\w+\s*=)(?=[\s\S]*\bconst\s+\w+\s*=)[\s\S]*/i,
       },
       {
-        titulo: "Nível 2/6",
-        descricao: "Declare uma variável chamada 'mensagem' e atribua a ela o valor 'Olá, mundo!'.",
-        teoria: "Para armazenar dados com Javascript, ultilizamos uma estrutura chamada variável. Para declararmos uma variavel que tem como valor um texto, ultlizamos a declaração <code>let nomeDaVariavel = 'valor';<code><br> No exemplo, 'let' é a palavra reservada que indica que estamos declarando uma variável, 'nomeDaVariavel' é o nome que escolhemos para a variável (que deve seguir certas regras, como não começar com números ou usar espaços) e 'valor' é o conteúdo que estamos atribuindo à variável, que no caso é um texto (string) e por isso está entre aspas simples.",
-        extra: "Exemplo: <code>let texto = 'Olá, mundo!';</code>",
-        respostaEsperada: /let\s+texto\s*=\s*'Olá, mundo!';?/i
+        titulo: "Nível 2/5",
+        descricao: "Crie uma string, um number e um boolean.",
+        teoria: "Os principais tipos primitivos são: string (texto entre aspas), number (inteiros e decimais sem distinção) e boolean (true/false). Saber escolher o tipo correto evita bugs e facilita validações.",
+        extra: "Ex.: let s = 'texto'; let n = 10; let b = true;",
+        codigoInicial: "",
+        respostaEsperada: /(?=[\s\S]*(let|var|const)\s+\w+\s*=\s*['\"]).*(?=[\s\S]*(let|var|const)\s+\w+\s*=\s*\d).*(?=[\s\S]*(let|var|const)\s+\w+\s*=\s*(true|false))[\s\S]*/i
       },
       {
-        titulo: "Nível 3/6",
-        descricao: "Use a tag de negrito para escrever 'Olá Mundo'. (Escreva o código no editor)",
-        teoria: "A tag <b> deixa o texto em negrito, mas apenas visualmente. Para dar ênfase semântica (quando o conteúdo é realmente importante), recomenda-se usar <strong>. Já <b> é mais usada para estilização simples.",
-        extra: "Exemplo: <code>&lt;b&gt;Olá Mundo&lt;/b&gt;</code>",
-        respostaEsperada: /<b>\s*olá mundo\s*<\/b>/i
+        titulo: "Nível 3/5",
+        descricao: "Converta um valor com Number() e outro com String().",
+        teoria: "Conversões explícitas tornam seu código previsível: Number(x) tenta transformar x em número (retorna NaN se falhar). String(x) converte qualquer valor em texto. Evite confiar em coerção implícita (ex.: == para não gerar surpresas.",
+        extra: "Ex.: let n = Number('42')<br>let s = String(42)",
+        codigoInicial: "",
+        respostaEsperada: /(?=[\s\S]*\bNumber\s*\()[\s\S]*\bString\s*\([\s\S]*/i
       },
       {
-        titulo: "Nível 4/6",
-        descricao: "Insira um título de aba usando a tag correta. (Escreva o código no editor)",
-        teoria: "A tag <title> define o título que aparece na aba do navegador e nos resultados de pesquisa do Google. Essa tag deve ficar sempre dentro do <head>. É importante escolher um título claro e objetivo, pois ajuda na experiência do usuário e no SEO (otimização para mecanismos de busca).",
-        extra: "Exemplo: <code>&lt;title&gt;Minha Página&lt;/title&gt;</code>",
-        respostaEsperada: /<title>.*<\/title>/i
+        titulo: "Nível 4/5",
+        descricao: "Faça uma frase juntando textos com + (concatenação).",
+        teoria: "Para juntar textos, use o operador + ou métodos como concat(). Atenção: quando um operando é string e o outro é number, o + faz concatenação, não soma. Garanta o tipo correto antes de operar.",
+        extra: "Ex.: let frase = 'Olá, ' + nome;",
+        codigoInicial: "",
+        respostaEsperada: /(?=[\s\S]*\+)(?=[\s\S]*['\"][^'\"]+['\"])[\s\S]*/i
       },
       {
-        titulo: "Nível 5/6",
-        descricao: "Use a tag <i> para deixar 'Importante' em itálico. (Escreva o código no editor)",
-        teoria: "A tag <i> deixa o texto em itálico, mas assim como <b>, é apenas uma formatação visual. Para dar ênfase semântica, recomenda-se usar <em> (ênfase). A diferença é que <em> comunica ao navegador e leitores de tela que o texto é realmente importante.",
-        extra: "Exemplo: <code>&lt;i&gt;Importante&lt;/i&gt;</code>",
-        respostaEsperada: /<i>\s*importante\s*<\/i>/i
-      },
-      {
-        titulo: "Nível 6/6",
-        descricao: "Monte a estrutura básica com html, head e body. (Escreva o código no editor)",
-        teoria: "Todo documento HTML deve começar com <!DOCTYPE html>, que informa ao navegador que o documento segue o padrão HTML5. Depois, temos a estrutura básica:<html>: raiz do documento;<head>: contém informações sobre a página (título, metadados, links de CSS, scripts);<body>: onde fica o conteúdo visível (textos, imagens, botões, etc.). É fundamental entender essa estrutura, pois todos os sites são construídos a partir dela.",
-        extra: "Exemplo:<br><code>&lt;!DOCTYPE html&gt;<br>&lt;html&gt;<br>&lt;head&gt;&lt;/head&gt;<br>&lt;body&gt;&lt;/body&gt;<br>&lt;/html&gt;</code>",
-        respostaEsperada: /<html>[\s\S]*<head>[\s\S]*<\/head>[\s\S]*<body>[\s\S]*<\/body>[\s\S]*<\/html>/i
+        titulo: "Nível 5/5",
+        descricao: "Use template literals (crase) e ${} para interpolar.",
+        teoria: "Template literals (entre crases) facilitam interpolar variáveis com ${} e quebrar linhas sem escapes. São ideais para montar mensagens legíveis e reduzir erros de concatenação.",
+        extra: "Ex.: let msg = `Olá, ${nome}!`",
+        codigoInicial: "",
+        respostaEsperada: /`[\s\S]*`/i
       }
     ];
 
@@ -168,104 +169,310 @@
         if (docSnap.exists) {
           const data = docSnap.data();
           const xp = data.xp || 0;
-          nivelAtual = data.nivelJsAtual || 1;
-          fase1JsJaConcluida = data.fase1JsConcluida || false;
+          nivelJsAtual = (data.fasesJS && data.fasesJS.fase2 && Number.isInteger(data.fasesJS.fase2.nivelAtual)) ? data.fasesJS.fase2.nivelAtual : 0;
+          fase2JaConcluida = (data.fasesJS && data.fasesJS.fase2 && data.fasesJS.fase2.status === "concluida") || false;
+          const faseDoc = data.fasesJS && data.fasesJS.fase2 ? data.fasesJS.fase2 : {};
+          if (fase2JaConcluida && ("codigoAtual" in faseDoc || "nivelAtual" in faseDoc)) {
+            db.collection("usuarios").doc(user.uid).set({
+              fasesJS: {
+                fase2: {
+                  codigoAtual: firebase.firestore.FieldValue.delete(),
+                  nivelAtual: firebase.firestore.FieldValue.delete()
+                }
+              }
+            }, { merge: true });
+            nivelJsAtual = 0;
+          }
           xpTotalSpan.textContent = `XP: ${xp}`;
           atualizarNivel();
-          if (data.codigoJsAtual) {
-            entradaCodigo.value = data.codigoJsAtual;
-            preview.innerHTML = data.codigoJsAtual;
+          if (data.fasesJS && data.fasesJS.fase2 && data.fasesJS.fase2.codigoAtual) {
+            entradaCodigo.value = data.fasesJS.fase2.codigoAtual;
+            preview.innerHTML = data.fasesJS.fase2.codigoAtual;
           }
 
-          if (fase1JsJaConcluida) {
-            alert("⚠️ Você já concluiu esta fase.");
-            history.back()
-          }
+          // Fase concluída pode ser repetida; sem XP extra (já tratado em verificarNivel)
         } else {
           atualizarNivel();
         }
       });
     }
 
-    entradaCodigo.addEventListener("input", () => {
-      const input = entradaCodigo.value
-        .replace(/<script.*?>.*?<\/script>/gi, "")
-        .replace(/on\w+=".*?"/gi, "");
-      salvarCodigo(entradaCodigo.value);
-    });
+    function atualizarBotaoCorreto(estado) {
+      const botao = document.querySelector('.editor-container button');
+      if (estado === 'correto') {
+        botao.style.background = '#2ecc40';
+        botao.innerHTML = '<i class="bx bx-check"></i> Correto! Clique para avançar';
+      } else if (estado === 'incorreto') {
+        botao.style.background = '#e74c3c';
+        botao.innerHTML = '<i class="bx bx-x"></i> Tente novamente';
+      } else {
+        botao.style.background = '';
+        botao.innerHTML = 'Testar Código';
+      }
+    }
+
+    function avancarNivel() {
+      aguardandoAvanco = false;
+      atualizarBotaoCorreto();
+      nivelJsAtual++;
+      salvarProgresso(nivelJsAtual);
+      if (nivelJsAtual < niveis.length) {
+        atualizarNivel();
+        mostrarVisualizacao(nivelJsAtual, entradaCodigo.value); // 🔥 Garante visualização em cada novo nível
+      } else {
+        const resultado = document.querySelector('.resultado');
+        resultado.style.display = 'block';
+        resultado.innerHTML = `
+          <h2>Parabéns!</h2>
+          <p>Você concluiu a Fase 2 de JavaScript! ${fase2JaConcluida ? "Pode refazer, mas não ganhará XP extra." : "+50XP"}</p>
+          <button onclick="concluirFase()">Concluir a fase</button>
+        `;
+      }
+    }
+
+
+    function atualizarNivel() {
+      if (nivelJsAtual >= niveis.length) return;
+      const nivel = niveis[nivelJsAtual];
+      document.getElementById("titulo-nivel").textContent = nivel.titulo;
+      document.getElementById("descricao-nivel").textContent = nivel.descricao;
+      document.getElementById("texto-teoria").textContent = nivel.teoria;
+
+      let extra = nivel.extra;
+      if (extra) {
+        extra = extra.replace(/;\s*/g, ';<br>');
+        extra = extra.replace(/(<br>\s*){2,}/g, '<br>');
+      }
+      extraHtmlAtual = extra || "";
+      extraVisivel = false;
+      extraTeoria.innerHTML = "";
+      if (extraHtmlAtual) {
+        botaoExemplo.style.display = 'inline-flex';
+        botaoExemplo.innerText = 'Exibir exemplo';
+      } else {
+        botaoExemplo.style.display = 'none';
+      }
+
+      db.collection("usuarios").doc(auth.currentUser.uid).get().then(docSnap => {
+        if (docSnap.exists) {
+          const dados = docSnap.data();
+          const codigoAtual = dados && dados.fasesJS && dados.fasesJS.fase2 && dados.fasesJS.fase2.codigoAtual;
+          if (codigoAtual !== undefined && codigoAtual !== null) {
+            entradaCodigo.value = codigoAtual;
+            mostrarVisualizacao(nivelJsAtual, codigoAtual);
+            return;
+          }
+        }
+        entradaCodigo.value = "";
+        preview.innerHTML = "A visualização aparecerá aqui.";
+      });
+
+      barraProgresso.style.width = `${((nivelJsAtual + 1) / niveis.length) * 100}%`;
+
+      preview.style.display = "block";
+      const resultado = document.querySelector('.resultado');
+      resultado.style.display = 'block';
+    }
+
+
+    function mostrarVisualizacao(nivel, codigo) {
+      const resultados = [];
+      const logs = [];
+      const errors = [];
+
+      const fakeConsole = {
+        log: (...args) => {
+          try {
+            logs.push(args.map(v => typeof v === 'object' ? JSON.stringify(v) : String(v)).join(' '));
+          } catch (_) {
+            logs.push(args.join(' '));
+          }
+        },
+        info: (...args) => fakeConsole.log(...args),
+        error: (...args) => {
+          try {
+            errors.push(args.map(v => typeof v === 'object' ? JSON.stringify(v) : String(v)).join(' '));
+          } catch (_) {
+            errors.push(args.join(' '));
+          }
+        }
+      };
+
+      const sanitizeDecls = (src) => {
+        let out = src
+          .replace(/\b(var|let|const)\s+([a-zA-Z_$][\w$]*)\s*=\s*/g, 'sandbox.$2 = ')
+          .replace(/\b(var|let|const)\s+([a-zA-Z_$][\w$]*)\s*(;|\n|$)/g, 'sandbox.$2 = undefined$3');
+        return out;
+      };
+
+      try {
+        const sandbox = {};
+        const transformed = sanitizeDecls(String(codigo));
+
+        try {
+          const runAll = new Function('sandbox', 'console', `with(sandbox){ try{ ${transformed} }catch(e){ console.error('Exec error:', e && e.message ? e.message : String(e)); } return sandbox; }`);
+          runAll(sandbox, fakeConsole);
+        } catch (e) {
+          errors.push(String(e && e.message ? e.message : e));
+        }
+
+        const linhasOrig = String(codigo).split(/\r?\n/);
+        const linhas = linhasOrig.map(s => s.trim()).filter(Boolean);
+
+        for (let i = 0; i < linhas.length; i++) {
+          const linha = linhas[i];
+          if (/^\/\//.test(linha)) continue;
+          if (/^\*|^\//.test(linha)) continue;
+          if (/^(if|for|while|switch|function|return|break|continue|class|try|catch|finally)\b/.test(linha)) continue;
+          if (/^\{|\}$/.test(linha)) continue;
+          if (/^(let|const|var)\b/.test(linha)) continue;
+
+          try {
+            const evalFn = new Function('sandbox', 'console', `with(sandbox){ try{ return (${linha.replace(/;$/, '')}); }catch(e){ throw e; } }`);
+            const valor = evalFn(sandbox, fakeConsole);
+            if (valor !== undefined) resultados.push({ linha: linha, valor: valor });
+          } catch (e) {
+            try {
+              const evalFn2 = new Function('sandbox', 'console', `with(sandbox){ try{ return ${linha.replace(/;$/, '')}; }catch(e){ throw e; } }`);
+              const val2 = evalFn2(sandbox, fakeConsole);
+              if (val2 !== undefined) resultados.push({ linha: linha, valor: val2 });
+            } catch (e2) {
+            }
+          }
+        }
+
+        if (resultados.length === 0) {
+          const porPontoEVirgula = String(codigo).split(';').map(s => s.trim()).filter(Boolean);
+          for (const frag of porPontoEVirgula) {
+            if (!frag) continue;
+            if (/^(let|const|var|if|for|while|switch|function|class|try|catch|finally|return|break|continue)\b/.test(frag)) continue;
+            try {
+              const evalFrag = new Function('sandbox', 'console', `with(sandbox){ return (${frag}); }`);
+              const val = evalFrag(sandbox, fakeConsole);
+              if (val !== undefined) resultados.push({ linha: frag, valor: val });
+            } catch (_) { }
+          }
+        }
+
+        if (resultados.length === 0) {
+          try {
+            const evalAll = new Function('sandbox', 'console', `with(sandbox){ return (${String(codigo)}); }`);
+            const valAll = evalAll(sandbox, fakeConsole);
+            if (valAll !== undefined) resultados.push({ linha: '(bloco)', valor: valAll });
+          } catch (_) { }
+        }
+
+        if (resultados.length === 0) {
+          try {
+            const chaves = Object.keys(sandbox || {});
+            for (const k of chaves) {
+              const v = sandbox[k];
+              if (typeof v === 'number' || typeof v === 'boolean' || typeof v === 'string') {
+                resultados.push({ linha: k, valor: v });
+              }
+            }
+          } catch (_) { }
+        }
+
+      } catch (e) {
+        errors.push(String(e && e.message ? e.message : e));
+      }
+
+      const partes = [];
+
+      for (const l of logs) {
+        partes.push(`<div class="output-log">console.log → ${escapeHtml(String(l))}</div>`);
+      }
+      for (const er of errors) {
+        partes.push(`<div class="output-error">Error → ${escapeHtml(String(er))}</div>`);
+      }
+      for (const r of resultados) {
+        const valorStr = formatValue(r.valor);
+        partes.push(`<div class="output-result">${escapeHtml(String(r.linha))} => ${escapeHtml(valorStr)}</div>`);
+      }
+
+      preview.innerHTML = partes.length ? partes.join('') : "A visualização aparecerá aqui.";
+      preview.scrollTop = preview.scrollHeight;
+
+      function formatValue(v) {
+        if (typeof v === 'string') return `"${v}"`;
+        if (v === null) return 'null';
+        if (v === undefined) return 'undefined';
+        if (typeof v === 'object') {
+          try { return JSON.stringify(v); } catch (_) { return String(v); }
+        }
+        return String(v);
+      }
+      function escapeHtml(str) {
+        return (str + '')
+          .replace(/&/g, '&amp;')
+          .replace(/</g, '&lt;')
+          .replace(/>/g, '&gt;')
+          .replace(/"/g, '&quot;')
+          .replace(/'/g, '&#039;');
+      }
+    }
 
     function verificarNivel() {
-      const entrada = entradaCodigo.value.trim();
+      const entrada = entradaCodigo.value;
       const audio = document.getElementById("audio-sucesso");
-      const regex = niveis[nivelAtual].respostaEsperada;
+      const resposta = niveis[nivelJsAtual].respostaEsperada;
+      const botao = document.querySelector('.editor-container button');
 
-      if (regex.test(entrada)) {
+      if (aguardandoAvanco) {
+        avancarNivel();
+        return;
+      }
+
+      mostrarVisualizacao(nivelJsAtual, entrada);
+
+
+      const passou = resposta instanceof RegExp ? resposta.test(entrada) : entrada === resposta;
+
+      if (passou) {
         if (somAtivo) {
           audio.play();
         }
-
-        if (!faseJsJaConcluida) {
+        if (!fase2JaConcluida) {
           adicionarXP(10);
         }
-
-        nivelAtual++;
-        salvarProgresso(nivelAtual);
-
-        if (nivelAtual < niveis.length) {
-          atualizarNivel();
-        } else {
-          document.querySelector(".resultado").innerHTML = `
-        <h2>Parabéns!</h2>
-        <p>Você concluiu a Fase 1 de HTML! ${fase1JsJaConcluida ? "Pode refazer, mas não ganhará XP extra." : "+60XP"}</p>
-        <button onclick="concluirFase1()">Concluir a fase</button>
-      `;
-        }
+        salvarCodigo(entrada);
+        aguardandoAvanco = true;
+        atualizarBotaoCorreto('correto');
       } else {
+        atualizarBotaoCorreto('incorreto');
         alert("Resposta incorreta! Tente novamente.");
       }
     }
 
-    function concluirFase1() {
+    function concluirFase() {
       const user = auth.currentUser;
       if (!user) return;
       const ref = db.collection("usuarios").doc(user.uid);
 
-      if (!fase1JsJaConcluida) {
+      if (!fase2JaConcluida) {
         ref.get().then(docSnap => {
           if (docSnap.exists) {
             const data = docSnap.data();
             const fases = data.fasesJS || {};
 
-            fases.fase1 = { status: "concluida" };
-            fases.fase2 = { status: "disponivel" };
+            fases.fase2 = { status: "concluida" };
+            fases.fase3 = fases.fase3 || { status: "disponivel" };
 
             ref.set({
               fasesJS: fases,
-              xp: firebase.firestore.FieldValue.increment(60),
-              fase1JsConcluida: true
+              xp: firebase.firestore.FieldValue.increment(50)
             }, { merge: true }).then(() => {
-              fase1JsJaConcluida = true;
-              alert("✅ Fase 1 concluída! Fase 2 desbloqueada.");
-              window.location.href = "../Fase2/index.html";
+              fase2JaConcluida = true;
+              alert("✅ Fase 2 concluída! Fase 3 desbloqueada.");
+              window.location.href = "../index.html";
             });
           }
         });
       } else {
         alert("⚠️ Você já concluiu esta fase. Pode revisar, mas não ganha XP.");
-        window.location.href = "../";
+        window.location.href = "../index.html";
       }
-    }
-
-    function atualizarNivel() {
-      if (nivelAtual >= niveis.length) return;
-      const nivel = niveis[nivelAtual];
-      document.getElementById("titulo-nivel").textContent = nivel.titulo;
-      document.getElementById("descricao-nivel").textContent = nivel.descricao;
-      document.getElementById("texto-teoria").textContent = nivel.teoria;
-      extraTeoria.innerHTML = nivel.extra;
-      entradaCodigo.value = "";
-      preview.innerHTML = "A visualização aparecerá aqui.";
-      barraProgresso.style.width = `${(nivelAtual / niveis.length) * 100}%`;
     }
 
     function adicionarXP(qtd) {
@@ -280,18 +487,56 @@
       });
     }
 
+    function toggleExemplo() {
+      extraVisivel = !extraVisivel;
+      extraTeoria.innerHTML = extraVisivel ? extraHtmlAtual : "";
+      botaoExemplo.innerText = extraVisivel ? 'Ocultar exemplo' : 'Exibir exemplo';
+    }
+
     function salvarProgresso(nivel) {
       const user = auth.currentUser;
       if (!user) return;
       const ref = db.collection("usuarios").doc(user.uid);
-      ref.set({ nivelAtual: nivel }, { merge: true });
+      ref.set({
+        fasesJS: {
+          fase2: {
+            nivelAtual: nivel
+          }
+        }
+      }, { merge: true });
     }
 
     function salvarCodigo(codigo) {
       const user = auth.currentUser;
       if (!user) return;
       const ref = db.collection("usuarios").doc(user.uid);
-      ref.set({ codigoAtual: codigo }, { merge: true });
+      ref.set({
+        fasesJS: {
+          fase2: {
+            codigoAtual: codigo
+          }
+        }
+      }, { merge: true });
+    }
+  </script>
+
+  <script src="https://cdn.jsdelivr.net/npm/eruda"></script>
+  <script>
+    function mostrarConsoleReal() {
+      if (window._erudaIniciado) {
+        const preview = document.getElementById('preview');
+        preview.innerHTML = '';
+        eruda.destroy();
+        window._erudaIniciado = false;
+      }
+      const preview = document.getElementById('preview');
+      preview.innerHTML = '<div id="eruda-container" style="height:200px;"></div>';
+      eruda.init({
+        container: document.getElementById('eruda-container'),
+        tool: ['console'],
+        autoScale: true
+      });
+      window._erudaIniciado = true;
     }
   </script>
 </body>

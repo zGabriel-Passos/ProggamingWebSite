@@ -10,7 +10,7 @@
   <link rel="stylesheet" href="../TelaPrincipal/style.css">
   <link rel="stylesheet" href="style.css">
   <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap">
-  <title>Proggaming | Fase 1 - JavaScript</title>
+  <title>Proggaming | Fase 10 - Projeto Final</title>
 </head>
 
 <body>
@@ -27,7 +27,7 @@
   <div class="container-nivel">
     <div class="bloco-teoria">
       <div style="display: flex; flex-direction: row; align-items: center; justify-content: space-between;">
-        <h3>Teoria - Fase 1</h3>
+        <h3>Teoria - Fase 10</h3>
         <button class="botao-som" id="botao-som" onclick="toggleSom()">🔊</button>
       </div>
       <p id="texto-teoria"></p>
@@ -35,10 +35,7 @@
       <button id="btn-extra-exemplo" class="voltar" style="margin-top:8px; display:none;"
         onclick="toggleExemplo()">Exibir exemplo</button>
       <h2 id="titulo-nivel">Nível 1/5</h2>
-      <p id="descricao-nivel">JavaScript é uma linguagem de programação essencial e a mais popular
-        para o desenvolvimento web, responsável por adicionar interatividade e dinamismo a páginas web,
-        como mapas interativos, animações e atualizações de conteúdo em tempo real. Ele é uma das três tecnologias
-        fundamentais da web, juntamente com HTML (estrutura) e CSS (estilo)</p>
+      <p id="descricao-nivel">Sessão 10 – Projeto Final<br>Tema: consolidar Arrays, Funções, Objetos, DOM e Eventos.</p>
       <hr>
       <div style="margin: 10px 0px 10px 0px;">
         <span id="xp-total" style="font-family: 'Press Start 2P', cursive; font-weight: 600; color: #c7860e;">XP:
@@ -105,8 +102,7 @@
     const db = firebase.firestore();
 
     let nivelJsAtual = 0;
-    let fase1JsJaConcluida = false;
-    let ultimoCodigoDigitado = "";
+    let fase10JaConcluida = false;
 
     const entradaCodigo = document.getElementById("entrada-codigo");
     const preview = document.getElementById("preview");
@@ -120,43 +116,43 @@
     const niveis = [
       {
         titulo: "Nível 1/5",
-        descricao: "JavaScript é uma linguagem de programação essencial e a mais popular para o desenvolvimento web, responsável por adicionar interatividade e dinamismo a páginas web, como mapas interativos, animações e atualizações de conteúdo em tempo real. Ele é uma das três tecnologias fundamentais da web, juntamente com HTML (estrutura) e CSS (estilo)",
-        teoria: "",
-        extra: "",
+        descricao: "Crie um array de tarefas (objetos com id, titulo, feito).",
+        teoria: "Estruture dados do projeto em um array de objetos.",
+        extra: "Ex.: const tarefas = [{id:1,titulo:'Estudar',feito:false}]",
         codigoInicial: "",
-        respostaEsperada: "",
+        respostaEsperada: /\[[\s\S]*\{[\s\S]*id[\s\S]*titulo[\s\S]*feito[\s\S]*\}[\s\S]*\]/i
       },
       {
         titulo: "Nível 2/5",
-        descricao: "Declare uma variável chamada 'mensagem' e atribua a ela o valor 'Olá, mundo!'.",
-        teoria: "Para armazenar dados com Javascript, ultilizamos uma estrutura chamada variável. Para declararmos uma variavel que tem como valor um texto, ultlizamos a declaração let nomeDaVariavel = 'valor';<br> No exemplo, 'let' é a palavra reservada que indica que estamos declarando uma variável, 'nomeDaVariavel' é o nome que escolhemos para a variável (que deve seguir certas regras, como não começar com números ou usar espaços) e 'valor' é o conteúdo que estamos atribuindo à variável, que no caso é um texto (string) e por isso está entre aspas simples.",
-        extra: "Exemplo: let texto = 'Olá, mundo!';",
+        descricao: "Implemente função addTarefa que adiciona no array.",
+        teoria: "Funções manipulam o estado do array.",
+        extra: "Ex.: function addTarefa(t){ tarefas.push(t) }",
         codigoInicial: "",
-        respostaEsperada: /let\s+mensagem\s*=\s*'Olá, mundo!'\s*;?\s*/i
+        respostaEsperada: /(function\s+addTarefa|const\s+addTarefa\s*=)\s*[\s\S]*\.push\s*\(/i
       },
       {
         titulo: "Nível 3/5",
-        descricao: "Use o metodo console.log para imprimir a variável mensagem",
-        teoria: "O método console.log() é usado para exibir mensagens no console do navegador, o que é útil para depuração e verificação de valores durante o desenvolvimento. Para imprimir o valor de uma variável, você simplesmente passa o nome da variável como argumento para console.log(). Por exemplo, se você tem uma variável chamada mensagem, você pode exibir seu valor no console com console.log(mensagem);",
-        extra: "Exemplo: console.log(mensagem)",
-        codigoInicial: "let mensagem = 'Olá, Mundo!'",
-        respostaEsperada: /let\s+mensagem\s*=\s*['"][\s\S]*?['"]\s*;?\s*console\.log\(\s*mensagem\s*\)\s*;?/i
+        descricao: "Renderize tarefas no DOM usando innerHTML e forEach.",
+        teoria: "Gere HTML a partir dos dados.",
+        extra: "Ex.: lista.innerHTML = tarefas.map(...).join('')",
+        codigoInicial: "",
+        respostaEsperada: /(\.forEach\s*\(|\.map\s*\()[\s\S]*\.innerHTML\s*=/i
       },
       {
         titulo: "Nível 4/5",
-        descricao: "Transforme o comando console.log anterior em um comentário.",
-        teoria: "Para comentar um comando em JavaScript, basta adicionar // antes dele ou envolver com /* ... */. Isso faz com que o comando não seja executado.",
-        extra: "Exemplo: // console.log(mensagem) ou /* console.log(mensagem) */",
-        codigoInicial: "let mensagem = 'Olá, Mundo!'<br>console.log(mensagem)",
-        respostaEsperada: /(\/\/\s*console\.log\(.*\)|\/\*\s*console\.log\(.*\)\s*\*\/)/i
+        descricao: "Adicione eventos para marcar tarefa como feita.",
+        teoria: "Eventos conectam UI e dados.",
+        extra: "Ex.: el.addEventListener('click', fn)",
+        codigoInicial: "",
+        respostaEsperada: /addEventListener\s*\(\s*['"]click['"]/i
       },
       {
         titulo: "Nível 5/5",
-        descricao: "Utilize o método alert ou outro método da window para exibir uma mensagem.",
-        teoria: "O objeto window representa a janela do navegador e possui vários métodos úteis, como alert(), prompt(), confirm(), entre outros. O método alert exibe uma caixa de diálogo com uma mensagem para o usuário.",
-        extra: "Exemplo: alert('Olá!') ou window.alert('Bem-vindo!')",
+        descricao: "Finalize: adicionar, listar e alternar estado; mostre contagem.",
+        teoria: "Consolide tudo e exiba total de tarefas feitas.",
+        extra: "Ex.: const feitas = tarefas.filter(t=>t.feito).length",
         codigoInicial: "",
-        respostaEsperada: /(window\s*\.\s*alert\s*\(.*\)|alert\s*\(.*\))/i
+        respostaEsperada: /(filter\s*\(|reduce\s*\()[\s\S]*length/i
       }
     ];
 
@@ -172,14 +168,13 @@
         if (docSnap.exists) {
           const data = docSnap.data();
           const xp = data.xp || 0;
-          nivelJsAtual = (data.fasesJS && data.fasesJS.fase1 && Number.isInteger(data.fasesJS.fase1.nivelAtual)) ? data.fasesJS.fase1.nivelAtual : 0;
-          fase1JsJaConcluida = (data.fasesJS && data.fasesJS.fase1 && data.fasesJS.fase1.status === "concluida") || false;
-          // Se a fase já foi concluída e há vestígios de progresso, limpar para repetir do início
-          const faseDoc = data.fasesJS && data.fasesJS.fase1 ? data.fasesJS.fase1 : {};
-          if (fase1JsJaConcluida && ("codigoAtual" in faseDoc || "nivelAtual" in faseDoc)) {
+          nivelJsAtual = (data.fasesJS && data.fasesJS.fase10 && Number.isInteger(data.fasesJS.fase10.nivelAtual)) ? data.fasesJS.fase10.nivelAtual : 0;
+          fase10JaConcluida = (data.fasesJS && data.fasesJS.fase10 && data.fasesJS.fase10.status === "concluida") || false;
+          const faseDoc = data.fasesJS && data.fasesJS.fase10 ? data.fasesJS.fase10 : {};
+          if (fase10JaConcluida && ("codigoAtual" in faseDoc || "nivelAtual" in faseDoc)) {
             db.collection("usuarios").doc(user.uid).set({
               fasesJS: {
-                fase1: {
+                fase10: {
                   codigoAtual: firebase.firestore.FieldValue.delete(),
                   nivelAtual: firebase.firestore.FieldValue.delete()
                 }
@@ -189,11 +184,12 @@
           }
           xpTotalSpan.textContent = `XP: ${xp}`;
           atualizarNivel();
-          if (data.fasesJS && data.fasesJS.fase1 && data.fasesJS.fase1.codigoAtual) {
-            entradaCodigo.value = data.fasesJS.fase1.codigoAtual;
-            preview.innerHTML = data.fasesJS.fase1.codigoAtual;
+          if (data.fasesJS && data.fasesJS.fase10 && data.fasesJS.fase10.codigoAtual) {
+            entradaCodigo.value = data.fasesJS.fase10.codigoAtual;
+            preview.innerHTML = data.fasesJS.fase10.codigoAtual;
           }
 
+          // Fase concluída pode ser repetida; sem XP extra (já tratado em verificarNivel)
         } else {
           atualizarNivel();
         }
@@ -224,9 +220,55 @@
       } else {
         document.querySelector('.resultado').innerHTML = `
       <h2>Parabéns!</h2>
-      <p>Você concluiu a Fase 1 de JavaScript! ${fase1JsJaConcluida ? "Pode refazer, mas não ganhará XP extra." : "+50XP"}</p>
-      <button onclick="concluirFase1()">Concluir a fase</button>
+      <p>Você concluiu a Fase 2 de JavaScript! ${fase2JaConcluida ? "Pode refazer, mas não ganhará XP extra." : "+50XP"}</p>
+      <button onclick="concluirFase()">Concluir a fase</button>
     `;
+      }
+    }
+
+    function atualizarNivel() {
+      if (nivelJsAtual >= niveis.length) return;
+      const nivel = niveis[nivelJsAtual];
+      document.getElementById("titulo-nivel").textContent = nivel.titulo;
+      document.getElementById("descricao-nivel").textContent = nivel.descricao;
+      document.getElementById("texto-teoria").textContent = nivel.teoria;
+
+      let extra = nivel.extra;
+      if (extra) {
+        extra = extra.replace(/;\s*/g, ';<br>');
+        extra = extra.replace(/(<br>\s*){2,}/g, '<br>');
+      }
+      extraHtmlAtual = extra || "";
+      extraVisivel = false;
+      extraTeoria.innerHTML = "";
+      if (extraHtmlAtual) {
+        botaoExemplo.style.display = 'inline-flex';
+        botaoExemplo.innerText = 'Exibir exemplo';
+      } else {
+        botaoExemplo.style.display = 'none';
+      }
+
+      db.collection("usuarios").doc(auth.currentUser.uid).get().then(docSnap => {
+        if (docSnap.exists) {
+          const dados = docSnap.data();
+          const codigoAtual = dados && dados.fasesJS && dados.fasesJS.fase10 && dados.fasesJS.fase10.codigoAtual;
+          if (codigoAtual !== undefined && codigoAtual !== null) {
+            entradaCodigo.value = codigoAtual;
+            mostrarVisualizacao(nivelJsAtual, codigoAtual);
+            return;
+          }
+        }
+        entradaCodigo.value = "";
+        preview.innerHTML = "A visualização aparecerá aqui.";
+      });
+
+      barraProgresso.style.width = `${(nivelJsAtual / niveis.length) * 100}%`;
+
+      const resultado = document.querySelector('.resultado');
+      if (nivelJsAtual === 0 || nivelJsAtual === 1) {
+        resultado.style.display = 'none';
+      } else {
+        resultado.style.display = 'block';
       }
     }
 
@@ -368,6 +410,12 @@
       }
     }
 
+    function toggleExemplo() {
+      extraVisivel = !extraVisivel;
+      extraTeoria.innerHTML = extraVisivel ? extraHtmlAtual : "";
+      botaoExemplo.innerText = extraVisivel ? 'Ocultar exemplo' : 'Exibir exemplo';
+    }
+
     function verificarNivel() {
       const entrada = entradaCodigo.value;
       const audio = document.getElementById("audio-sucesso");
@@ -381,6 +429,7 @@
 
       mostrarVisualizacao(nivelJsAtual, entrada);
 
+      // visualização do console desativada
 
       const passou = resposta instanceof RegExp ? resposta.test(entrada) : entrada === resposta;
 
@@ -388,8 +437,8 @@
         if (somAtivo) {
           audio.play();
         }
-        if (!fase1JsJaConcluida) {
-          adicionarXP(10);
+        if (!fase10JaConcluida) {
+          adicionarXP(120);
         }
         salvarCodigo(entrada);
         aguardandoAvanco = true;
@@ -400,26 +449,25 @@
       }
     }
 
-    function concluirFase1() {
+    function concluirFase10() {
       const user = auth.currentUser;
       if (!user) return;
       const ref = db.collection("usuarios").doc(user.uid);
 
-      if (!fase1JsJaConcluida) {
+      if (!fase10JaConcluida) {
         ref.get().then(docSnap => {
           if (docSnap.exists) {
             const data = docSnap.data();
             const fases = data.fasesJS || {};
 
-            fases.fase1 = { status: "concluida" };
-            fases.fase2 = { status: "disponivel" };
+            fases.fase10 = { status: "concluida" };
 
             ref.set({
               fasesJS: fases,
-              xp: firebase.firestore.FieldValue.increment(50)
+              xp: firebase.firestore.FieldValue.increment(120)
             }, { merge: true }).then(() => {
-              fase1JsJaConcluida = true;
-              alert("✅ Fase 1 concluída! Fase 2 desbloqueada.");
+              fase10JaConcluida = true;
+              alert("🎉 Fase 10 concluída! Projeto finalizado.");
               window.location.href = "../index.html";
             });
           }
@@ -427,57 +475,6 @@
       } else {
         alert("⚠️ Você já concluiu esta fase. Pode revisar, mas não ganha XP.");
         window.location.href = "../index.html";
-      }
-    }
-
-    function atualizarNivel() {
-      if (nivelJsAtual >= niveis.length) return;
-      const nivel = niveis[nivelJsAtual];
-      document.getElementById("titulo-nivel").textContent = nivel.titulo;
-      document.getElementById("descricao-nivel").textContent = nivel.descricao;
-      document.getElementById("texto-teoria").textContent = nivel.teoria;
-
-      let extra = nivel.extra;
-      if (extra) {
-        extra = extra.replace(/;\s*/g, ';<br>');
-        extra = extra.replace(/(<br>\s*)+/g, '<br>');
-      }
-      extraHtmlAtual = extra || "";
-      extraVisivel = false;
-      extraTeoria.innerHTML = "";
-      if (extraHtmlAtual) {
-        botaoExemplo.style.display = 'inline-flex';
-        botaoExemplo.innerText = 'Exibir exemplo';
-      } else {
-        botaoExemplo.style.display = 'none';
-      }
-
-      db.collection("usuarios").doc(auth.currentUser.uid).get().then(docSnap => {
-        if (docSnap.exists) {
-          const dados = docSnap.data();
-          const codigoAtual = dados && dados.fasesJS && dados.fasesJS.fase1 && dados.fasesJS.fase1.codigoAtual;
-          if (codigoAtual !== undefined && codigoAtual !== null) {
-            entradaCodigo.value = codigoAtual;
-            mostrarVisualizacao(nivelJsAtual, codigoAtual);
-            return;
-          }
-        }
-
-        if ((nivelJsAtual === 2 || nivelJsAtual === 3) && ultimoCodigoDigitado) {
-          entradaCodigo.value = ultimoCodigoDigitado;
-        } else {
-          entradaCodigo.value = "";
-        }
-        preview.innerHTML = "A visualização aparecerá aqui.";
-      });
-
-      barraProgresso.style.width = `${(nivelJsAtual / niveis.length) * 100}%`;
-
-      const resultado = document.querySelector('.resultado');
-      if (nivelJsAtual === 0 || nivelJsAtual === 1) {
-        resultado.style.display = 'none';
-      } else {
-        resultado.style.display = 'block';
       }
     }
 
@@ -493,19 +490,13 @@
       });
     }
 
-    function toggleExemplo() {
-      extraVisivel = !extraVisivel;
-      extraTeoria.innerHTML = extraVisivel ? extraHtmlAtual : "";
-      botaoExemplo.innerText = extraVisivel ? 'Ocultar exemplo' : 'Exibir exemplo';
-    }
-
     function salvarProgresso(nivel) {
       const user = auth.currentUser;
       if (!user) return;
       const ref = db.collection("usuarios").doc(user.uid);
       ref.set({
         fasesJS: {
-          fase1: {
+          fase10: {
             nivelAtual: nivel
           }
         }
@@ -515,11 +506,10 @@
     function salvarCodigo(codigo) {
       const user = auth.currentUser;
       if (!user) return;
-      ultimoCodigoDigitado = codigo;
       const ref = db.collection("usuarios").doc(user.uid);
       ref.set({
         fasesJS: {
-          fase1: {
+          fase10: {
             codigoAtual: codigo
           }
         }
