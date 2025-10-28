@@ -5,9 +5,10 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css">
-    <link rel="apple-touch-icon" href="/public/icon_512x512.png">
-    <link rel="icon" type="image/png" href="/public/icon_512x512.png">
-    <link rel="stylesheet" href="style.css">
+    <link rel="apple-touch-icon" href="./../icon_512x512.png">
+    <link rel="icon" type="image/png" href="./../icon_512x512.png">
+    <link rel="stylesheet" href="../TelaPrincipal/style.css">
+    <link rel="stylesheet" href="../estiloFases.css">
     <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap">
     <title>Proggaming | Fase 9 HTML</title>
 </head>
@@ -36,7 +37,7 @@
             <hr>
             <span id="xp-total" style="font-family: 'Press Start 2P', cursive; font-weight: 600; color: #c7860e;">XP:
                 0</span>
-            <a href="/public/gameHTML/index.html" style="float: right; margin: 10px;">
+            <a href="../" style="float: right; margin: 10px;">
                 <button class="voltar">
                     <i class='bx bx-arrow-back'></i>
                     <span style="font-size: 12px;">Voltar</span>
@@ -59,7 +60,7 @@
         </div>
     </div>
 
-    <audio id="audio-sucesso" src="/public/Green Screen + Efeito Sonoro (Acerto).mp3"></audio>
+    <audio id="audio-sucesso" src="../Green Screen + Efeito Sonoro (Acerto).mp3"></audio>
 
     <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-app-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-auth-compat.js"></script>
@@ -73,6 +74,32 @@
             const botaoSom = document.getElementById("botao-som");
             botaoSom.innerText = somAtivo ? "🔊" : "🔇";
         }
+
+        // ====================================================
+        // FUNÇÕES AUXILIARES DE NORMALIZAÇÃO E LIMPEZA
+        // ====================================================
+
+        // 1. Função de normalização agressiva (Para o QUIZ NÍVEL 1 e 5)
+        function normalizeCode(code) {
+            // Remove quebras de linha/tabulações e substitui por um único espaço
+            let normalized = code.replace(/[\n\r\t]/g, ' ');
+            // Remove espaços extras ao redor de caracteres de sintaxe
+            normalized = normalized.replace(/\s*([<>{}()\[\];:])\s*/g, '$1');
+            // Substitui múltiplos espaços por um único espaço
+            normalized = normalized.replace(/\s+/g, ' ');
+            // Remove tags de código/comentário
+            normalized = normalized.replace(/<\/?code>/ig, '');
+            // Remove espaços no início e no fim e faz o decode de entidades HTML para que a Regex funcione
+            return normalized.trim().replace(/&lt;/g, '<').replace(/&gt;/g, '>').replace(/&quot;/g, '"').replace(/&apos;/g, "'");
+        }
+
+        // 2. Função de limpeza de código (Para NÍVEIS DE CÓDIGO)
+        // Remove quebras de linha/tabulações e substitui por um único espaço
+        function cleanCodeForRegex(code) {
+            // Limpa espaços em excesso para facilitar o match da regex
+            return code.replace(/[\n\r\t]/g, ' ').replace(/\s{2,}/g, ' ').trim();
+        }
+        // ====================================================
 
         const firebaseConfig = {
             apiKey: "AIzaSyClRHfJuTSogkbWLaaUKsSBGN1KiT5xuUc",
@@ -108,18 +135,20 @@
         // =================== FASE 9: BOAS PRÁTICAS E ACESSIBILIDADE ===================
         const niveis = [
             {
-                titulo: "Nível 1/6",
-                descricao: "Adicione um comentário ao seu código. O comentário deve ser: 'Boas-vindas!'",
+                titulo: "Nível 1/6 (Quiz)",
+                descricao: "Qual é o comentário que você deve adicionar ao seu código para boas práticas? Responda com a frase: 'Boas-vindas!'",
                 teoria: "Comentários não são visíveis no navegador e servem para explicar seu código, tornando-o mais fácil de entender para você e outros desenvolvedores.",
-                extra: "Sintaxe: <code>&lt;!-- Seu comentário aqui --&gt;</code>",
-                respostaEsperada: /^\s*Boas-vindas\s*$/i
+                extra: "Digite apenas a frase. Ex: <code>Boas-vindas!</code>",
+                // Ajustado para Quiz. Aceita 'Boas-vindas!'
+                respostaEsperada: /^\s*boas-vindas\s*!*$/i
             },
             {
                 titulo: "Nível 2/6",
                 descricao: "Corrija a imagem. Adicione o atributo `alt` com a descrição 'Uma imagem de um gato'.",
                 teoria: "O atributo `alt` (texto alternativo) é crucial para a acessibilidade. Ele descreve a imagem para leitores de tela e é exibido caso a imagem não carregue.",
                 extra: "Exemplo: <code>&lt;img src='gato.jpg' alt='Uma imagem de um gato'&gt;</code>",
-                respostaEsperada: /<img[\s\S]*alt\s*=\s*['"]Uma\s*imagem\s*de\s*um\s*gato['"][\s\S]*>/i
+                // Regex ajustada: Mais robusta para atributos e ordem.
+                respostaEsperada: /<img[^>]*\balt\s*=\s*['"]Uma\s*imagem\s*de\s*um\s*gato['"][^>]*>/i
             },
             {
                 titulo: "Nível 3/6",
@@ -139,15 +168,17 @@
                 titulo: "Nível 5/6 (Quiz)",
                 descricao: "Quiz: Qual das opções abaixo é um uso correto da semântica para um título de seção?",
                 teoria: "A hierarquia de títulos (`<h1>` a `<h6>`) é fundamental para a estrutura. Um `<p>` é apenas um parágrafo de texto.",
-                extra: "Digite o código correto: a) <code>&lt;p&gt;Título&lt;/p&gt;</code> b) <code>&lt;h2&gt;Título&lt;/h2&gt;</code> c) <code>&lt;div&gt;Título&lt;/div&gt;</code>",
-                respostaEsperada: /h2>Título<\/h2>/i
+                extra: "Digite o código correto (B). Ex: <code>&lt;h2&gt;Título&lt;/h2&gt;</code>",
+                // Ajustado para Quiz. Requer a tag completa após normalização.
+                respostaEsperada: /^<h2[^>]*>títul[^<]*<\/h2>$/i
             },
             {
                 titulo: "Nível 6/6 (Desafio)",
                 descricao: "Crie uma seção de 'Sobre Mim' usando as tags `<section>`, `<h2>` e `<p>`. Adicione uma imagem com o atributo `alt`.",
                 teoria: "A tag `<section>` agrupa conteúdo tematicamente relacionado. Use `<h2>` para o título da seção, `<p>` para um parágrafo de texto e o atributo `alt` na sua imagem para garantir a acessibilidade.",
                 extra: "Exemplo de estrutura: <code>&lt;section&gt;&lt;h2&gt;...&lt;/h2&gt;&lt;p&gt;...&lt;/p&gt;&lt;img ... alt='...'&gt;&lt;/section&gt;</code>",
-                respostaEsperada: /<section[\s\S]*>[\s\S]*<h2[\s\S]*>[\s\S]*<\/h2>[\s\S]*<p[\s\S]*>[\s\S]*<\/p>[\s\S]*<img[\s\S]*alt\s*=\s*['"][^'"]+['"][\s\S]*>[\s\S]*<\/section>/i
+                // Regex ajustada: Mais robusta e explícita para o aninhamento.
+                respostaEsperada: /<section[^>]*>[\s\S]*<h2[^>]*>[\s\S]*<\/h2>[\s\S]*<p[^>]*>[\s\S]*<\/p>[\s\S]*<img[\s\S]*alt\s*=\s*['"][^'"]+['"][\s\S]*>[\s\S]*<\/section>/i
             }
         ];
 
@@ -159,28 +190,29 @@
 
                 if (!doc.exists) {
                     alert("Usuário não encontrado!");
-                    location.href = "/public/gameHTML/index.html";
+                    location.href = "../";
                     return;
                 }
 
                 const data = doc.data();
 
-                // Precisa da fase 8 concluída para liberar
+                // Precisa da fase 8 concluída para liberar a FASE 9
                 if (!data.fasesHTML || data.fasesHTML.fase8?.status !== "concluida") {
                     alert("Você precisa concluir a Fase 8 antes!");
-                    location.href = "/public/gameHTML/index.html";
+                    location.href = "../";
                     return;
                 }
 
                 // Se fase 9 já concluída
                 if (data.fasesHTML?.fase9?.status === "concluida") {
                     alert("⚠️ Você já concluiu esta fase.");
-                    window.location.href = "/public/gameHTML/index.html";
+                    window.location.href = "../";
                     return;
                 }
 
                 nivelAtual = data.fasesHTML?.fase9?.nivelAtual || 0;
                 xpTotal = data.xp || 0;
+                // Busca o código da fase 9
                 entradaCodigo.value = data.fasesHTML?.fase9?.codigoAtual || "";
                 xpSpan.textContent = `XP: ${xpTotal}`;
 
@@ -196,21 +228,31 @@
                         .replace(/on\w+=".*?"/gi, "");
                     preview.innerHTML = input || "A visualização aparecerá aqui.";
 
+                    // Salva o código na fase 9
                     userDocRef.update({
                         "fasesHTML.fase9.codigoAtual": entradaCodigo.value
                     });
                 });
             } else {
-                location.href = "/public/login.html";
+                location.href = "./../";
             }
         });
 
         function verificarNivel() {
-            const entrada = entradaCodigo.value.trim();
+            const entradaOriginal = entradaCodigo.value;
             const audio = document.getElementById("audio-sucesso");
+
+            let entradaParaTeste;
+
+            if (nivelAtual === 0 || nivelAtual === 4) {
+                entradaParaTeste = normalizeCode(entradaOriginal);
+            } else {
+                entradaParaTeste = cleanCodeForRegex(entradaOriginal);
+            }
+
             const regex = niveis[nivelAtual].respostaEsperada;
 
-            if (regex.test(entrada)) {
+            if (regex.test(entradaParaTeste)) {
                 if (somAtivo) {
                     audio.play();
                 }
@@ -259,10 +301,10 @@
                 });
 
                 document.querySelector(".resultado").innerHTML = `
-        <h2>Parabéns!</h2>
-        <p>Você concluiu a Fase 9 de HTML! +60XP</p>
-        <button onclick="location.href='/public/gameHTML/index.html'">Concluir a fase</button>
-    `;
+                <h2>Parabéns!</h2>
+                <p>Você concluiu a Fase 9 de HTML! +60XP</p>
+                <button onclick="location.href='../'">Concluir a fase</button>
+            `;
             } catch (e) {
                 console.error("Erro ao salvar fase 9:", e);
                 alert("Erro ao salvar progresso. Tente novamente!");

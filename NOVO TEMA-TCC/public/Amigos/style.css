@@ -13,6 +13,12 @@
     --danger: #ff5151;
 }
 
+.cabecalho {
+    font-family: "Press Start 2P", monospace;
+    text-align: center;
+    text-shadow: 2px 2px 5px #646464;
+}
+
 @font-face {
     font-family: "PixelGridS";
     src: url(../pixel-grid-font-family-1754034157-0/pixelgridtrial-circlenormxl.otf);
@@ -24,7 +30,7 @@
 
 body {
     margin: 0;
-    height: 100vh;
+    height: 120vh;
     font-family: "Poppins";
     background: linear-gradient(120deg, #092b61, #09437a, #112a53);
     color: var(--text);

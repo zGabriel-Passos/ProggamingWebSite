@@ -37,7 +37,10 @@
       <button id="btn-extra-exemplo" class="voltar" style="margin-top:8px; display:none;"
         onclick="toggleExemplo()">Exibir exemplo</button>
       <h2 id="titulo-nivel">Nível 1/6</h2>
-      <p id="descricao-nivel">Sessão 3 – Operadores e Expressões<br>Tema: Operações matemáticas e lógicas</p>
+      <p id="descricao-nivel">JavaScript é uma linguagem de programação essencial e a mais popular
+        para o desenvolvimento web, responsável por adicionar interatividade e dinamismo a páginas web,
+        como mapas interativos, animações e atualizações de conteúdo em tempo real. Ele é uma das três tecnologias
+        fundamentais da web, juntamente com HTML (estrutura) e CSS (estilo)</p>
       <hr>
       <div style="margin: 10px 0px 10px 0px;">
         <span id="xp-total" style="font-family: 'Press Start 2P', cursive; font-weight: 600; color: #c7860e;">XP:
@@ -457,8 +460,28 @@
         if (somAtivo) {
           audio.play();
         }
-        if (!fase3JaConcluida) {
-          adicionarXP(12);
+
+        if (!fase1JsJaConcluida) {
+          adicionarXP(10);
+        }
+
+        // Se está no nível 1, redireciona para a fase 2
+        if (nivelJsAtual === 0) {
+          window.location.href = "../Fase2/index.html";
+          return;
+        }
+
+        nivelJsAtual++;
+        salvarProgresso(nivelJsAtual);
+
+        if (nivelJsAtual < niveis.length) {
+          atualizarNivel();
+        } else {
+          document.querySelector(".resultado").innerHTML = `
+        <h2>Parabéns!</h2>
+        <p>Você concluiu a Fase 1 de HTML! ${fase1JsJaConcluida ? "Pode refazer, mas não ganhará XP extra." : "+60XP"}</p>
+        <button onclick="concluirFase1()">Concluir a fase</button>
+      `;
         }
         salvarCodigo(entrada);
         aguardandoAvanco = true;

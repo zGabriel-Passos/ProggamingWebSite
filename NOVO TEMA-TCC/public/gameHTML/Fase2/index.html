@@ -8,7 +8,7 @@
     <link rel="apple-touch-icon" href="./../icon_512x512.png">
     <link rel="icon" type="image/png" href="./../icon_512x512.png">
     <link rel="stylesheet" href="../TelaPrincipal/style.css">
-    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="../estiloFases.css">
     <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap">
     <title>Proggaming | Fase 2 HTML</title>
 </head>
@@ -67,6 +67,25 @@
     <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore-compat.js"></script>
 
     <script>
+        // ----------------------------------------------------
+        // FUNÇÃO AUXILIAR DE NORMALIZAÇÃO
+        // ----------------------------------------------------
+        function normalizeCode(code) {
+            // 1. Substitui todas as quebras de linha, tabulações e retornos de carro por um único espaço
+            let normalized = code.replace(/[\n\r\t]/g, ' ');
+
+            // 2. Remove espaços extras ao redor de chaves e tags para "desformatação"
+            // (Isso é crucial para o HTML, pois remove espaços entre "<", "tag", ">")
+            normalized = normalized.replace(/\s*([<>{}()\[\];:])\s*/g, '$1');
+
+            // 3. Substitui múltiplos espaços por um único espaço
+            normalized = normalized.replace(/\s+/g, ' ');
+
+            // 4. Remove espaços no início e no fim da string
+            return normalized.trim();
+        }
+        // ----------------------------------------------------
+
         let somAtivo = true;
 
         function toggleSom() {
@@ -85,6 +104,9 @@
             measurementId: "G-TQP4LNPYQ1"
         };
 
+        // 🚩 Importante: Se você está usando tags <script> simples (não type="module"),
+        // você precisa garantir que as bibliotecas do Firebase foram carregadas via CDN
+        // antes deste script, para que `firebase.initializeApp` funcione.
         firebase.initializeApp(firebaseConfig);
         const auth = firebase.auth();
         const db = firebase.firestore();
@@ -120,7 +142,7 @@
                 descricao: "Crie um link para a página 'https://www.google.com'.",
                 teoria: "A tag `<a>` (anchor) é a espinha dorsal da internet, usada para conectar páginas entre si. O endereço para onde o link aponta é colocado no atributo `href`, que significa 'Hypertext Reference'. Lembre-se, o texto visível e clicável para o usuário deve ficar entre a abertura `<a>` e o fechamento `</a>` da tag.",
                 extra: "Exemplo: <code>&lt;a href=\"https://www.google.com\"&gt;Google&lt;/a&gt;</code>",
-                respostaEsperada: /<a href="https:\/\/www\.google\.com".*<\/a>/i
+                respostaEsperada: /<a\s+href="https:\/\/www\.google\.com".*<\/a>/i // Adicionado \s+
             },
             {
                 titulo: "Nível 3/6",
@@ -174,7 +196,7 @@
                 if (data.fasesHTML?.fase2?.status === "concluida") {
                     alert("⚠️ Você já concluiu esta fase.");
                     window.location.href = "../";
-                    return; // Impede que o resto do código da função seja executado
+                    return;
                 }
 
                 nivelAtual = data.fasesHTML?.fase2?.nivelAtual || 0;
@@ -204,11 +226,15 @@
         });
 
         function verificarNivel() {
-            const entrada = entradaCodigo.value.trim();
+            // 👈 AQUI ESTÁ A CORREÇÃO PRINCIPAL: Normalizar a entrada do usuário
+            const entradaOriginal = entradaCodigo.value;
+            const entradaNormalizada = normalizeCode(entradaOriginal);
+
             const audio = document.getElementById("audio-sucesso");
             const regex = niveis[nivelAtual].respostaEsperada;
 
-            if (regex.test(entrada)) {
+            // Testar a entrada NORMALIZADA contra a regex
+            if (regex.test(entradaNormalizada)) {
                 if (somAtivo) {
                     audio.play();
                 }
@@ -219,7 +245,7 @@
 
                 userDocRef.update({
                     "fasesHTML.fase2.nivelAtual": nivelAtual,
-                    "fasesHTML.fase2.codigoAtual": entradaCodigo.value,
+                    "fasesHTML.fase2.codigoAtual": entradaOriginal, // Salvamos o código original para manter a formatação do usuário
                     xp: xpTotal
                 });
 
@@ -229,7 +255,7 @@
                     concluirFase();
                 }
             } else {
-                alert("Resposta incorreta! Tente novamente.");
+                alert("Resposta incorreta! Tente novamente. Verifique se as tags e atributos estão corretos.");
             }
         }
 
@@ -250,9 +276,9 @@
             try {
                 await userDocRef.update({
                     "fasesHTML.fase2.status": "concluida",
-                    "fasesHTML.fase2.codigoAtual": entradaCodigo.value, // salva o código final
+                    "fasesHTML.fase2.codigoAtual": entradaCodigo.value,
                     "fasesHTML.fase2.nivelAtual": nivelAtual,
-                    fase2Concluida: true, // 👈 novo campo fora de fasesHTML
+                    fase2Concluida: true,
                     xp: firebase.firestore.FieldValue.increment(60),
                     nivelAtual: firebase.firestore.FieldValue.increment(6)
                 });
@@ -260,7 +286,7 @@
                 document.querySelector(".resultado").innerHTML = `
             <h2>Parabéns!</h2>
             <p>Você concluiu a Fase 2 de HTML! +60XP</p>
-            <button onclick="location.href='/public/gameHTML/index.html'">Concluir a fase</button>
+            <button onclick="location.href='../'">Concluir a fase</button>
         `;
             } catch (e) {
                 console.error("Erro ao salvar fase 2:", e);

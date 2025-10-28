@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="style.css">
+    <link href='https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css' rel='stylesheet'>
+    <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap" rel="stylesheet">
+    <link rel="apple-touch-icon" href="graduacao.png">
+    <link rel="icon" type="image/png" href="graduacao.png">
+    <meta name="mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <title>Proggaming - Academy</title>
+</head>
+
+<body>
+    <div class="overlay">
+        <img src="../logo_rotating.gif">
+    </div>
+    <header>
+        <div class="left">
+            <i class='bx bx-network-chart'></i>
+            <h1>Proggaming Academy</h1>
+        </div>
+        <div class="right">
+            <button onclick="location.href='/Academy/chatbot'" title="Chatbot"><i class='bx bx-chat'></i></button>
+            <button onclick="location.href='../TelaPrincipal'"><span id="btn-right">Início</span><i
+                    class='bx bx-right-arrow-alt'></i></button>
+        </div>
+    </header>
+
+    <main id="body">
+        <span class="title-main">Arquivos, tutoriais, repositórios e muito mais sobre programação básica.</span>
+
+        <div class="container" style="margin-top: 10px;">
+            <div class="tabs">
+                <a href="#" onclick="mostrarSecao('filehtml')">
+                    <i class='bx bxl-html5' id="html"></i>File HTML</a>
+                <a href="#" onclick="mostrarSecao('filecss')">
+                    <i class='bx bxl-css3' id="css"></i>File CSS</a>
+                <a href="#" onclick="mostrarSecao('filejs')">
+                    <i class='bx bxl-javascript' id="js"></i>File JS</a>
+                <a href="#" onclick="mostrarSecao('moretech')">
+                    <i class='bx bx-code-alt' id="tech"></i>More Tech</a>
+                <a href="#" onclick="mostrarSecao('nada')">
+                    <i class='bx bx-window-close'></i></a>
+            </div>
+            <div class="tabs-sections">
+                <section id="nada" class="page"></section>
+
+                <section id="filehtml" class="page"></section>
+
+                <section id="filecss" class="page"></section>
+
+                <section id="filejs" class="page"></section>
+
+                <section id="moretech" class="page"></section>
+            </div>
+        </div>
+    </main>
+
+    <div class="modal hidden" id="modal"></div>
+
+    <div class="icon">
+        <img src="../avatares/prota-dançando.gif" alt="Nosso protagonista dançando" title="Prota dançando"
+            onclick="abrirModal()">
+    </div>
+
+    <div class="social-media">
+        <a href="https://www.youtube.com/@ProggamingPage" target="_blank"><i class='bx bxl-youtube' id="ytb"></i></a>
+        <a href="https://www.instagram.com/proggaming_/" target="_blank"><i class='bx bxl-instagram-alt'
+                id="instagram"></i></a>
+    </div>
+
+    <script src="script.js"></script>
+    <script>
+        // O script que atualiza o ano
+        const elementoAno = document.getElementById("anoAtual");
+        const dataAtual = new Date();
+        const ano = dataAtual.getFullYear();
+        elementoAno.innerHTML = ano;
+    </script>
+</body>
+
+</html>

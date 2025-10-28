@@ -5,9 +5,10 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css">
-    <link rel="apple-touch-icon" href="/public/icon_512x512.png">
-    <link rel="icon" type="image/png" href="/public/icon_512x512.png">
-    <link rel="stylesheet" href="style.css">
+    <link rel="apple-touch-icon" href="./../icon_512x512.png">
+    <link rel="icon" type="image/png" href="./../icon_512x512.png">
+    <link rel="stylesheet" href="../TelaPrincipal/style.css">
+    <link rel="stylesheet" href="../estiloFases.css">
     <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap">
     <title>Proggaming | Fase 10 HTML</title>
 </head>
@@ -36,7 +37,7 @@
             <hr>
             <span id="xp-total" style="font-family: 'Press Start 2P', cursive; font-weight: 600; color: #c7860e;">XP:
                 0</span>
-            <a href="/public/gameHTML/index.html" style="float: right; margin: 10px;">
+            <a href="../" style="float: right; margin: 10px;">
                 <button class="voltar">
                     <i class='bx bx-arrow-back'></i>
                     <span style="font-size: 12px;">Voltar</span>
@@ -59,7 +60,7 @@
         </div>
     </div>
 
-    <audio id="audio-sucesso" src="/public/Green Screen + Efeito Sonoro (Acerto).mp3"></audio>
+    <audio id="audio-sucesso" src="../Green Screen + Efeito Sonoro (Acerto).mp3"></audio>
 
     <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-app-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-auth-compat.js"></script>
@@ -73,6 +74,35 @@
             const botaoSom = document.getElementById("botao-som");
             botaoSom.innerText = somAtivo ? "🔊" : "🔇";
         }
+
+        // ====================================================
+        // FUNÇÕES AUXILIARES DE NORMALIZAÇÃO E LIMPEZA
+        // ====================================================
+
+        // 1. Função de normalização agressiva (Para Quizzes)
+        function normalizeCode(code) {
+            // Remove quebras de linha/tabulações e substitui por um único espaço
+            let normalized = code.replace(/[\n\r\t]/g, ' ');
+            // Remove espaços extras ao redor de caracteres de sintaxe
+            normalized = normalized.replace(/\s*([<>{}()\[\];:])\s*/g, '$1');
+            // Substitui múltiplos espaços por um único espaço
+            normalized = normalized.replace(/\s+/g, ' ');
+            // Remove tags de código/comentário e espaços no início e no fim
+            return normalized.trim().replace(/<\/?code>/ig, '').replace(/&lt;/g, '<').replace(/&gt;/g, '>').replace(/&quot;/g, '"').replace(/&apos;/g, "'");
+        }
+
+        // 2. Função de limpeza de código (Para NÍVEIS DE CÓDIGO) - OTIMIZADA PARA REMOVER ESPAÇOS ENTRE TAGS
+        function cleanCodeForRegex(code) {
+            // 1. Substitui quebras de linha/tabulações por um único espaço
+            let cleaned = code.replace(/[\n\r\t]/g, ' ');
+            // 2. Reduz múltiplos espaços para um único espaço
+            cleaned = cleaned.replace(/\s{2,}/g, ' ');
+            // 3. REMOVE TODOS OS ESPAÇOS ENTRE > e < (FORÇA O CÓDIGO PARA UMA LINHA ÚNICA DE ESTRUTURA)
+            cleaned = cleaned.replace(/>\s*</g, '><');
+            // 4. Remove espaços antes e depois do código
+            return cleaned.trim();
+        }
+        // ====================================================
 
         const firebaseConfig = {
             apiKey: "AIzaSyClRHfJuTSogkbWLaaUKsSBGN1KiT5xuUc",
@@ -105,42 +135,42 @@
         const extraTeoria = document.getElementById("extra-teoria");
         const xpSpan = document.getElementById("xp-total");
 
+        // =================== FASE 10: PROJETO FINAL ===================
         const niveis = [
             {
                 titulo: "Nível 1/5 (Briefing)",
                 descricao: "Seu projeto final é criar um 'Portfólio Pessoal'. Ele deve ter seções para 'Sobre Mim', 'Projetos' e 'Contato'.",
                 teoria: "Pense na estrutura semântica que você vai usar para organizar o conteúdo. O projeto será construído passo a passo nos próximos níveis.",
-                extra: "Objetivo: Criar um portfólio pessoal simples e funcional usando tudo o que você aprendeu.",
-                respostaEsperada: /.*/i // Qualquer coisa para avançar no briefing
+                extra: "Objetivo: Criar um portfólio pessoal simples e funcional usando tudo o que você aprendeu. Digite 'iniciar' para prosseguir.",
+                respostaEsperada: /iniciar/i
             },
             {
                 titulo: "Nível 2/5 (Estrutura)",
                 descricao: "Crie a estrutura básica da sua página usando `<header>`, `<main>` e `<footer>`.",
                 teoria: "A organização semântica é a base do seu projeto. O `<header>` vai conter o título, o `<main>` o conteúdo principal e o `<footer>` informações de contato.",
-                extra: "",
-                respostaEsperada: /<header[\s\S]*><\/header>[\s\S]*<main[\s\S]*><\/main>[\s\S]*<footer[\s\S]*><\/footer>/i
+                extra: "Lembre-se da ordem: <code>&lt;header&gt; &lt;main&gt; &lt;footer&gt;</code>",
+                respostaEsperada: /<header[^>]*>[\s\S]*<\/header>[\s\S]*<main[^>]*>[\s\S]*<\/main>[\s\S]*<footer[^>]*>[\s\S]*<\/footer>/i
             },
             {
                 titulo: "Nível 3/5 (Conteúdo)",
                 descricao: "Preencha a estrutura com títulos, parágrafos e uma imagem.",
                 teoria: "Dentro do `<main>`, adicione uma seção 'Sobre Mim' com um `<h2>` e um `<p>`. Use uma imagem com o atributo `alt` para sua foto.",
-                extra: "",
-                respostaEsperada: /<main[\s\S]*><h2[\s\S]*>[\s\S]*<\/h2>[\s\S]*<p[\s\S]*>[\s\S]*<\/p>[\s\S]*<img[\s\S]*alt\s*=\s*['"][^'"]+['"][\s\S]*>[\s\S]*<\/main>/i
+                extra: "Estrutura esperada DENTRO de <main>: <code>&lt;h2&gt;...&lt;/h2&gt; &lt;p&gt;...&lt;/p&gt; &lt;img alt='...'&gt;</code>",
+                respostaEsperada: /<main[^>]*>[\s\S]*<h2[^>]*>[\s\S]*<\/h2>[\s\S]*<p[^>]*>[\s\S]*<\/p>[\s\S]*<img[\s\S]*alt\s*=\s*['"][^'"]+['"][\s\S]*>[\s\S]*<\/main>/i
             },
             {
                 titulo: "Nível 4/5 (Links e Navegação)",
-                descricao: "Adicione navegação com `<nav>` e links (`<a>`) para as seções 'Projetos' e 'Contato'.",
-                teoria: "A tag `<nav>` é ideal para menus. Crie uma lista de links dentro dela. No rodapé, inclua um link de e-mail.",
-                extra: "",
-                respostaEsperada: /<nav[\s\S]*>(<a[\s\S]*href\s*=\s*['"][^'"]*['"][\s\S]*>[\s\S]*<\/a>){2,}[\s\S]*<\/nav>[\s\S]*<footer>[\s\S]*<a[\s\S]*href\s*=\s*['"]mailto:[^'"]*['"][\s\S]*>[\s\S]*<\/a>[\s\S]*<\/footer>/i
-
+                descricao: "Adicione navegação com `<nav>` e pelo menos dois links (`<a>`) para as seções. No rodapé, inclua um link de e-mail (`mailto`).",
+                teoria: "A tag `<nav>` é ideal para menus e deve ficar dentro do `<header>`. O link de e-mail deve estar dentro do `<footer>`.",
+                extra: "Exemplo: <code>&lt;nav&gt;&lt;a href='#'&gt;...&lt;/a&gt;&lt;a href='#'&gt;...&lt;/a&gt;&lt;/nav&gt;</code> e <code>&lt;footer&gt;&lt;a href='mailto:...'&gt;...&lt;/a&gt;&lt;/footer&gt;</code>",
+                respostaEsperada: /<header[^>]*>[\s\S]*<nav[^>]*>[\s\S]*(<a[^>]*href\s*=\s*['"][^'"]*['"][^>]*>[\s\S]*<\/a>){2,}[\s\S]*<\/nav>[\s\S]*<\/header>[\s\S]*<footer[^>]*>[\s\S]*<a[^>]*href\s*=\s*['"]mailto:[^'"]*['"][^>]*>[\s\S]*<\/a>[\s\S]*<\/footer>/i
             },
             {
                 titulo: "Nível 5/5 (Boas Práticas e Validação)",
-                descricao: "Revise todo o seu código. Certifique-se de que ele tem um `<title>`, a tag `alt` nas imagens e está bem identado. A validação final será menos rígida.",
-                teoria: "Um bom código é fácil de ler e acessível. A indentação e o uso de atributos como `alt` e `aria` são essenciais.",
-                extra: "Seu código deve incluir `<title>`, `<header>`, `<main>`, `<footer>` e `<img>` com o atributo `alt`.",
-                respostaEsperada: /<head[\s\S]*><title[\s\S]*>[\s\S]*<\/title>[\s\S]*<\/head>[\s\S]*<body>[\s\S]*<header[\s\S]*>[\s\S]*<\/header>[\s\S]*<main[\s\S]*>[\s\S]*<\/main>[\s\S]*<footer[\s\S]*>[\s\S]*<\/footer>[\s\S]*<img[\s\S]*alt\s*=\s*['"][^'"]+['"][\s\S]*>/i
+                descricao: "Revise todo o seu código. Certifique-se de que ele tem um `<title>`, a tag `alt` nas imagens, e as tags essenciais. Seu código deve ser completo!",
+                teoria: "Um portfólio completo deve ter as tags `<title>`, `<header>`, `<main>`, `<footer>` e `<img>` com o atributo `alt` para ser acessível e válido.",
+                extra: "O desafio é garantir a presença de todas as tags principais.",
+                respostaEsperada: /(?=[\s\S]*<title[^>]*>[\s\S]*<\/title>)(?=[\s\S]*<header[^>]*>)(?=[\s\S]*<main[^>]*>)(?=[\s\S]*<footer[^>]*>)(?=[\s\S]*<img[\s\S]*alt\s*=\s*['"][^'"]+['"])/i
             }
         ];
 
@@ -151,7 +181,7 @@
 
                 if (!doc.exists) {
                     alert("Usuário não encontrado!");
-                    location.href = "/public/gameHTML/index.html";
+                    location.href = "../";
                     return;
                 }
 
@@ -159,13 +189,13 @@
 
                 if (!data.fasesHTML || data.fasesHTML.fase9?.status !== "concluida") {
                     alert("Você precisa concluir a Fase 9 antes!");
-                    location.href = "/public/gameHTML/index.html";
+                    location.href = "../";
                     return;
                 }
 
                 if (data.fasesHTML?.fase10?.status === "concluida") {
                     alert("⚠️ Você já concluiu esta fase.");
-                    window.location.href = "/public/gameHTML/index.html";
+                    window.location.href = "../";
                     return;
                 }
 
@@ -191,16 +221,27 @@
                     });
                 });
             } else {
-                location.href = "/public/login.html";
+                location.href = "./../";
             }
         });
 
         function verificarNivel() {
-            const entrada = entradaCodigo.value.trim();
+            const entradaOriginal = entradaCodigo.value;
             const audio = document.getElementById("audio-sucesso");
+
+            let entradaParaTeste;
+
+            // Níveis 1 (Briefing) e 5 (Validação) usam a normalização agressiva.
+            if (nivelAtual === 0 || nivelAtual === 4) {
+                entradaParaTeste = normalizeCode(entradaOriginal);
+            } else {
+                // Níveis de 2 a 4 usam a limpeza OTIMIZADA para HTML.
+                entradaParaTeste = cleanCodeForRegex(entradaOriginal);
+            }
+
             const regex = niveis[nivelAtual].respostaEsperada;
 
-            if (regex.test(entrada)) {
+            if (regex.test(entradaParaTeste)) {
                 if (somAtivo) {
                     audio.play();
                 }
@@ -249,10 +290,10 @@
                 });
 
                 document.querySelector(".resultado").innerHTML = `
-        <h2>Parabéns!</h2>
-        <p>Você concluiu a Fase 10 de HTML e todo o módulo! +60XP</p>
-        <button onclick="location.href='/public/gameHTML/index.html'">Finalizar Módulo</button>
-    `;
+                <h2>Parabéns!</h2>
+                <p>Você concluiu a Fase 10 de HTML e todo o módulo! +60XP</p>
+                <button onclick="location.href='../'">Finalizar Módulo</button>
+            `;
             } catch (e) {
                 console.error("Erro ao salvar fase 10:", e);
                 alert("Erro ao salvar progresso. Tente novamente!");

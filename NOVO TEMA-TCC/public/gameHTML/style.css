@@ -262,7 +262,7 @@ h2 {
 
 .conta img:hover {
     border: 2px dashed #ffffff30;
-    cursor: url(/public/PixelSelector.cur), pointer !important;
+    cursor: url(../PixelSelector.cur), pointer !important;
     filter: saturate(100%);
 }
 

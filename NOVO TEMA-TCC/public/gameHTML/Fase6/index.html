@@ -5,9 +5,10 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css">
-    <link rel="apple-touch-icon" href="/public/icon_512x512.png">
-    <link rel="icon" type="image/png" href="/public/icon_512x512.png">
-    <link rel="stylesheet" href="style.css">
+    <link rel="apple-touch-icon" href="./../icon_512x512.png">
+    <link rel="icon" type="image/png" href="./../icon_512x512.png">
+    <link rel="stylesheet" href="../TelaPrincipal/style.css">
+    <link rel="stylesheet" href="../estiloFases.css">
     <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap">
     <title>Proggaming | Fase 6 HTML</title>
 </head>
@@ -36,7 +37,7 @@
             <hr>
             <span id="xp-total" style="font-family: 'Press Start 2P', cursive; font-weight: 600; color: #c7860e;">XP:
                 0</span>
-            <a href="/public/gameHTML/index.html" style="float: right; margin: 10px;">
+            <a href="../" style="float: right; margin: 10px;">
                 <button class="voltar">
                     <i class='bx bx-arrow-back'></i>
                     <span style="font-size: 12px;">Voltar</span>
@@ -59,7 +60,7 @@
         </div>
     </div>
 
-    <audio id="audio-sucesso" src="/public/Green Screen + Efeito Sonoro (Acerto).mp3"></audio>
+    <audio id="audio-sucesso" src="../Green Screen + Efeito Sonoro (Acerto).mp3"></audio>
 
     <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-app-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-auth-compat.js"></script>
@@ -72,6 +73,16 @@
             somAtivo = !somAtivo;
             const botaoSom = document.getElementById("botao-som");
             botaoSom.innerText = somAtivo ? "🔊" : "🔇";
+        }
+
+        function normalizeCode(code) {
+            let normalized = code.replace(/[\n\r\t]/g, ' ');
+
+            normalized = normalized.replace(/\s*([<>{}()\[\];:])\s*/g, '$1');
+
+            normalized = normalized.replace(/\s+/g, ' ');
+
+            return normalized.trim();
         }
 
         const firebaseConfig = {
@@ -105,27 +116,31 @@
         const extraTeoria = document.getElementById("extra-teoria");
         const xpSpan = document.getElementById("xp-total");
 
-        // =================== FASE 6: TABELAS ===================
         const niveis = [
             {
                 titulo: "Nível 1/6",
-                descricao: "Crie a estrutura básica de uma tabela com duas linhas e duas células.",
+                descricao: "Crie a estrutura básica de uma tabela com duas linhas e duas células. Use `<table>`, `<tr>` e `<td>`.",
                 teoria: "A tag `<table>` cria a tabela, `<tr>` cria uma linha (table row) e `<td>` cria uma célula (table data).",
-                extra: "Exemplo: <code>&lt;table&gt; &lt;tr&gt; &lt;td&gt;célula&lt;/td&gt; &lt;/tr&gt; &lt;/table&gt;</code>",
+                extra: "Exemplo: <code>&lt;table&gt; &lt;tr&gt; &lt;td&gt;célula 1&lt;/td&gt; &lt;/tr&gt; &lt;tr&gt; &lt;td&gt;célula 2&lt;/td&gt; &lt;/tr&gt; &lt;/table&gt;</code>",
+                // Regex para <table>, 2x <tr>, e 2x <td> (mínimo, pois a regex é para o documento todo)
                 respostaEsperada: /<table>[\s\S]*<tr>[\s\S]*<td>[\s\S]*<\/td>[\s\S]*<\/tr>[\s\S]*<tr>[\s\S]*<td>[\s\S]*<\/td>[\s\S]*<\/tr>[\s\S]*<\/table>/i
             },
             {
                 titulo: "Nível 2/6",
-                descricao: "Adicione um cabeçalho à sua tabela. Use a tag <th>.",
-                teoria: "A tag `<th>` (table header) cria uma célula de cabeçalho, que geralmente é exibida em negrito e centralizada.",
-                extra: "Exemplo: <code>&lt;tr&gt; &lt;th&gt;Cabeçalho&lt;/th&gt; &lt;/tr&gt;</code>",
-                respostaEsperada: /<table>[\s\S]*<tr>[\s\S]*<th>[\s\S]*<\/th>[\s\S]*<\/tr>[\s\S]*<tr>[\s\S]*<td>[\s\S]*<\/td>[\s\S]*<\/tr>[\s\S]*<\/table>/i
+                // DESCRIÇÃO AJUSTADA: Deixa claro que ele deve ter ambos
+                descricao: "Crie uma tabela com pelo menos uma célula de cabeçalho (`<th>`) e uma célula de dados (`<td>`).",
+                teoria: "A tag `<th>` cria uma célula de cabeçalho, enquanto `<td>` é para dados comuns.",
+                // EXTRA AJUSTADO: Mostra as tags de cabeçalho e dados
+                extra: "Exemplo: <code>&lt;table&gt; &lt;tr&gt;&lt;th&gt;Título&lt;/th&gt;&lt;/tr&gt; &lt;tr&gt;&lt;td&gt;Dado&lt;/td&gt;&lt;/tr&gt; &lt;/table&gt;</code>",
+                // REGEX: Mantida, pois ela já exige <th> e <td>.
+                respostaEsperada: /<table>[\s\S]*<th>[\s\S]*<\/th>[\s\S]*<td>[\s\S]*<\/td>[\s\S]*<\/table>/i
             },
             {
                 titulo: "Nível 3/6",
                 descricao: "Crie uma célula que ocupe duas colunas. Use o atributo `colspan`.",
                 teoria: "O atributo `colspan` (column span) em uma tag `<td>` ou `<th>` faz com que a célula ocupe o espaço de várias colunas.",
                 extra: "Exemplo: <code>&lt;td colspan='2'&gt;Célula&lt;/td&gt;</code>",
+                // Procura por <td> ou <th> com colspan='2' (ou "2")
                 respostaEsperada: /<(?:td|th)[^>]*\bcolspan\s*=\s*['"]2['"][^>]*>[\s\S]*?<\/(?:td|th)>/i
             },
             {
@@ -133,6 +148,7 @@
                 descricao: "Crie uma célula que ocupe duas linhas. Use o atributo `rowspan`.",
                 teoria: "O atributo `rowspan` (row span) em uma tag `<td>` ou `<th>` faz com que a célula se estenda por várias linhas.",
                 extra: "Exemplo: <code>&lt;td rowspan='2'&gt;Célula&lt;/td&gt;</code>",
+                // Procura por <td> ou <th> com rowspan='2' (ou "2")
                 respostaEsperada: /<(?:td|th)[^>]*\browspan\s*=\s*['"]2['"][^>]*>[\s\S]*?<\/(?:td|th)>/i
             },
             {
@@ -140,18 +156,19 @@
                 descricao: "Quiz: Qual das tags abaixo é usada para definir uma linha em uma tabela?",
                 teoria: "A tag `<tr>` (table row) é usada para definir uma linha dentro de uma tabela.",
                 extra: "Digite apenas a tag de abertura e fechamento. Ex: <code>&lt;tr&gt;&lt;/tr&gt;</code>",
-                respostaEsperada: /<tr>\s*<\/tr>/i
+                // Espera por <tr></tr>
+                respostaEsperada: /<tr><\/tr>/i
             },
             {
-                titulo: "Nível 6/6 (Desafio)",
-                descricao: "Desafio: Crie uma tabela de horários simples com 2 colunas ('Horário' e 'Atividade') e 3 linhas de dados. Inclua um cabeçalho.",
-                teoria: "Combine as tags `<table>`, `<tr>`, `<th>` e `<td>` para organizar a tabela de forma clara.",
-                extra: "Sua tabela deve ter um cabeçalho e pelo menos 3 linhas de dados com duas células em cada.",
-                respostaEsperada: /<table[^>]*>[\s\S]*<thead>[\s\S]*<tr>[\s\S]*<th[\s\S]*>[\s\S]*<\/th>[\s\S]*<th[\s\S]*>[\s\S]*<\/th>[\s\S]*<\/tr>[\s\S]*<\/thead>[\s\S]*<tbody>[\s\S]*(?:<tr>[\s\S]*<td>[\s\S]*<\/td>[\s\S]*<td>[\s\S]*<\/td>[\s\S]*<\/tr>[\s\S]*){3,}<\/tbody>[\s\S]*<\/table>/i
+                titulo: "Nível 6/6 (Desafio - Fácil)",
+                descricao: "Desafio: Crie uma tabela básica com apenas 1 coluna ('Item') e pelo menos 1 linha de dados. **Use as tags semânticas `<thead>` e `<tbody>`**.",
+                teoria: "O `<thead>` define o cabeçalho (`<th>`) e o `<tbody>` define o corpo (os dados `<td>`).",
+                extra: "Sua tabela deve ter um `<thead>` com **1** `<th>` e um `<tbody>` com pelo menos uma `<tr>` com **1** `<td>`.",
+                // Regex para <table>, <thead> com 1 <th>, e <tbody> com 1+ <tr> de 1 <td>
+                respostaEsperada: /<table[\s\S]*<thead>[\s\S]*<tr>[\s\S]*<th[\s\S]*>[\s\S]*<\/th>[\s\S]*<\/tr>[\s\S]*<\/thead>[\s\S]*<tbody>[\s\S]*(?:<tr>[\s\S]*<td[\s\S]*>[\s\S]*<\/td>[\s\S]*<\/tr>[\s\S]*){1,}[\s\S]*<\/tbody>[\s\S]*<\/table>/i
             }
         ];
 
-        // =================== AUTENTICAÇÃO & PROGRESSO ===================
         auth.onAuthStateChanged(async user => {
             if (user) {
                 userDocRef = db.collection("usuarios").doc(user.uid);
@@ -159,23 +176,21 @@
 
                 if (!doc.exists) {
                     alert("Usuário não encontrado!");
-                    location.href = "/public/gameHTML/index.html";
+                    location.href = "../";
                     return;
                 }
 
                 const data = doc.data();
 
-                // Precisa da fase 5 concluída para liberar
                 if (!data.fasesHTML || data.fasesHTML.fase5?.status !== "concluida") {
                     alert("Você precisa concluir a Fase 5 antes!");
-                    location.href = "/public/gameHTML/index.html";
+                    location.href = "../";
                     return;
                 }
 
-                // Se fase 6 já concluída
                 if (data.fasesHTML?.fase6?.status === "concluida") {
                     alert("⚠️ Você já concluiu esta fase.");
-                    window.location.href = "/public/gameHTML/index.html";
+                    window.location.href = "../";
                     return;
                 }
 
@@ -201,16 +216,21 @@
                     });
                 });
             } else {
-                location.href = "/public/login.html";
+                location.href = "./../";
             }
         });
 
         function verificarNivel() {
-            const entrada = entradaCodigo.value.trim();
+            const entradaOriginal = entradaCodigo.value;
+            const entradaNormalizada = normalizeCode(entradaOriginal);
+
             const audio = document.getElementById("audio-sucesso");
+
+            const entradaParaTeste = (nivelAtual === 4) ? entradaNormalizada : entradaOriginal;
+
             const regex = niveis[nivelAtual].respostaEsperada;
 
-            if (regex.test(entrada)) {
+            if (regex.test(entradaParaTeste)) {
                 if (somAtivo) {
                     audio.play();
                 }
@@ -224,7 +244,6 @@
                     "fasesHTML.fase6.codigoAtual": entradaCodigo.value,
                     xp: xpTotal
                 });
-
                 if (nivelAtual < niveis.length) {
                     atualizarNivel();
                 } else {
@@ -259,10 +278,10 @@
                 });
 
                 document.querySelector(".resultado").innerHTML = `
-        <h2>Parabéns!</h2>
-        <p>Você concluiu a Fase 6 de HTML! +60XP</p>
-        <button onclick="location.href='/public/gameHTML/index.html'">Concluir a fase</button>
-    `;
+                    <h2>Parabéns!</h2>
+                    <p>Você concluiu a Fase 6 de HTML! +60XP</p>
+                    <button onclick="location.href='../'">Concluir a fase</button>
+                `;
             } catch (e) {
                 console.error("Erro ao salvar fase 6:", e);
                 alert("Erro ao salvar progresso. Tente novamente!");

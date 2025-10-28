@@ -4,17 +4,36 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="apple-touch-icon" href="icon_512x512.png">
-    <link rel="icon" type="image/png" href="icon_512x512.png">
+    <link rel="apple-touch-icon" href="./../icon_512x512.png">
+    <link rel="icon" type="image/png" href="./../icon_512x512.png">
     <meta name="mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-capable" content="yes">
     <link rel="stylesheet" href="style.css">
     <meta name="apple-mobile-web-app-status-bar-style" content="default">
     <title>Configurações da Conta</title>
+    <style>
+        a {
+            text-decoration: none;
+            font-weight: 600;
+            width: 70px;
+            color: #fffd;
+            padding: 10px;
+            border: 2px solid #fffff019;
+            border-radius: 10px;
+            transition: all 0.2s;
+        }
+
+        a:hover {
+            color: white;
+            border: 2px solid #fffff03b;
+            transition: all 0.2s;
+        }
+    </style>
 </head>
 
 <body>
     <div class="card">
+        <a href="../TelaPrincipal/">⬅ Voltar</a>
         <h2>Excluir Conta</h2>
         <div class="body">
             <p>Esta ação é irreversível e apagará todos os seus dados. Confirme para continuar.</p>
@@ -96,7 +115,7 @@
                                 await deleteUser(user);
 
                                 alert("Sua conta foi excluída com sucesso!");
-                                window.location.href = "/public/index.html";
+                                window.location.href = "../";
                             } catch (error) {
                                 console.error("Erro ao excluir conta:", error);
                                 alert("Erro ao excluir sua conta. Por favor, tente novamente.");
@@ -117,7 +136,7 @@
                             await deleteUser(user);
 
                             alert("Sua conta foi excluída com sucesso!");
-                            window.location.href = "/public/index.html";
+                            window.location.href = "../";
                         } catch (error) {
                             console.error("Erro ao excluir conta:", error);
                             let errorMessage = "Ocorreu um erro ao excluir sua conta. Tente novamente.";
@@ -138,7 +157,7 @@
                 configurarExclusaoDeConta(user);
             } else {
                 console.log("Nenhum usuário logado.");
-                window.location.href = "/public/index.html";
+                window.location.href = "../";
             }
         });
     </script>
