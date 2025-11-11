@@ -1,0 +1,387 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css">
+    <link rel="apple-touch-icon" href="./../icon_512x512.png">
+    <link rel="icon" type="image/png" href="./../icon_512x512.png">
+    <link rel="stylesheet" href="../TelaPrincipal/style.css">
+    <link rel="stylesheet" href="../estiloFases.css">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap">
+    <title>Proggaming | Fase 1 HTML</title>
+</head>
+
+<body>
+    <div class="navbar">
+        <button onclick="mostrarTela('bloco-teoria')">Teoria</button>
+        <button onclick="mostrarTela('resultado')">Resultado</button>
+        <button onclick="mostrarTela('editor-container')">Editor</button>
+    </div>
+
+    <div class="progresso">
+        <div class="barra" id="barra-progresso"></div>
+    </div>
+
+    <div class="container-nivel">
+        <div class="bloco-teoria">
+            <div style="display: flex; flex-direction: row; align-items: center; justify-content: space-between;">
+                <h3>Teoria - Fase 1</h3>
+                <button class="botao-som" id="botao-som" onclick="toggleSom()">🔊</button>
+            </div>
+            <p id="texto-teoria"></p>
+            <div id="extra-teoria" style="margin-top:10px; font-weight: 600; font-size:14px; color:#ddd;"></div>
+            <h2 id="titulo-nivel">Nível 1/6</h2>
+            <p id="descricao-nivel">Digite a tag HTML que representa um título principal.</p>
+            <hr>
+            <div style="margin: 10px 0px 10px 0px;">
+                <span id="xp-total"
+                    style="font-family: 'Press Start 2P', cursive; font-weight: 600; color: #c7860e;">XP:
+                    0</span>
+            </div>
+            <a href="../" style="float: right; margin: 10px;">
+                <button class="voltar">
+                    <i class='bx bx-arrow-back'></i>
+                    <span style="font-size: 12px;">Voltar</span>
+                </button>
+            </a>
+        </div>
+
+        <div class="resultado" id="preview">A visualização aparecerá aqui.</div>
+
+        <div class="editor-container">
+            <div class="editor-header">
+                <span class="dot red"></span>
+                <span class="dot yellow"></span>
+                <span class="dot green"></span>
+                <span class="editor-title">index.html</span>
+            </div>
+            <textarea id="entrada-codigo" class="code-editor" spellcheck="false"
+                placeholder="Digite o código HTML aqui..." style="height: 90%;"></textarea>
+            <button onclick="verificarNivel()">Testar Código</button>
+        </div>
+    </div>
+
+    <audio id="audio-sucesso" src="../Green Screen + Efeito Sonoro (Acerto).mp3"></audio>
+
+    <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-auth-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore-compat.js"></script>
+    <script>
+        // VARIÁVEIS DE CONFIGURAÇÃO DO FIREBASE (MANTIDAS)
+        // (Assumindo que estão acima desta seção ou você irá copiá-las)
+
+        // ----------------------------------------------------
+        // FUNÇÃO AUXILIAR DE NORMALIZAÇÃO
+        // MANTIDA para ignorar quebras de linha, tabulações e excesso de espaços no CSS
+        // ----------------------------------------------------
+        function normalizeCode(code) {
+            // 1. Substitui todas as quebras de linha, tabulações e retornos de carro por um único espaço
+            let normalized = code.replace(/[\n\r\t]/g, ' ');
+
+            // 2. Remove espaços extras ao redor de chaves, tags e pontos-e-vírgula
+            normalized = normalized.replace(/\s*([<>{}()\[\];:])\s*/g, '$1');
+
+            // 3. Substitui múltiplos espaços por um único espaço
+            normalized = normalized.replace(/\s+/g, ' ');
+
+            // 4. Remove espaços no início e no fim da string
+            return normalized.trim();
+        }
+        // ----------------------------------------------------
+
+
+        function toggleSom() {
+            somAtivo = !somAtivo;
+            const botaoSom = document.getElementById("botao-som");
+            botaoSom.innerText = somAtivo ? "🔊" : "🔇";
+        }
+
+        function mostrarTela(id) {
+            document.querySelectorAll('.bloco-teoria, .resultado, .editor-container')
+                .forEach(el => el.classList.remove('active'));
+
+            document.querySelector('.' + id).classList.add('active');
+        }
+
+        mostrarTela('bloco-teoria');
+
+        // Sua Configuração do Firebase
+        const firebaseConfig = {
+            apiKey: "AIzaSyClRHfJuTSogkbWLaaUKsSBGN1KiT5xuUc",
+            authDomain: "proggamingpage.firebaseapp.com",
+            projectId: "proggamingpage",
+            storageBucket: "proggamingpage.firebasestorage.app",
+            messagingSenderId: "911283259283",
+            appId: "1:911283259283:web:0b9be83ed5e07391360a66",
+            measurementId: "G-TQP4LNPYQ1"
+        };
+        firebase.initializeApp(firebaseConfig);
+        const auth = firebase.auth();
+        const db = firebase.firestore();
+
+        // VARIÁVEIS DE ESTADO (RENOMEADAS para CSS)
+        let somAtivo = true; // Assumindo que esta variável global está presente
+        let faseCSSAtual = 0;
+        let fase1CSSConcluida = false;
+
+        const entradaCodigo = document.getElementById("entrada-codigo");
+        const preview = document.getElementById("preview");
+        const barraProgresso = document.getElementById("barra-progresso");
+        const xpTotalSpan = document.getElementById("xp-total");
+        const extraTeoria = document.getElementById("extra-teoria");
+
+        // ----------------------------------------------------
+        // DEFINIÇÃO DAS 10 FASES CSS
+        // ----------------------------------------------------
+        // ----------------------------------------------------
+        // DEFINIÇÃO DAS 10 FASES CSS - MODIFICANDO O PRÓPRIO JOGO
+        // ----------------------------------------------------
+        const niveisCSS = [
+            {
+                titulo: "Nível 1/10: A Cor Base",
+                descricao: "Mude a cor de fundo (background-color) do BODY para 'black' (preto) para começar a 'hackear' o tema.",
+                teoria: "A tag <code>body</code> é o contêiner de tudo que é visível. Modificar seu <code>background</code> é a forma mais rápida de mudar o tema visual do site.",
+                extra: "Use a propriedade <code>background-color: black;</code> no seletor <code>body</code>.",
+                respostaEsperada: /body{background-color:black;}/i
+            },
+            {
+                titulo: "Nível 2/10: Hackeando a Classe",
+                descricao: "Selecione o bloco de Teoria (classe <code>.bloco-teoria</code>) e defina sua largura (width) para '500px'.",
+                teoria: "Classes (<code>.nome</code>) permitem estilizar grupos de elementos. Mudar a largura (<code>width</code>) é fundamental no layout, mas cuidado com a quebra da responsividade!",
+                extra: "Você está forçando a largura do bloco!",
+                respostaEsperada: /\.bloco-teoria{width:500px;}/i
+            },
+            {
+                titulo: "Nível 3/10: O Título Monstro",
+                descricao: "Selecione o título do nível (ID <code>#titulo-nivel</code>) e aumente seu tamanho para '40px'.",
+                teoria: "IDs (<code>#nome</code>) selecionam um elemento único. Modificar o <code>font-size</code> pode quebrar o layout, mas é essencial para dar destaque!",
+                extra: "Use o seletor <code>#titulo-nivel</code> e <code>font-size</code>.",
+                respostaEsperada: /#titulo-nivel{font-size:40px;}/i
+            },
+            {
+                titulo: "Nível 4/10: A Margem Invisível",
+                descricao: "Remova a margem externa (margin) do BODY, definindo-a como '0'. (Isso deve ser feito em conjunto com a sua regra de `padding: 0;`).",
+                teoria: "O navegador aplica uma margem padrão ao <code>body</code>. Remover isso é o primeiro passo de qualquer CSS 'reset' para ter controle total sobre o layout.",
+                extra: "No seu código original, a margem já é zero, mas vamos reforçar a regra para aprender a remover padrões: <code>margin: 0;</code>",
+                respostaEsperada: /body{margin:0;}/i
+            },
+            {
+                titulo: "Nível 5/10: Botão de Ação!",
+                descricao: "Mude a cor de fundo dos botões (<code>button</code>) para o verde da barra de progresso: '#4CAF50'.",
+                teoria: "Seletores de tag (<code>button</code>) afetam todos os botões. Cores chamativas são usadas para Ação e Sucesso na gamificação.",
+                extra: "Use o seletor <code>button</code> e <code>background-color</code>.",
+                respostaEsperada: /button{background-color:#4CAF50;}/i
+            },
+            {
+                titulo: "Nível 6/10: Borda de Hacker",
+                descricao: "Adicione uma borda (border) de '3px solid white' ao contêiner do Editor (classe <code>.editor-container</code>).",
+                teoria: "A propriedade <code>border</code> é parte do Box Model. Ajuda a destacar áreas importantes e a dar aquele visual de 'terminal' ou 'hacker'.",
+                extra: "Lembre-se: <code>{ border: 3px solid white; }</code>",
+                respostaEsperada: /\.editor-container{border:3px solid white;}/i
+            },
+            {
+                titulo: "Nível 7/10: Sumiço da Barra",
+                descricao: "Selecione a barra de progresso (classe <code>.progresso</code>) e defina sua altura (height) para '5px'.",
+                teoria: "Mudar a <code>height</code> (altura) é vital para layout. Neste caso, você está 'disfarçando' a barra para dar um toque sutil de progresso.",
+                extra: "Use o seletor <code>.progresso</code> para 'encolher' a barra.",
+                respostaEsperada: /\.progresso{height:5px;}/i
+            },
+            {
+                titulo: "Nível 8/10: Hackeando a Fonte",
+                descricao: "Mude a família da fonte (font-family) de todo o BODY para 'Roboto, sans-serif'.",
+                teoria: "A propriedade <code>font-family</code> é herdada por quase todos os elementos. Mudar a fonte base afeta o visual de todo o site.",
+                extra: "A fonte 'Roboto' é mais limpa.",
+                respostaEsperada: /body{font-family:'Roboto,sans-serif';}/i
+            },
+            {
+                titulo: "Nível 9/10: Centralização na Caixa",
+                descricao: "Tente centralizar a caixa de Teoria (<code>.bloco-teoria</code>) horizontalmente. Defina a largura para 500px (como no Nível 2) e use <code>margin: 0 auto;</code>.",
+                teoria: "Para centralizar um bloco: 1. Defina largura (`width`); 2. Use `margin: auto;` (ou `0 auto;`) para distribuir o espaço lateral.",
+                extra: "Combine as propriedades de largura e margem no seletor <code>.bloco-teoria</code>.",
+                respostaEsperada: /\.bloco-teoria{width:500px;margin:0auto;}/i
+            },
+            {
+                titulo: "Nível 10/10: O Container Flexível",
+                descricao: "Selecione o contêiner principal (<code>.container-nivel</code>) e remova o `display: flex;` definindo-o como `display: block;`.",
+                teoria: "O `display: flex` é o que alinha as caixas lado a lado. Mudar para `block` deve quebrar esse alinhamento, empilhando as caixas.",
+                extra: "Seu layout vai ficar 'engraçado' agora! KKK.",
+                respostaEsperada: /\.container-nivel{display:block;}/i
+            }
+        ];
+
+
+        auth.onAuthStateChanged(user => {
+            if (!user) window.location.href = "./../";
+            else carregarProgresso(user);
+        });
+
+
+        // ----------------------------------------------------
+        // FUNÇÃO carregarProgresso (ADAPTADA PARA CSS)
+        // ----------------------------------------------------
+        function carregarProgresso(user) {
+            const ref = db.collection("usuarios").doc(user.uid);
+            ref.get().then(docSnap => {
+                if (docSnap.exists) {
+                    const data = docSnap.data();
+                    const xp = data.xp || 0;
+                    // Carrega o progresso específico de CSS
+                    faseCSSAtual = data.nivelCSSAtual || 0;
+                    fase1CSSConcluida = data.fase1CSSConcluida || false;
+
+                    xpTotalSpan.textContent = `XP: ${xp}`;
+                    atualizarNivelCSS(); // Chama a função de atualização de nível CSS
+
+                    if (data.codigoCSSAtual) { // Novo campo para salvar o código CSS
+                        entradaCodigo.value = data.codigoCSSAtual;
+                        // NOTA: Para CSS, o preview precisa ser atualizado de forma diferente do HTML.
+                        // Aqui, estou mantendo a lógica de HTML por simplicidade do TCC,
+                        // mas idealmente, o código CSS deve ser injetado em uma tag <style>.
+                        preview.innerHTML = `<style>${data.codigoCSSAtual}</style>A visualização aparecerá aqui.`;
+                    }
+
+                    if (fase1CSSConcluida) {
+                        alert("⚠️ Você já concluiu esta fase.");
+                        history.back()
+                    }
+                } else {
+                    atualizarNivelCSS();
+                }
+            });
+        }
+
+        entradaCodigo.addEventListener("input", () => {
+            const input = entradaCodigo.value;
+
+            // Para CSS, você deve injetar o código dentro de uma tag <style> no preview
+            preview.innerHTML = `<style>${input}</style>A visualização aparecerá aqui.`;
+
+            salvarCodigoCSS(entradaCodigo.value); // Função adaptada
+        });
+
+        // ----------------------------------------------------
+        // FUNÇÃO verificarNivel (ADAPTADA PARA CSS)
+        // ----------------------------------------------------
+        function verificarNivel() {
+            const entradaOriginal = entradaCodigo.value;
+            const entradaNormalizada = normalizeCode(entradaOriginal);
+
+            const audio = document.getElementById("audio-sucesso");
+            const regex = niveisCSS[faseCSSAtual].respostaEsperada; // Usando niveisCSS
+
+            if (regex.test(entradaNormalizada)) {
+                if (somAtivo) {
+                    audio.play();
+                }
+
+                if (!fase1CSSConcluida) {
+                    adicionarXP(10); // XP por nível
+                }
+
+                faseCSSAtual++;
+                salvarProgressoCSS(faseCSSAtual);
+
+                if (faseCSSAtual < niveisCSS.length) {
+                    atualizarNivelCSS();
+                } else {
+                    // MENSAGEM DE CONCLUSÃO DA FASE 1 CSS
+                    document.querySelector(".resultado").innerHTML = `
+                <h2>Fase CSS Concluída!</h2>
+                <p>Você concluiu a Fase 1 de CSS! ${fase1CSSConcluida ? "Pode refazer, mas não ganhará XP extra." : "+100XP"}</p>
+                <button onclick="concluirFase1CSS()">Concluir a fase</button>
+            `;
+                    mostrarTela('resultado');
+                }
+            } else {
+                alert("Resposta incorreta! Tente novamente. Lembre-se de fechar as chaves e usar ponto e vírgula.");
+            }
+        }
+
+        // ----------------------------------------------------
+        // FUNÇÃO concluirFase1CSS (NOVA LÓGICA DE FIREBASE)
+        // ----------------------------------------------------
+        function concluirFase1CSS() {
+            const user = auth.currentUser;
+            if (!user) return;
+            const ref = db.collection("usuarios").doc(user.uid);
+
+            if (!fase1CSSConcluida) {
+                ref.get().then(docSnap => {
+                    if (docSnap.exists) {
+                        const data = docSnap.data();
+                        const fases = data.fasesCSS || {}; // Usando a nova subcoleção fasesCSS
+
+                        fases.fase1 = { status: "concluida" };
+                        fases.fase2 = { status: "disponivel" };
+
+                        ref.set({
+                            fasesCSS: fases,
+                            xp: firebase.firestore.FieldValue.increment(100), // XP total da fase
+                            fase1CSSConcluida: true // Novo flag
+                        }, { merge: true }).then(() => {
+                            fase1CSSConcluida = true;
+                            alert("✅ Fase 1 CSS concluída! Fase 2 CSS desbloqueada.");
+                            window.location.href = "../"; // Voltar para a tela principal
+                        });
+                    }
+                });
+            } else {
+                alert("⚠️ Você já concluiu esta fase. Pode revisar, mas não ganha XP.");
+                window.location.href = "../";
+            }
+        }
+
+        // ----------------------------------------------------
+        // FUNÇÃO atualizarNivelCSS (ADAPTADA)
+        // ----------------------------------------------------
+        function atualizarNivelCSS() {
+            if (faseCSSAtual >= niveisCSS.length) return;
+            const nivel = niveisCSS[faseCSSAtual];
+
+            document.getElementById("titulo-nivel").textContent = nivel.titulo;
+            document.getElementById("descricao-nivel").textContent = nivel.descricao;
+            document.getElementById("texto-teoria").textContent = nivel.teoria;
+            extraTeoria.innerHTML = nivel.extra;
+
+            entradaCodigo.value = "";
+            preview.innerHTML = "A visualização aparecerá aqui.";
+            barraProgresso.style.width = `${(faseCSSAtual / niveisCSS.length) * 100}%`;
+        }
+
+
+        function adicionarXP(qtd) {
+            const user = auth.currentUser;
+            if (!user) return;
+            const ref = db.collection("usuarios").doc(user.uid);
+            db.runTransaction(async t => {
+                const docSnap = await t.get(ref);
+                const xpAtual = docSnap.exists ? (docSnap.data().xp || 0) : 0;
+                t.set(ref, { xp: xpAtual + qtd }, { merge: true });
+                xpTotalSpan.textContent = `XP: ${xpAtual + qtd}`;
+            });
+        }
+
+        // ----------------------------------------------------
+        // FUNÇÕES DE SALVAMENTO DE PROGRESSO E CÓDIGO (ADAPTADAS)
+        // ----------------------------------------------------
+        function salvarProgressoCSS(nivel) {
+            const user = auth.currentUser;
+            if (!user) return;
+            const ref = db.collection("usuarios").doc(user.uid);
+            // Salva o nível atual na fase de CSS
+            ref.set({ nivelCSSAtual: nivel }, { merge: true });
+        }
+
+        function salvarCodigoCSS(codigo) {
+            const user = auth.currentUser;
+            if (!user) return;
+            const ref = db.collection("usuarios").doc(user.uid);
+            // Salva o código CSS
+            ref.set({ codigoCSSAtual: codigo }, { merge: true });
+        }
+    </script>
+</body>
+
+</html>
