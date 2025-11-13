@@ -515,6 +515,10 @@ footer {
     .right #btn-right {
         display: none;
     }
+
+    .title-main {
+        text-align: center;
+    }
 }
 
 .direitos a {
