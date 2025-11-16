@@ -57,11 +57,26 @@ function gerarResposta(pergunta) {
     if (pergunta.includes("estrutura do código") || pergunta.includes("estrutura do projeto")) {
         return "O projeto é dividido em módulos sequenciais (HTML, CSS, JS). Cada módulo tem fases com sub-níveis, onde o usuário insere o código em um editor e ele é validado por expressões regulares (Regex) em tempo real.";
     }
-
     if (pergunta.includes("ola") || pergunta.includes("oi") || pergunta.includes("tudo bem")) {
         return "Olá! Sou o assistente do Proggaming. Quer saber sobre HTML, CSS, JavaScript, ou sobre o TCC?";
     }
-
+    if (pergunta.includes("sobre o desenvolvimento") || pergunta.includes("quem desenvolveu")) {
+        return "O Proggaming foi desenvolvido por uma equipe de 7 pessoas, com participação ativa de todos. E a ideia comandada por <u>Gabriel Passos</u>. \n <b>Integrantes:</b> Ana Clara, Arthur Pires, Clayton Luan, Eduardo Leite, Gabriel Passos, Rafael Fortes e Igor Alves.";
+    }
+    if (pergunta.includes("codigo") || pergunta.includes("codigo teste")) {
+        return `<pre><code>&lt;!DOCTYPE html&gt;
+&lt;html lang=\"pt-BR\"&gt;
+  &lt;head&gt;
+    &lt;meta charset=\"UTF-8\"&gt;
+    &lt;meta name=\"viewport\" content=\"width=device-width, initial-scale=1.0\"&gt;
+    &lt;title&gt;Teste de Código&lt;/title&gt;
+  &lt;/head&gt;
+  &lt;body&gt;
+    &lt;h1&gt;Olá, Mundo!&lt;/h1&gt;
+    &lt;p&gt;Este é um teste de código HTML.&lt;/p&gt;
+  &lt;/body&gt;
+&lt;/html&gt;</code></pre>`;
+    }
     if (pergunta.includes("piada")) {
         return "Por que o computador foi ao médico? Porque ele tinha um vírus!";
     }
