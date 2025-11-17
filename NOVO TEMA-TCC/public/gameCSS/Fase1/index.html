@@ -16,7 +16,7 @@
 <body>
     <div class="navbar">
         <button onclick="mostrarTela('bloco-teoria')">Teoria</button>
-        <button onclick="mostrarTela('resultado')">Resultado</button>
+        <button onclick="mostrarTela('resultado')" class="sumir">Resultado</button>
         <button onclick="mostrarTela('editor-container')">Editor</button>
     </div>
 
@@ -186,8 +186,8 @@
                 titulo: "Nível 10/10: O Container Flexível",
                 descricao: "Se você percebeu não utilizamos o contêiner do meio, o resultado de visualização (<code>.resultado</code>) remova o `display: flex;` definindo-o como `display: none;`.",
                 teoria: "O `display: flex` é o que alinha as caixas lado a lado. Mudar para `none` deve desaparecer o item, deixando sem nada na tela.",
-                extra: "O layout vai ficar engraçado agora! KKK.",
-                respostaEsperada: /\.resultado{display:none;}/i
+                extra: "O layout vai ficar engraçado agora! KKK. Use .resultado, .sumir { display: none; }",
+                respostaEsperada: /\.resultado,.sumir{display:none;}/i
             }
         ];
 
