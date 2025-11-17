@@ -69,28 +69,15 @@
     <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-auth-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore-compat.js"></script>
     <script>
-        // VARIÁVEIS DE CONFIGURAÇÃO DO FIREBASE (MANTIDAS)
-        // (Assumindo que estão acima desta seção ou você irá copiá-las)
-
-        // ----------------------------------------------------
-        // FUNÇÃO AUXILIAR DE NORMALIZAÇÃO
-        // MANTIDA para ignorar quebras de linha, tabulações e excesso de espaços no CSS
-        // ----------------------------------------------------
         function normalizeCode(code) {
-            // 1. Substitui todas as quebras de linha, tabulações e retornos de carro por um único espaço
             let normalized = code.replace(/[\n\r\t]/g, ' ');
 
-            // 2. Remove espaços extras ao redor de chaves, tags e pontos-e-vírgula
             normalized = normalized.replace(/\s*([<>{}()\[\];:])\s*/g, '$1');
 
-            // 3. Substitui múltiplos espaços por um único espaço
             normalized = normalized.replace(/\s+/g, ' ');
 
-            // 4. Remove espaços no início e no fim da string
             return normalized.trim();
         }
-        // ----------------------------------------------------
-
 
         function toggleSom() {
             somAtivo = !somAtivo;
@@ -107,7 +94,6 @@
 
         mostrarTela('bloco-teoria');
 
-        // Sua Configuração do Firebase
         const firebaseConfig = {
             apiKey: "AIzaSyClRHfJuTSogkbWLaaUKsSBGN1KiT5xuUc",
             authDomain: "proggamingpage.firebaseapp.com",
@@ -117,11 +103,11 @@
             appId: "1:911283259283:web:0b9be83ed5e07391360a66",
             measurementId: "G-TQP4LNPYQ1"
         };
+
         firebase.initializeApp(firebaseConfig);
         const auth = firebase.auth();
         const db = firebase.firestore();
 
-        // VARIÁVEIS DE ESTADO (RENOMEADAS para CSS)
         let somAtivo = true; // Assumindo que esta variável global está presente
         let faseCSSAtual = 0;
         let fase1CSSConcluida = false;
@@ -132,19 +118,13 @@
         const xpTotalSpan = document.getElementById("xp-total");
         const extraTeoria = document.getElementById("extra-teoria");
 
-        // ----------------------------------------------------
-        // DEFINIÇÃO DAS 10 FASES CSS
-        // ----------------------------------------------------
-        // ----------------------------------------------------
-        // DEFINIÇÃO DAS 10 FASES CSS - MODIFICANDO O PRÓPRIO JOGO
-        // ----------------------------------------------------
         const niveisCSS = [
             {
                 titulo: "Nível 1/10: A Cor Base",
-                descricao: "Mude a cor de fundo (background-color) do BODY para 'black' (preto) para começar a 'hackear' o tema.",
-                teoria: "A tag <code>body</code> é o contêiner de tudo que é visível. Modificar seu <code>background</code> é a forma mais rápida de mudar o tema visual do site.",
-                extra: "Use a propriedade <code>background-color: black;</code> no seletor <code>body</code>.",
-                respostaEsperada: /body{background-color:black;}/i
+                descricao: "Mude a cor de fundo (background-color) do bloco-teoria para 'black' (preto) para começar a 'hackear' o tema.",
+                teoria: "A tag <code>bloco-teoria</code> é o contêiner de tudo que é visível. Modificar seu <code>background</code> é a forma mais rápida de mudar o tema visual do site.",
+                extra: "Use a propriedade <code>background-color: black;</code> no seletor <code>bloco-teoria</code>.",
+                respostaEsperada: /\.bloco-teoria{background-color:black;}/i
             },
             {
                 titulo: "Nível 2/10: Hackeando a Classe",
@@ -162,10 +142,10 @@
             },
             {
                 titulo: "Nível 4/10: A Margem Invisível",
-                descricao: "Remova a margem externa (margin) do BODY, definindo-a como '0'. (Isso deve ser feito em conjunto com a sua regra de `padding: 0;`).",
+                descricao: "Modifique a margem externa (margin) do BODY, definindo-a como '20'.",
                 teoria: "O navegador aplica uma margem padrão ao <code>body</code>. Remover isso é o primeiro passo de qualquer CSS 'reset' para ter controle total sobre o layout.",
-                extra: "No seu código original, a margem já é zero, mas vamos reforçar a regra para aprender a remover padrões: <code>margin: 0;</code>",
-                respostaEsperada: /body{margin:0;}/i
+                extra: "No seu código original, a margem já é zero, mas vamos modificar a regra para aprender os padrões: <code>margin: 20px;</code>",
+                respostaEsperada: /body{margin:20px;}/i
             },
             {
                 titulo: "Nível 5/10: Botão de Ação!",
@@ -190,10 +170,10 @@
             },
             {
                 titulo: "Nível 8/10: Hackeando a Fonte",
-                descricao: "Mude a família da fonte (font-family) de todo o BODY para 'Roboto, sans-serif'.",
+                descricao: "Mude a família da fonte (font-family) de todo o BODY para 'Roboto'.",
                 teoria: "A propriedade <code>font-family</code> é herdada por quase todos os elementos. Mudar a fonte base afeta o visual de todo o site.",
                 extra: "A fonte 'Roboto' é mais limpa.",
-                respostaEsperada: /body{font-family:'Roboto,sans-serif';}/i
+                respostaEsperada: /body{font-family:'Roboto';}/i
             },
             {
                 titulo: "Nível 9/10: Centralização na Caixa",
@@ -204,23 +184,18 @@
             },
             {
                 titulo: "Nível 10/10: O Container Flexível",
-                descricao: "Selecione o contêiner principal (<code>.container-nivel</code>) e remova o `display: flex;` definindo-o como `display: block;`.",
-                teoria: "O `display: flex` é o que alinha as caixas lado a lado. Mudar para `block` deve quebrar esse alinhamento, empilhando as caixas.",
-                extra: "Seu layout vai ficar 'engraçado' agora! KKK.",
-                respostaEsperada: /\.container-nivel{display:block;}/i
+                descricao: "Se você percebeu não utilizamos o contêiner do meio, o resultado de visualização (<code>.resultado</code>) remova o `display: flex;` definindo-o como `display: none;`.",
+                teoria: "O `display: flex` é o que alinha as caixas lado a lado. Mudar para `none` deve desaparecer o item, deixando sem nada na tela.",
+                extra: "O layout vai ficar engraçado agora! KKK.",
+                respostaEsperada: /\.resultado{display:none;}/i
             }
         ];
-
 
         auth.onAuthStateChanged(user => {
             if (!user) window.location.href = "./../";
             else carregarProgresso(user);
         });
 
-
-        // ----------------------------------------------------
-        // FUNÇÃO carregarProgresso (ADAPTADA PARA CSS)
-        // ----------------------------------------------------
         function carregarProgresso(user) {
             const ref = db.collection("usuarios").doc(user.uid);
             ref.get().then(docSnap => {
@@ -236,9 +211,7 @@
 
                     if (data.codigoCSSAtual) { // Novo campo para salvar o código CSS
                         entradaCodigo.value = data.codigoCSSAtual;
-                        // NOTA: Para CSS, o preview precisa ser atualizado de forma diferente do HTML.
-                        // Aqui, estou mantendo a lógica de HTML por simplicidade do TCC,
-                        // mas idealmente, o código CSS deve ser injetado em uma tag <style>.
+
                         preview.innerHTML = `<style>${data.codigoCSSAtual}</style>A visualização aparecerá aqui.`;
                     }
 
@@ -261,9 +234,6 @@
             salvarCodigoCSS(entradaCodigo.value); // Função adaptada
         });
 
-        // ----------------------------------------------------
-        // FUNÇÃO verificarNivel (ADAPTADA PARA CSS)
-        // ----------------------------------------------------
         function verificarNivel() {
             const entradaOriginal = entradaCodigo.value;
             const entradaNormalizada = normalizeCode(entradaOriginal);
@@ -299,9 +269,6 @@
             }
         }
 
-        // ----------------------------------------------------
-        // FUNÇÃO concluirFase1CSS (NOVA LÓGICA DE FIREBASE)
-        // ----------------------------------------------------
         function concluirFase1CSS() {
             const user = auth.currentUser;
             if (!user) return;
@@ -333,9 +300,6 @@
             }
         }
 
-        // ----------------------------------------------------
-        // FUNÇÃO atualizarNivelCSS (ADAPTADA)
-        // ----------------------------------------------------
         function atualizarNivelCSS() {
             if (faseCSSAtual >= niveisCSS.length) return;
             const nivel = niveisCSS[faseCSSAtual];
@@ -363,9 +327,6 @@
             });
         }
 
-        // ----------------------------------------------------
-        // FUNÇÕES DE SALVAMENTO DE PROGRESSO E CÓDIGO (ADAPTADAS)
-        // ----------------------------------------------------
         function salvarProgressoCSS(nivel) {
             const user = auth.currentUser;
             if (!user) return;
