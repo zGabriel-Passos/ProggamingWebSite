@@ -61,7 +61,7 @@ O **Proggaming** é uma plataforma educacional que combina gamificação e apren
 ### 🔗 Passos para Execução Local
 1. Clone o repositório:
    ```bash
-   git clone <URL_DO_REPOSITORIO>
+   git clone https://github.com/zGabriel-Passos/ProggamingWebSite.git
    ```
 
 2. Navegue até o diretório do projeto:
