@@ -119,7 +119,7 @@ body.tema-escuro .chat-container .chat-input textarea {
     display: flex;
     justify-content: flex;
     align-items: center;
-    cursor: pointer;
+    cursor: url(../cursors/Link.cur), pointer !important;
     border: none;
     margin-bottom: 10px;
     text-align: center;
@@ -158,7 +158,7 @@ body.tema-escuro .chat-container .chat-input textarea {
     font-weight: 600;
     border-radius: 40px;
     font-family: 'Roboto', monospace;
-    cursor: pointer;
+    cursor: url(../cursors/Link.cur), pointer !important;
     transition: all 0.3s;
 }
 
@@ -201,7 +201,7 @@ body.tema-escuro .chat-container #botoes-atalho button:hover {
     color: white;
     border: none;
     border-radius: 5px;
-    cursor: pointer;
+    cursor: url(../cursors/Link.cur), pointer !important;
     font-size: 18px;
     line-height: 1;
 }
@@ -233,7 +233,7 @@ body.tema-escuro .chat-container #botoes-atalho button:hover {
     color: #f8f9fa;
     background: none;
     border: none;
-    cursor: pointer;
+    cursor: url(../cursors/Link.cur), pointer !important;
 }
 
 .menu-title {
@@ -260,7 +260,7 @@ body.tema-escuro .chat-container #botoes-atalho button:hover {
     padding: 10px 15px 10px 20px;
     font-size: 16px;
     color: #adb5bd;
-    cursor: pointer;
+    cursor: url(../cursors/Link.cur), pointer !important;
     border-bottom: 1px solid #343a40;
 }
 
