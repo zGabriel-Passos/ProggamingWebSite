@@ -32,8 +32,6 @@ O **Proggaming** é uma plataforma educacional que combina gamificação e apren
 
 ---
 
----
-
 ## 🌟 Funcionalidades
 
 ### 🔹 Chatbot (Academy)
