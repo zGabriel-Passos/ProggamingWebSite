@@ -4,38 +4,214 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>Página não encontrada</title>
+    <title>Proggaming - Página não encontrada</title>
+    <link href='https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css' rel='stylesheet'>
+    <link rel="apple-touch-icon" href="icon_512x512.png">
+    <link rel="icon" type="image/png" href="icon_512x512.png">
+    <meta name="mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="default">
     <style>
+        @font-face {
+            font-family: "PixelGridS";
+            src: url(./pixel-grid-font-family-1754034157-0/pixelgridtrial-circlenormxl.otf);
+        }
+
         body {
-            background-color: #0f2027;
+            background: linear-gradient(120deg, #092b61, #09437a, #112a53);
             color: white;
             font-family: 'Poppins', sans-serif;
             text-align: center;
             padding: 4rem 1rem;
+            height: 100vh;
         }
 
-        h1 {
-            font-size: 3rem;
-            margin-bottom: 1rem;
+        main {
+            display: flex;
+            flex-direction: column;
+            background-color: #000000;
+            width: 100%;
+            border-radius: 20px;
+            border: 2px solid white;
         }
 
-        p {
-            font-size: 1.2rem;
-            color: #ccc;
+        main .container {
+            display: flex;
+            width: 100%;
+            margin: 20px;
+            flex-wrap: wrap;
+            justify-content: space-around;
         }
 
-        a {
-            color: #00aaff;
+        main .container .img-set {
+            width: 300px;
+        }
+
+        img {
+            width: 100%;
+            border-radius: 20px;
+        }
+
+        main .container h2 {
+            font-family: "PixelGridS";
+            font-size: 28px;
+            font-weight: 700;
+            margin-bottom: 10px;
+            color: lightcoral;
+        }
+
+        main .container p {
+            width: 100%;
+            font-family: "PixelGridS";
+            font-size: 20px;
+            font-weight: 600;
+        }
+
+        main .container a {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            justify-content: center;
+            font-family: "PixelGridS";
+            font-weight: 600;
             text-decoration: none;
-            display: inline-block;
-            margin-top: 2rem;
+            background-color: #092b61;
+            border: 2px solid #20c7ff;
+            border-bottom: 4px solid #20c7ff;
+            border-radius: 10px;
+            width: 300px;
+            padding: 10px;
+            transition: 0.4s;
+            color: white;
+        }
+
+        .container main span {
+            transition: 0.3s;
+        }
+
+        main .container a i {
+            color: #fff;
+            display: none;
+            font-size: 22px;
+        }
+
+        main .container a:hover {
+            transform: scale(1.1);
+            background-color: #092b61;
+        }
+
+        main .container a:hover i {
+            display: block;
+            animation: slideUp 0.4s ease-out forwards;
+        }
+
+        main .container a:hover span {
+            display: none;
+        }
+
+        @keyframes slideUp {
+            0% {
+                transform: translateY(100px);
+                opacity: 0;
+            }
+
+            100% {
+                transform: translateY(0);
+                opacity: 1;
+            }
+        }
+
+        ::-webkit-scrollbar {
+            width: 12px;
+            background: #0a1931;
+        }
+
+        ::-webkit-scrollbar-thumb {
+            background: linear-gradient(120deg, #1a3d63, #073a69);
+            border-radius: 8px;
+            border: 2px solid #0a1931;
+        }
+
+        ::-webkit-scrollbar-thumb:hover {
+            background: #1a3d63;
+        }
+
+        @media (max-width: 600px) {
+            main .container .img-set {
+                width: 150px;
+            }
+
+            main .container h2 {
+                font-size: 16px;
+            }
+
+            main .container p {
+                max-width: 100%;
+                width: 300px;
+                text-align: center;
+                margin: 10px;
+                padding: 10px;
+                font-size: 8px;
+            }
+        }
+
+        @media (max-width: 1068px) {
+            main {
+                display: flex;
+                justify-content: center;
+                align-items: center;
+                border-radius: 12px;
+            }
+
+            main .container {
+                display: flex;
+                flex-direction: column;
+                margin: 12px;
+                gap: 12px;
+                align-items: center;
+            }
+
+            main .container .img-set {
+                width: 220px;
+            }
+
+            main .container h2 {
+                font-size: 20px;
+            }
+
+            main .container p {
+                font-size: 16px;
+                padding: 0 1rem;
+            }
+
+            main .container a {
+                max-width: 100%;
+                width: 220px;
+                padding: 12px;
+                font-size: 14px;
+            }
         }
     </style>
 </head>
 
 <body>
-    <h1>404</h1>
-    <p>Essa página não existe ou foi movida.</p>
+    <main>
+        <div class="container">
+            <div class="img-set">
+                <img src="./avatares/prota-404.png">
+            </div>
+            <div style="display: flex; flex-direction: column; align-items: center; width: 100%;">
+                <h2>Erro 404, Página não encontrada.</h2>
+                <p>
+                    Ops. Parece que você não encontrou um caminho correto de uma página nossa.
+                </p>
+                <a href="./TelaPrincipal/index.html">
+                    <span>Voltar para o inicio</span>
+                    <i class='bx bx-right-arrow-alt'></i>
+                </a>
+            </div>
+        </div>
+    </main>
 </body>
 
 </html>

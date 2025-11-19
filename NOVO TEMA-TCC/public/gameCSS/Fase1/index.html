@@ -122,15 +122,15 @@
             {
                 titulo: "Nível 1/10: A Cor Base",
                 descricao: "Mude a cor de fundo (background-color) do bloco-teoria para 'black' (preto) para começar a 'hackear' o tema.",
-                teoria: "A tag <code>bloco-teoria</code> é o contêiner de tudo que é visível. Modificar seu <code>background</code> é a forma mais rápida de mudar o tema visual do site.",
-                extra: "Use a propriedade <code>background-color: black;</code> no seletor <code>bloco-teoria</code>.",
+                teoria: "A tag <code>.bloco-teoria</code> é o contêiner de tudo que é visível. Modificar seu <code>background</code> é a forma mais rápida de mudar o tema visual do site.",
+                extra: "Use a propriedade <code>{ background-color: black; }</code> no seletor <code>.bloco-teoria</code>.",
                 respostaEsperada: /\.bloco-teoria{background-color:black;}/i
             },
             {
                 titulo: "Nível 2/10: Hackeando a Classe",
                 descricao: "Selecione o bloco de Teoria (classe <code>.bloco-teoria</code>) e defina sua largura (width) para '500px'.",
                 teoria: "Classes (<code>.nome</code>) permitem estilizar grupos de elementos. Mudar a largura (<code>width</code>) é fundamental no layout, mas cuidado com a quebra da responsividade!",
-                extra: "Você está forçando a largura do bloco!",
+                extra: "Ex: .bloco-teoria { width: 500px; }",
                 respostaEsperada: /\.bloco-teoria{width:500px;}/i
             },
             {
