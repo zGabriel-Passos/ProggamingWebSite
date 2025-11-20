@@ -134,7 +134,7 @@
         titulo: "Nível 3/6",
         descricao: "Faça uma contagem crescente e decrescente usando laços.",
         teoria: "Você pode controlar o valor da variável de controle para contar para cima ou para baixo.",
-        extra: "Exemplo:<br><code>for (let i = 1; i <= 5; i++) {<br>console.log(i);<br>}<br>for (let i = 5; i >= 1; i--) {<br>console.log(i);<br>}</code>",
+        extra: "Exemplo:<br><code>console.log(&quot;Adição&quot;)<br>for (let i = 1; i <= 5; i++) {<br>console.log(i);<br>if (i === 5) console.log(&quot;Subtração&quot;);<br>}<br>for (let i = 5; i >= 1; i--) {<br>console.log(i);<br>}</code>",
         codigoInicial: "",
         respostaEsperada: /(for\s*\([\s\S]*;\s*i\s*(<=|>=)\s*\d+;[\s\S]*\)\s*\{[\s\S]*\})/i
       },
@@ -243,10 +243,9 @@
 
       let extra = nivel.extra;
       if (extra) {
-        extra = extra.replace(/<\/code>\s*/g, '</code><br>');
-        extra = extra.replace(/;\s*/g, ';<br>');
-        extra = extra.replace(/(<br>\s*)+/g, '<br>');
+        extra = extra.replace(/<\/code>/g, '</code>');
       }
+
       extraHtmlAtual = extra || "";
       extraVisivel = false;
       extraTeoria.innerHTML = "";
@@ -274,11 +273,8 @@
       barraProgresso.style.width = `${(nivelJsAtual / niveis.length) * 100}%`;
 
       const resultado = document.querySelector('.resultado');
-      if (nivelJsAtual === 0 || nivelJsAtual === 1) {
-        resultado.style.display = 'none';
-      } else {
-        resultado.style.display = 'block';
-      }
+      resultado.style.display = 'block';
+
     }
 
     function mostrarVisualizacao(nivel, codigo) {
@@ -320,31 +316,6 @@
           runAll(sandbox, fakeConsole);
         } catch (e) {
           errors.push(String(e && e.message ? e.message : e));
-        }
-
-        const linhasOrig = String(codigo).split(/\r?\n/);
-        const linhas = linhasOrig.map(s => s.trim()).filter(Boolean);
-
-        for (let i = 0; i < linhas.length; i++) {
-          const linha = linhas[i];
-          if (/^\/\//.test(linha)) continue;
-          if (/^\*|^\//.test(linha)) continue;
-          if (/^(if|for|while|switch|function|return|break|continue|class|try|catch|finally)\b/.test(linha)) continue;
-          if (/^\{|\}$/.test(linha)) continue;
-          if (/^(let|const|var)\b/.test(linha)) continue;
-
-          try {
-            const evalFn = new Function('sandbox', 'console', `with(sandbox){ try{ return (${linha.replace(/;$/, '')}); }catch(e){ throw e; } }`);
-            const valor = evalFn(sandbox, fakeConsole);
-            if (valor !== undefined) resultados.push({ linha: linha, valor: valor });
-          } catch (e) {
-            try {
-              const evalFn2 = new Function('sandbox', 'console', `with(sandbox){ try{ return ${linha.replace(/;$/, '')}; }catch(e){ throw e; } }`);
-              const val2 = evalFn2(sandbox, fakeConsole);
-              if (val2 !== undefined) resultados.push({ linha: linha, valor: val2 });
-            } catch (e2) {
-            }
-          }
         }
 
         if (resultados.length === 0) {

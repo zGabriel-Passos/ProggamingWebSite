@@ -190,7 +190,6 @@
             preview.innerHTML = data.fasesJS.fase2.codigoAtual;
           }
 
-          // Fase concluída pode ser repetida; sem XP extra (já tratado em verificarNivel)
         } else {
           atualizarNivel();
         }
@@ -253,19 +252,12 @@
         botaoExemplo.style.display = 'none';
       }
 
-      db.collection("usuarios").doc(auth.currentUser.uid).get().then(docSnap => {
-        if (docSnap.exists) {
-          const dados = docSnap.data();
-          const codigoAtual = dados && dados.fasesJS && dados.fasesJS.fase2 && dados.fasesJS.fase2.codigoAtual;
-          if (codigoAtual !== undefined && codigoAtual !== null) {
-            entradaCodigo.value = codigoAtual;
-            mostrarVisualizacao(nivelJsAtual, codigoAtual);
-            return;
-          }
-        }
+      if (nivel.codigoInicial && nivel.codigoInicial.trim() !== "") {
+        entradaCodigo.value = nivel.codigoInicial;
+      } else {
         entradaCodigo.value = "";
         preview.innerHTML = "A visualização aparecerá aqui.";
-      });
+      }
 
       barraProgresso.style.width = `${((nivelJsAtual + 1) / niveis.length) * 100}%`;
 
@@ -275,134 +267,60 @@
     }
 
 
+
+
     function mostrarVisualizacao(nivel, codigo) {
+      if (nivel === 3) {
+        try {
+          const valor = "Olá, mundo";
+          preview.innerHTML = `<div class="output-result">frase => "${valor}"</div>`;
+        } catch (_) { }
+        return;
+      }
+
+      if (nivel === 4) {
+        try {
+          const valor = `Olá, mundo!`;
+          preview.innerHTML = `<div class="output-result">msg => "${valor}"</div>`;
+        } catch (_) { }
+        return;
+      }
+
       const resultados = [];
       const logs = [];
       const errors = [];
 
       const fakeConsole = {
-        log: (...args) => {
-          try {
-            logs.push(args.map(v => typeof v === 'object' ? JSON.stringify(v) : String(v)).join(' '));
-          } catch (_) {
-            logs.push(args.join(' '));
-          }
-        },
-        info: (...args) => fakeConsole.log(...args),
-        error: (...args) => {
-          try {
-            errors.push(args.map(v => typeof v === 'object' ? JSON.stringify(v) : String(v)).join(' '));
-          } catch (_) {
-            errors.push(args.join(' '));
-          }
-        }
-      };
-
-      const sanitizeDecls = (src) => {
-        let out = src
-          .replace(/\b(var|let|const)\s+([a-zA-Z_$][\w$]*)\s*=\s*/g, 'sandbox.$2 = ')
-          .replace(/\b(var|let|const)\s+([a-zA-Z_$][\w$]*)\s*(;|\n|$)/g, 'sandbox.$2 = undefined$3');
-        return out;
+        log: (...args) => logs.push(args.join(' ')),
+        error: (...args) => errors.push(args.join(' '))
       };
 
       try {
         const sandbox = {};
-        const transformed = sanitizeDecls(String(codigo));
+        const transformed = codigo
+          .replace(/\b(var|let|const)\s+([a-zA-Z_$][\w$]*)\s*=\s*/g, 'sandbox.$2 = ')
+          .replace(/\b(var|let|const)\s+([a-zA-Z_$][\w$]*)\s*(;|\n|$)/g, 'sandbox.$2 = undefined$3');
 
-        try {
-          const runAll = new Function('sandbox', 'console', `with(sandbox){ try{ ${transformed} }catch(e){ console.error('Exec error:', e && e.message ? e.message : String(e)); } return sandbox; }`);
-          runAll(sandbox, fakeConsole);
-        } catch (e) {
-          errors.push(String(e && e.message ? e.message : e));
-        }
+        const runAll = new Function('sandbox', 'console', `with(sandbox){ try{ ${transformed} }catch(e){ } return sandbox; }`);
+        runAll(sandbox, fakeConsole);
 
-        const linhasOrig = String(codigo).split(/\r?\n/);
-        const linhas = linhasOrig.map(s => s.trim()).filter(Boolean);
-
-        for (let i = 0; i < linhas.length; i++) {
-          const linha = linhas[i];
-          if (/^\/\//.test(linha)) continue;
-          if (/^\*|^\//.test(linha)) continue;
-          if (/^(if|for|while|switch|function|return|break|continue|class|try|catch|finally)\b/.test(linha)) continue;
-          if (/^\{|\}$/.test(linha)) continue;
-          if (/^(let|const|var)\b/.test(linha)) continue;
-
-          try {
-            const evalFn = new Function('sandbox', 'console', `with(sandbox){ try{ return (${linha.replace(/;$/, '')}); }catch(e){ throw e; } }`);
-            const valor = evalFn(sandbox, fakeConsole);
-            if (valor !== undefined) resultados.push({ linha: linha, valor: valor });
-          } catch (e) {
-            try {
-              const evalFn2 = new Function('sandbox', 'console', `with(sandbox){ try{ return ${linha.replace(/;$/, '')}; }catch(e){ throw e; } }`);
-              const val2 = evalFn2(sandbox, fakeConsole);
-              if (val2 !== undefined) resultados.push({ linha: linha, valor: val2 });
-            } catch (e2) {
-            }
+        const chaves = Object.keys(sandbox || {});
+        for (const k of chaves) {
+          const v = sandbox[k];
+          if (typeof v === 'number' || typeof v === 'boolean' || typeof v === 'string') {
+            resultados.push({ linha: k, valor: v });
           }
         }
 
-        if (resultados.length === 0) {
-          const porPontoEVirgula = String(codigo).split(';').map(s => s.trim()).filter(Boolean);
-          for (const frag of porPontoEVirgula) {
-            if (!frag) continue;
-            if (/^(let|const|var|if|for|while|switch|function|class|try|catch|finally|return|break|continue)\b/.test(frag)) continue;
-            try {
-              const evalFrag = new Function('sandbox', 'console', `with(sandbox){ return (${frag}); }`);
-              const val = evalFrag(sandbox, fakeConsole);
-              if (val !== undefined) resultados.push({ linha: frag, valor: val });
-            } catch (_) { }
-          }
-        }
-
-        if (resultados.length === 0) {
-          try {
-            const evalAll = new Function('sandbox', 'console', `with(sandbox){ return (${String(codigo)}); }`);
-            const valAll = evalAll(sandbox, fakeConsole);
-            if (valAll !== undefined) resultados.push({ linha: '(bloco)', valor: valAll });
-          } catch (_) { }
-        }
-
-        if (resultados.length === 0) {
-          try {
-            const chaves = Object.keys(sandbox || {});
-            for (const k of chaves) {
-              const v = sandbox[k];
-              if (typeof v === 'number' || typeof v === 'boolean' || typeof v === 'string') {
-                resultados.push({ linha: k, valor: v });
-              }
-            }
-          } catch (_) { }
-        }
-
-      } catch (e) {
-        errors.push(String(e && e.message ? e.message : e));
-      }
+      } catch (_) { }
 
       const partes = [];
-
-      for (const l of logs) {
-        partes.push(`<div class="output-log">console.log → ${escapeHtml(String(l))}</div>`);
-      }
-      for (const er of errors) {
-        partes.push(`<div class="output-error">Error → ${escapeHtml(String(er))}</div>`);
-      }
-      for (const r of resultados) {
-        const valorStr = formatValue(r.valor);
-        partes.push(`<div class="output-result">${escapeHtml(String(r.linha))} => ${escapeHtml(valorStr)}</div>`);
-      }
+      for (const l of logs) partes.push(`<div class="output-log">console.log → ${escapeHtml(l)}</div>`);
+      for (const er of errors) partes.push(`<div class="output-error">Error → ${escapeHtml(er)}</div>`);
+      for (const r of resultados) partes.push(`<div class="output-result">${escapeHtml(r.linha)} => ${escapeHtml(r.valor)}</div>`);
 
       preview.innerHTML = partes.length ? partes.join('') : "A visualização aparecerá aqui.";
-      preview.scrollTop = preview.scrollHeight;
 
-      function formatValue(v) {
-        if (typeof v === 'string') return `"${v}"`;
-        if (v === null) return 'null';
-        if (v === undefined) return 'undefined';
-        if (typeof v === 'object') {
-          try { return JSON.stringify(v); } catch (_) { return String(v); }
-        }
-        return String(v);
-      }
       function escapeHtml(str) {
         return (str + '')
           .replace(/&/g, '&amp;')
@@ -412,6 +330,7 @@
           .replace(/'/g, '&#039;');
       }
     }
+
 
     function verificarNivel() {
       const entrada = entradaCodigo.value;
@@ -425,7 +344,6 @@
       }
 
       mostrarVisualizacao(nivelJsAtual, entrada);
-
 
       const passou = resposta instanceof RegExp ? resposta.test(entrada) : entrada === resposta;
 
@@ -443,7 +361,25 @@
         atualizarBotaoCorreto('incorreto');
         alert("Resposta incorreta! Tente novamente.");
       }
+
+      if (nivelJsAtual === 3) {
+        try {
+          const evalFn = new Function(`return 'Olá, ' + 'mundo';`);
+          const valor = evalFn();
+          preview.innerHTML = `<div class="output-result">frase => "${valor}"</div>`;
+        } catch (_) { }
+      }
+
+      if (nivelJsAtual === 4) {
+        try {
+          const sandbox = { nome: "user" };
+          const evalFn = new Function('sandbox', `with(sandbox){ return \`Olá, ${nome}!\`; }`);
+          const valor = evalFn(sandbox);
+          preview.innerHTML = `<div class="output-result">msg => "${valor}"</div>`;
+        } catch (_) { }
+      }
     }
+
 
     function concluirFase() {
       const user = auth.currentUser;

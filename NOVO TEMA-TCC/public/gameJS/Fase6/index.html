@@ -128,15 +128,15 @@
         descricao: "Modifique um item do vetor via índice (arr[0] = ...).",
         teoria: "Use arr[indice] para ler/escrever posições. Lembre que o primeiro elemento está no índice 0.",
         extra: "Ex.: nomes[1] = 'Ana'",
-        codigoInicial: "",
+        codigoInicial: "let nomes = []",
         respostaEsperada: /\w+\s*\[\s*\d+\s*\]\s*=\s*[\s\S]+/i
       },
       {
         titulo: "Nível 3/7",
         descricao: "Use push, pop, shift ou unshift no vetor.",
         teoria: "push adiciona ao final; pop remove do final; unshift adiciona no início; shift remove do início.",
-        extra: "Ex.: itens.push('novo')",
-        codigoInicial: "",
+        extra: "Ex.: itens.push('item2')",
+        codigoInicial: "let itens = ['item1']",
         respostaEsperada: /(\.push\s*\(|\.pop\s*\(|\.shift\s*\(|\.unshift\s*\()/i
       },
       {
@@ -144,7 +144,7 @@
         descricao: "Acesse o tamanho do vetor com length.",
         teoria: "A propriedade length retorna a quantidade de itens do array.",
         extra: "Ex.: let qtd = itens.length",
-        codigoInicial: "",
+        codigoInicial: "let itens = ['item1', 'item2']",
         respostaEsperada: /\w+\s*\.\s*length/i
       },
       {
@@ -152,7 +152,7 @@
         descricao: "Percorra o vetor com for usando i < arr.length e acesse arr[i].",
         teoria: "Use um laço for tradicional para iterar pelos índices e acessar cada valor.",
         extra: "Ex.: for (let i = 0; i < arr.length; i++) { console.log(arr[i]) }",
-        codigoInicial: "",
+        codigoInicial: "let arr = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10]",
         respostaEsperada: /for\s*\([^)]*;\s*\w+\s*<\s*\w+\s*\.\s*length;[^)]*\)\s*\{[\s\S]*\w+\s*\[\s*\w+\s*\]/i
       },
       {
@@ -160,7 +160,7 @@
         descricao: "Percorra o vetor com forEach.",
         teoria: "forEach executa uma função para cada item do array.",
         extra: "Ex.: itens.forEach((v,i)=>console.log(i,v))",
-        codigoInicial: "",
+        codigoInicial: "let itens = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10]",
         respostaEsperada: /\.forEach\s*\(/i
       },
       {
@@ -168,7 +168,7 @@
         descricao: "Use o operador spread ... com arrays.",
         teoria: "Spread expande os itens de um array. Útil para copiar, concatenar e passar argumentos.",
         extra: "Ex.: let copia = [...orig];",
-        codigoInicial: "",
+        codigoInicial: "let orig = ['item1, item2']",
         respostaEsperada: /\.\.\./i
       }
     ];
@@ -181,37 +181,23 @@
 
     function carregarProgresso(user) {
       const ref = db.collection("usuarios").doc(user.uid);
-      ref.get().then(docSnap => {
-        if (docSnap.exists) {
-          const data = docSnap.data();
-          const xp = data.xp || 0;
-          nivelJsAtual = (data.fasesJS && data.fasesJS.fase6 && Number.isInteger(data.fasesJS.fase6.nivelAtual)) ? data.fasesJS.fase6.nivelAtual : 0;
-          fase6JaConcluida = (data.fasesJS && data.fasesJS.fase6 && data.fasesJS.fase6.status === "concluida") || false;
-          const faseDoc = data.fasesJS && data.fasesJS.fase6 ? data.fasesJS.fase6 : {};
-          if (fase6JaConcluida && ("codigoAtual" in faseDoc || "nivelAtual" in faseDoc)) {
-            db.collection("usuarios").doc(user.uid).set({
-              fasesJS: {
-                fase6: {
-                  codigoAtual: firebase.firestore.FieldValue.delete(),
-                  nivelAtual: firebase.firestore.FieldValue.delete()
-                }
-              }
-            }, { merge: true });
-            nivelJsAtual = 0;
-          }
-          xpTotalSpan.textContent = `XP: ${xp}`;
-          atualizarNivel();
-          if (data.fasesJS && data.fasesJS.fase6 && data.fasesJS.fase6.codigoAtual) {
-            entradaCodigo.value = data.fasesJS.fase6.codigoAtual;
-            preview.innerHTML = data.fasesJS.fase6.codigoAtual;
-          }
 
-          // Fase concluída pode ser repetida; sem XP extra (já tratado em verificarNivel)
-        } else {
-          atualizarNivel();
-        }
+      ref.get().then(doc => {
+        const data = doc.data() || {};
+
+        const xp = data.xp || 0;
+        xpTotalSpan.textContent = `XP: ${xp}`;
+
+        const fase6 = data.fasesJS?.fase6 || {};
+
+        nivelJsAtual = fase6.nivelAtual || 0;
+        fase6JaConcluida = fase6.status === "concluida";
+
+        atualizarNivel();
       });
     }
+
+
 
     function atualizarBotaoCorreto(estado) {
       const botao = document.querySelector('.editor-container button');
@@ -237,7 +223,7 @@
       } else {
         document.querySelector('.resultado').innerHTML = `
       <h2>Parabéns!</h2>
-      <p>Você concluiu a Fase 2 de JavaScript! ${fase2JaConcluida ? "Pode refazer, mas não ganhará XP extra." : "+50XP"}</p>
+      <p>Você concluiu a Fase 6 de JavaScript! ${fase6JaConcluida ? "Pode refazer, mas não ganhará XP extra." : "+50XP"}</p>
       <button onclick="concluirFase()">Concluir a fase</button>
     `;
       }
@@ -245,49 +231,30 @@
 
     function atualizarNivel() {
       if (nivelJsAtual >= niveis.length) return;
+
       const nivel = niveis[nivelJsAtual];
+
       document.getElementById("titulo-nivel").textContent = nivel.titulo;
       document.getElementById("descricao-nivel").textContent = nivel.descricao;
       document.getElementById("texto-teoria").textContent = nivel.teoria;
 
-      let extra = nivel.extra;
-      if (extra) {
-        extra = extra.replace(/;\s*/g, ';<br>');
-        extra = extra.replace(/(<br>\s*){2,}/g, '<br>');
-      }
-      extraHtmlAtual = extra || "";
-      extraVisivel = false;
+      extraHtmlAtual = nivel.extra || "";
       extraTeoria.innerHTML = "";
-      if (extraHtmlAtual) {
-        botaoExemplo.style.display = 'inline-flex';
-        botaoExemplo.innerText = 'Exibir exemplo';
-      } else {
-        botaoExemplo.style.display = 'none';
-      }
+      botaoExemplo.style.display = extraHtmlAtual ? "inline-flex" : "none";
 
-      db.collection("usuarios").doc(auth.currentUser.uid).get().then(docSnap => {
-        if (docSnap.exists) {
-          const dados = docSnap.data();
-          const codigoAtual = dados && dados.fasesJS && dados.fasesJS.fase2 && dados.fasesJS.fase2.codigoAtual;
-          if (codigoAtual !== undefined && codigoAtual !== null) {
-            entradaCodigo.value = codigoAtual;
-            mostrarVisualizacao(nivelJsAtual, codigoAtual);
-            return;
-          }
-        }
-        entradaCodigo.value = "";
-        preview.innerHTML = "A visualização aparecerá aqui.";
-      });
+      const user = auth.currentUser;
+      entradaCodigo.value = nivel.codigoInicial || "";
+
+      preview.innerHTML = "A visualização aparecerá aqui.";
 
       barraProgresso.style.width = `${(nivelJsAtual / niveis.length) * 100}%`;
 
-      const resultado = document.querySelector('.resultado');
-      if (nivelJsAtual === 0 || nivelJsAtual === 1) {
-        resultado.style.display = 'none';
-      } else {
-        resultado.style.display = 'block';
-      }
+      document.querySelector('.resultado').style.display = 'block';
+
+      aguardandoAvanco = false;
+      atualizarBotaoCorreto(null);
     }
+
 
     function mostrarVisualizacao(nivel, codigo) {
       const resultados = [];
@@ -381,9 +348,16 @@
             const chaves = Object.keys(sandbox || {});
             for (const k of chaves) {
               const v = sandbox[k];
-              if (typeof v === 'number' || typeof v === 'boolean' || typeof v === 'string') {
+              if (
+                typeof v === 'number' ||
+                typeof v === 'boolean' ||
+                typeof v === 'string' ||
+                Array.isArray(v) ||
+                (typeof v === 'object' && v !== null)
+              ) {
                 resultados.push({ linha: k, valor: v });
               }
+
             }
           } catch (_) { }
         }
@@ -446,7 +420,6 @@
 
       mostrarVisualizacao(nivelJsAtual, entrada);
 
-      // visualização do console desativada
 
       const passou = resposta instanceof RegExp ? resposta.test(entrada) : entrada === resposta;
 
@@ -457,7 +430,7 @@
         if (!fase6JaConcluida) {
           adicionarXP(12);
         }
-        salvarCodigo(entrada);
+        // salvarCodigo(entrada);
         aguardandoAvanco = true;
         atualizarBotaoCorreto('correto');
       } else {
@@ -511,28 +484,35 @@
     function salvarProgresso(nivel) {
       const user = auth.currentUser;
       if (!user) return;
+
       const ref = db.collection("usuarios").doc(user.uid);
+
       ref.set({
         fasesJS: {
           fase6: {
-            nivelAtual: nivel
+            nivelAtual: nivel,
           }
         }
       }, { merge: true });
     }
 
-    function salvarCodigo(codigo) {
+
+    /* function salvarCodigo(codigo) {
       const user = auth.currentUser;
       if (!user) return;
+
       const ref = db.collection("usuarios").doc(user.uid);
+
       ref.set({
         fasesJS: {
           fase6: {
-            codigoAtual: codigo
+            codigoAtual: codigo,
+            nivelAtual: nivelJsAtual
           }
         }
       }, { merge: true });
-    }
+    } */
+
   </script>
 
   <script src="https://cdn.jsdelivr.net/npm/eruda"></script>

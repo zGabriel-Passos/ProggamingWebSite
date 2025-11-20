@@ -84,10 +84,11 @@
 
     function mostrarTela(id) {
       document.querySelectorAll('.bloco-teoria, .resultado, .editor-container')
-        .forEach(el => el.classList.remove('active'));
+        .forEach(el => el.style.display = 'none');
 
-      document.querySelector('.' + id).classList.add('active');
+      document.querySelector('.' + id).style.display = 'block';
     }
+
 
     mostrarTela('bloco-teoria');
 
@@ -235,6 +236,11 @@
       const logs = [];
       const errors = [];
 
+      if (nivel === 3) {
+        preview.innerHTML = "";
+        return;
+      }
+
       const fakeConsole = {
         log: (...args) => {
           try {
@@ -262,6 +268,12 @@
 
       try {
         const sandbox = {};
+        sandbox.alert = (...args) => {
+          console.log(`alert bloqueado: ${args.join(' ')}`);
+        };
+        sandbox.prompt = () => "Simulação de prompt";
+        sandbox.confirm = () => true;
+        sandbox.window = sandbox;
         const transformed = sanitizeDecls(String(codigo));
 
         try {
@@ -269,31 +281,6 @@
           runAll(sandbox, fakeConsole);
         } catch (e) {
           errors.push(String(e && e.message ? e.message : e));
-        }
-
-        const linhasOrig = String(codigo).split(/\r?\n/);
-        const linhas = linhasOrig.map(s => s.trim()).filter(Boolean);
-
-        for (let i = 0; i < linhas.length; i++) {
-          const linha = linhas[i];
-          if (/^\/\//.test(linha)) continue;
-          if (/^\*|^\//.test(linha)) continue;
-          if (/^(if|for|while|switch|function|return|break|continue|class|try|catch|finally)\b/.test(linha)) continue;
-          if (/^\{|\}$/.test(linha)) continue;
-          if (/^(let|const|var)\b/.test(linha)) continue;
-
-          try {
-            const evalFn = new Function('sandbox', 'console', `with(sandbox){ try{ return (${linha.replace(/;$/, '')}); }catch(e){ throw e; } }`);
-            const valor = evalFn(sandbox, fakeConsole);
-            if (valor !== undefined) resultados.push({ linha: linha, valor: valor });
-          } catch (e) {
-            try {
-              const evalFn2 = new Function('sandbox', 'console', `with(sandbox){ try{ return ${linha.replace(/;$/, '')}; }catch(e){ throw e; } }`);
-              const val2 = evalFn2(sandbox, fakeConsole);
-              if (val2 !== undefined) resultados.push({ linha: linha, valor: val2 });
-            } catch (e2) {
-            }
-          }
         }
 
         if (resultados.length === 0) {
@@ -368,6 +355,7 @@
       }
     }
 
+
     function verificarNivel() {
       const entrada = entradaCodigo.value;
       const audio = document.getElementById("audio-sucesso");
@@ -385,6 +373,14 @@
       const passou = resposta instanceof RegExp ? resposta.test(entrada) : entrada === resposta;
 
       if (passou) {
+        if (nivelJsAtual === 4) {
+          try {
+            const runReal = new Function(entrada);
+            runReal();
+          } catch (e) {
+            console.error("Erro ao executar o alert real:", e);
+          }
+        }
         if (somAtivo) {
           audio.play();
         }
