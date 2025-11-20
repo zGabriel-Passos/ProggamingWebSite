@@ -359,6 +359,7 @@ body.loaded .site-content {
 }
 
 .aviso {
+  font-family: "Poppins", sans-serif;
   position: fixed;
   bottom: 20px;
   right: 20px;

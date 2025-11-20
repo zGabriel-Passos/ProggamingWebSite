@@ -139,7 +139,7 @@ document.addEventListener('DOMContentLoaded', (event) => {
   const botaoFechar = document.getElementById('fechar-aviso'); // Novo elemento
 
   // Tempo em milissegundos
-  const TEMPO_EXIBICAO = 15000; // 15 segundos visível
+  const TEMPO_EXIBICAO = 995000; // 15 segundos visível
   const INTERVALO_REPETICAO = 1 * 60 * 1000; // 2 minutos
 
   // Variável para armazenar o ID do temporizador de desaparecimento
