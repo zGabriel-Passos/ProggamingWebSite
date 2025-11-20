@@ -5,9 +5,10 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css">
-    <link rel="apple-touch-icon" href="/public/icon_512x512.png">
-    <link rel="icon" type="image/png" href="/public/icon_512x512.png">
-    <link rel="stylesheet" href="style.css">
+    <link rel="apple-touch-icon" href="./../icon_512x512.png">
+    <link rel="icon" type="image/png" href="./../icon_512x512.png">
+    <link rel="stylesheet" href="../TelaPrincipal/style.css">
+    <link rel="stylesheet" href="../estiloFases.css">
     <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap">
     <title>Proggaming | Fase 3 HTML</title>
 </head>
@@ -36,7 +37,7 @@
             <hr>
             <span id="xp-total" style="font-family: 'Press Start 2P', cursive; font-weight: 600; color: #c7860e;">XP:
                 0</span>
-            <a href="/public/gameHTML/index.html" style="float: right; margin: 10px;">
+            <a href="../" style="float: right; margin: 10px;">
                 <button class="voltar">
                     <i class='bx bx-arrow-back'></i>
                     <span style="font-size: 12px;">Voltar</span>
@@ -59,14 +60,23 @@
         </div>
     </div>
 
-    <audio id="audio-sucesso" src="/public/Green Screen + Efeito Sonoro (Acerto).mp3"></audio>
+    <audio id="audio-sucesso" src="../Green Screen + Efeito Sonoro (Acerto).mp3"></audio>
 
     <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-app-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-auth-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore-compat.js"></script>
-
     <script>
         let somAtivo = true;
+
+        function normalizeCode(code) {
+            let normalized = code.replace(/[\n\r\t]/g, ' ');
+
+            normalized = normalized.replace(/\s*([<>{}()\[\];:])\s*/g, '$1');
+
+            normalized = normalized.replace(/\s+/g, ' ');
+
+            return normalized.trim();
+        }
 
         function toggleSom() {
             somAtivo = !somAtivo;
@@ -105,7 +115,6 @@
         const extraTeoria = document.getElementById("extra-teoria");
         const xpSpan = document.getElementById("xp-total");
 
-        // =================== FASE 3 ===================
         const niveis = [
             {
                 titulo: "Nível 1/7",
@@ -119,14 +128,16 @@
                 descricao: "Use os atributos target, title e download no link.",
                 teoria: "O atributo `target='_blank'` abre o link em uma nova aba. O `title` mostra uma dica quando o usuário passa o mouse. O `download` força baixar o arquivo.",
                 extra: "Exemplo: <code>&lt;a href='arquivo.pdf' target='_blank' title='Baixar PDF' download&gt;Baixar&lt;/a&gt;</code>",
-                respostaEsperada: /<a\b(?=[^>]*\bhref\s*=\s*(['"])[\s\S]*?\1)(?=[^>]*\btarget\s*=\s*(['"])_blank\2)(?=[^>]*\btitle\s*=\s*(['"])[\s\S]*?\3)(?=[^>]*\bdownload(?:\s*=\s*(['"])[\s\S]*?\4)?)[^>]*>[\s\S]*?<\/a>/i
+                // Corrigido RegEx para melhor leitura e compatibilidade com normalização
+                respostaEsperada: /<a\b(?=[\s\S]*\bhref\s*=\s*(['"])[\s\S]*?\1)(?=[\s\S]*\btarget\s*=\s*(['"])_blank\2)(?=[\s\S]*\btitle\s*=\s*(['"])[\s\S]*?\3)(?=[\s\S]*\bdownload(?:\s*=\s*(['"])[\s\S]*?\4)?)[^>]*>[\s\S]*?<\/a>/i
             },
             {
                 titulo: "Nível 3/7",
                 descricao: "Crie um link interno (âncora) que leve até uma seção com id.",
                 teoria: "Para navegar na mesma página: `href='#id'` e no destino `id='id'`.",
                 extra: "Exemplo: <code>&lt;a href='#secao'&gt;Ir&lt;/a&gt; ... &lt;div id='secao'&gt;Conteúdo&lt;/div&gt;</code>",
-                respostaEsperada: /^(?=[\s\S]*<a\b[^>]*\bhref\s*=\s*(['"])#[^'"]+\1[^>]*>[\s\S]*?<\/a>)(?=[\s\S]*\bid\s*=\s*(['"])[^'"]+\2)[\s\S]*$/i
+                // Esta RegEx foi ajustada para funcionar bem com a string normalizada
+                respostaEsperada: /(<a\b[^>]*\bhref\s*=\s*(['"])#[^'"]+\2[^>]*>[\s\S]*?<\/a>)|(\bid\s*=\s*(['"])[^'"]+\4)/i
             },
             {
                 titulo: "Nível 4/7",
@@ -154,11 +165,10 @@
                 descricao: "Desafio: Adicione uma imagem com um link de sua escolha.",
                 teoria: "A tag `<img>` é usada para inserir imagens. O atributo `src` (source) aponta para o caminho da imagem. Pode ser um link ou um caminho relativo.",
                 extra: "Exemplo: <code>&lt;img src='https://via.placeholder.com/150' alt='Uma imagem de exemplo'&gt;</code>",
-                respostaEsperada: /<img\b[^>]*\bsrc\s*=\s*(['"])(https?:\/\/[^'"]+)\1[^>]*>/i
+                respostaEsperada: /<img\b[^>]*\bsrc\s*=\s*(['"])[^'"]+\1[^>]*>/i
             }
         ];
 
-        // =================== AUTENTICAÇÃO & PROGRESSO ===================
         auth.onAuthStateChanged(async user => {
             if (user) {
                 userDocRef = db.collection("usuarios").doc(user.uid);
@@ -166,23 +176,21 @@
 
                 if (!doc.exists) {
                     alert("Usuário não encontrado!");
-                    location.href = "/public/gameHTML/index.html";
+                    location.href = "../";
                     return;
                 }
 
                 const data = doc.data();
 
-                // Precisa da fase 2 concluída para liberar
                 if (!data.fasesHTML || data.fasesHTML.fase2?.status !== "concluida") {
                     alert("Você precisa concluir a Fase 2 antes!");
-                    location.href = "/public/gameHTML/index.html";
+                    location.href = "../";
                     return;
                 }
 
-                // Se fase 3 já concluída
                 if (data.fasesHTML?.fase3?.status === "concluida") {
                     alert("⚠️ Você já concluiu esta fase.");
-                    window.location.href = "/public/gameHTML/index.html";
+                    window.location.href = "../";
                     return;
                 }
 
@@ -208,16 +216,18 @@
                     });
                 });
             } else {
-                location.href = "/public/login.html";
+                location.href = "./../";
             }
         });
 
         function verificarNivel() {
-            const entrada = entradaCodigo.value.trim();
+            const entradaOriginal = entradaCodigo.value;
+            const entradaNormalizada = normalizeCode(entradaOriginal);
+
             const audio = document.getElementById("audio-sucesso");
             const regex = niveis[nivelAtual].respostaEsperada;
 
-            if (regex.test(entrada)) {
+            if (regex.test(entradaNormalizada)) {
                 if (somAtivo) {
                     audio.play();
                 }
@@ -228,7 +238,7 @@
 
                 userDocRef.update({
                     "fasesHTML.fase3.nivelAtual": nivelAtual,
-                    "fasesHTML.fase3.codigoAtual": entradaCodigo.value,
+                    "fasesHTML.fase3.codigoAtual": entradaOriginal,
                     xp: xpTotal
                 });
 
@@ -238,7 +248,7 @@
                     concluirFase();
                 }
             } else {
-                alert("Resposta incorreta! Tente novamente.");
+                alert("Resposta incorreta! Tente novamente. Verifique se as tags e atributos estão corretos.");
             }
         }
 
@@ -266,9 +276,9 @@
                 });
 
                 document.querySelector(".resultado").innerHTML = `
-        <h2>Parabéns!</h2>
-        <p>Você concluiu a Fase 3 de HTML! +60XP</p>
-        <button onclick="location.href='/public/gameHTML/index.html'">Concluir a fase</button>
+                <h2>Parabéns!</h2>
+                <p>Você concluiu a Fase 3 de HTML! +60XP</p>
+                <button onclick="location.href='../'">Concluir a fase</button>
     `;
             } catch (e) {
                 console.error("Erro ao salvar fase 3:", e);

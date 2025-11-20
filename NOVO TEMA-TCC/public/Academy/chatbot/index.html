@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link href='https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css' rel='stylesheet'>
+    <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap" rel="stylesheet">
+    <link rel="apple-touch-icon" href="../graduacao.png">
+    <link rel="icon" type="image/png" href="../graduacao.png">
+    <meta name="mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <link rel="stylesheet" href="style.css">
+    <title>Academy - Proggaming Chatbot</title>
+</head>
+
+<body class="tema-claro">
+    <div class="overlay">
+        <img src="../../logo_rotating.gif">
+    </div>
+    <button id="open-menu-btn" class="menu-toggler" aria-label="Abrir Menu Lateral">
+        <i class='bx bx-message-alt-error'></i>
+    </button>
+
+    <nav id="side-menu" class="side-menu">
+        <button id="close-menu-btn" class="close-btn" aria-label="Fechar Menu Lateral">&times;</button>
+
+        <h3 class="menu-title">Mensagens Válidas</h3>
+
+        <ul class="menu-list">
+            <li class="menu-item">
+                <a href="#" data-question="O que vou aprender em HTML no Proggaming?">O que vou aprender em HTML no
+                    Proggaming?</a>
+            </li>
+            <li class="menu-item">
+                <a href="#" data-question="O que vou aprender em CSS?">O que vou aprender em CSS?</a>
+            </li>
+            <li class="menu-item">
+                <a href="#" data-question="O que vou aprender em JS?">O que vou aprender em JS?</a>
+            </li>
+
+            <li class="menu-item">
+                <a href="#" data-question="Qual é o objetivo deste TCC?">Qual é o objetivo deste TCC?</a>
+            </li>
+            <li class="menu-item">
+                <a href="#" data-question="O que é o Proggaming?">O que é o Proggaming?</a>
+            </li>
+            <li class="menu-item">
+                <a href="#" data-question="Como funciona a gamificação?">Como funciona a gamificação?</a>
+            </li>
+            <li class="menu-item">
+                <a href="#" data-question="Qual banco de dados o projeto usa?">Qual banco de dados o projeto usa?</a>
+            </li>
+            <li class="menu-item">
+                <a href="#" data-question="Como é a estrutura do código do projeto?">Como é a estrutura do código do
+                    projeto?</a>
+            </li>
+
+            <li class="menu-item">
+                <a href="#" data-question="Ola">Olá</a>
+            </li>
+            <li class="menu-item">
+                <a href="#" data-question="Me conta uma piada">Me conta uma piada</a>
+            </li>
+            <li class="menu-item">
+                <a href="#" data-question="Que horas são?">Que horas são?</a>
+            </li>
+        </ul>
+    </nav>
+
+    <div id="menu-overlay" class="menu-overlay"></div>
+
+    <div class="chat-container">
+        <div class="chat-box" id="chat-box">
+            <div class="mensagem" style="text-align: center; font-size: 30px; font-weight: 200;">
+                <p>Olá! Conheça tudo sobre o Proggaming!!</p>
+            </div>
+        </div>
+        <div class="chat-input">
+            <textarea type="text" id="user-input" placeholder="Mande um Olá..."></textarea>
+            <button onclick="enviar()"><i class='bx bx-up-arrow-alt'></i></button>
+        </div>
+
+        <div id="botoes-atalho">
+            <button onclick="preencherInput('O que vou aprender em HTML no Proggaming?');"><i class='bx bxl-html5'
+                    id="html" style="color: #ff5125;"></i> HTML</button>
+            <button onclick="preencherInput('O que vou aprender em CSS no Proggaming?');"><i class='bx bxl-css3'
+                    id="css" style="color: #0077ff;"></i> CSS</button>
+            <button onclick="preencherInput('O que vou aprender em JS no Proggaming?');"><i class='bx bxl-javascript'
+                    id="js" style="color: #ffd900; text-shadow: 0 2px 2px rgb(0, 0, 0);"></i> JavaScript</button>
+            <button onclick="preencherInput('Qual é o objetivo deste TCC?');">Sobre o Projeto</button>
+            <button onclick="location.href='../'"><span style="color: #0077ff;">Voltar ao Academy </span><i
+                    class='bx bx-right-arrow-alt'></i></button>
+            <button onclick="trocarTema()" class="btn-theme"><i class='bx bx-bulb'></i></button>
+        </div>
+    </div>
+
+    <footer style="font-size: 14px;">
+        <span><strong>&copy; <span id="anoAtual"></span> Proggaming.</strong> All rights reserved.</span>
+    </footer>
+    <script src="script.js"></script>
+    <script>
+        window.addEventListener("DOMContentLoaded", () => {
+            setTimeout(() => {
+                document.body.classList.add("loaded");
+                setTimeout(() => {
+                    document.body.style.overflow = "auto";
+                }, 500);
+            }, 500);
+        });
+
+        const elementoAno = document.getElementById("anoAtual");
+        const dataAtual = new Date();
+        const ano = dataAtual.getFullYear();
+        elementoAno.innerHTML = ano;
+    </script>
+</body>
+
+</html>

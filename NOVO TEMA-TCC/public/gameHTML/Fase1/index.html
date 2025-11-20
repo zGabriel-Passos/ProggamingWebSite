@@ -8,7 +8,7 @@
   <link rel="apple-touch-icon" href="./../icon_512x512.png">
   <link rel="icon" type="image/png" href="./../icon_512x512.png">
   <link rel="stylesheet" href="../TelaPrincipal/style.css">
-  <link rel="stylesheet" href="style.css">
+  <link rel="stylesheet" href="../estiloFases.css">
   <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap">
   <title>Proggaming | Fase 1 HTML</title>
 </head>
@@ -69,6 +69,25 @@
   <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore-compat.js"></script>
   <script>
     let somAtivo = true;
+
+    // ----------------------------------------------------
+    // FUNÇÃO AUXILIAR DE NORMALIZAÇÃO
+    // Adicionada para ignorar quebras de linha, tabulações e excesso de espaços
+    // ----------------------------------------------------
+    function normalizeCode(code) {
+      // 1. Substitui todas as quebras de linha, tabulações e retornos de carro por um único espaço
+      let normalized = code.replace(/[\n\r\t]/g, ' ');
+
+      // 2. Remove espaços extras ao redor de chaves e tags (crucial para o HTML)
+      normalized = normalized.replace(/\s*([<>{}()\[\];:])\s*/g, '$1');
+
+      // 3. Substitui múltiplos espaços por um único espaço
+      normalized = normalized.replace(/\s+/g, ' ');
+
+      // 4. Remove espaços no início e no fim da string
+      return normalized.trim();
+    }
+    // ----------------------------------------------------
 
 
     function toggleSom() {
@@ -193,11 +212,15 @@
     });
 
     function verificarNivel() {
-      const entrada = entradaCodigo.value.trim();
+      const entradaOriginal = entradaCodigo.value;
+      // 🚩 APLICAÇÃO DA CORREÇÃO: Normalizar a entrada do usuário antes de testar
+      const entradaNormalizada = normalizeCode(entradaOriginal);
+
       const audio = document.getElementById("audio-sucesso");
       const regex = niveis[nivelAtual].respostaEsperada;
 
-      if (regex.test(entrada)) {
+      // Testar a entrada NORMALIZADA contra a regex
+      if (regex.test(entradaNormalizada)) {
         if (somAtivo) {
           audio.play();
         }
@@ -213,10 +236,10 @@
           atualizarNivel();
         } else {
           document.querySelector(".resultado").innerHTML = `
-        <h2>Parabéns!</h2>
-        <p>Você concluiu a Fase 1 de HTML! ${faseJaConcluida ? "Pode refazer, mas não ganhará XP extra." : "+60XP"}</p>
-        <button onclick="concluirFase1()">Concluir a fase</button>
-      `;
+                <h2>Parabéns!</h2>
+                <p>Você concluiu a Fase 1 de HTML! ${faseJaConcluida ? "Pode refazer, mas não ganhará XP extra." : "+60XP"}</p>
+                <button onclick="concluirFase1()">Concluir a fase</button>
+            `;
         }
       } else {
         alert("Resposta incorreta! Tente novamente.");

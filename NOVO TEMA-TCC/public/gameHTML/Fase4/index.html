@@ -5,15 +5,15 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css">
-    <link rel="apple-touch-icon" href="/public/icon_512x512.png">
-    <link rel="icon" type="image/png" href="/public/icon_512x512.png">
+    <link rel="apple-touch-icon" href="./../icon_512x512.png">
+    <link rel="icon" type="image/png" href="./../icon_512x512.png">
+    <link rel="stylesheet" href="../TelaPrincipal/style.css">
     <link rel="stylesheet" href="style.css">
     <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap">
     <title>Proggaming | Fase 4 HTML</title>
 </head>
 
 <body>
-
     <h1 id="quiz-title">Quiz: Imagens e Multimídia</h1>
     <p id="quiz-description">Teste seus conhecimentos sobre como inserir e configurar elementos multimídia em HTML.
         <span>O resultado sairá no final do teste. Então não se preocupe se errar</span>
@@ -24,7 +24,7 @@
     </div>
 
     <div id="teoria-container" class="quiz-container">
-        <img src="/public/avatares/prota-lendo.png">
+        <img src="./../../avatares/prota-lendo.png">
         <div id="teoria-content"></div>
         <div class="quiz-buttons">
             <button id="continue-button">Continuar</button>
@@ -44,8 +44,7 @@
     <div id="results" style="display: none;"></div>
     <div id="result-buttons" style="display: none;">
         <button id="reiniciar" class="result-button">Refazer Fase</button>
-        <button id="voltar-menu" class="result-button"
-            onclick="window.location.href='/public/gameHTML/index.html'">Voltar ao Menu</button>
+        <button id="voltar-menu" class="result-button" onclick="window.location.href='../'">Voltar ao Menu</button>
     </div>
 
     <script type="module">
@@ -68,7 +67,6 @@
         const db = getFirestore(app);
         const auth = getAuth();
 
-        // 🔹 Quiz Data (perguntas e teorias)
         const quizData = [
             {
                 teoria: "A tag <code>&lt;img&gt;</code> é fundamental para incluir imagens em uma página web. Ela é uma tag de fechamento automático, ou seja, não precisa de uma tag de fechamento (<code>&lt;/img&gt;</code>). Os dois atributos mais importantes são: <code>src</code> (source), que define o caminho da imagem, e <code>alt</code> (alternative text), que descreve a imagem para fins de acessibilidade e aparece se a imagem não carregar.",
@@ -135,13 +133,11 @@
             }
         ];
 
-        // 🔹 Variáveis de estado
         let userDocRef;
         let xpTotal = 0;
         let currentQuestionIndex = 0;
         let userScore = 0;
 
-        // 🔹 Referências do DOM
         const teoriaContainer = document.getElementById("teoria-container");
         const teoriaContent = document.getElementById("teoria-content");
         const continueButton = document.getElementById("continue-button");
@@ -157,7 +153,6 @@
         const restartButton = document.getElementById("reiniciar");
         const resultButtonsDiv = document.getElementById("result-buttons");
 
-        // 🔹 Funções do Quiz
         function updateProgress() {
             const progress = (currentQuestionIndex / quizData.length) * 100;
             progressBar.style.width = progress + "%";
@@ -222,7 +217,6 @@
             }
             currentQuestionIndex++;
 
-            // 🔹 Salva o progresso no Firestore
             try {
                 if (userDocRef) {
                     await updateDoc(userDocRef, {
@@ -260,7 +254,6 @@
                         "fasesHTML.fase4.status": "concluida",
                         "fasesHTML.fase4.pontuacao": userScore,
                         "fasesHTML.fase4.total": quizData.length,
-                        // Reseta o progresso da fase para 0 quando for concluída
                         "fasesHTML.fase4.progresso": 0,
                         xp: xpTotal + 60
                     });
@@ -282,7 +275,6 @@
             resultButtonsDiv.style.display = 'none';
             updateProgress();
             showTheory(currentQuestionIndex);
-            // Zera o progresso no banco de dados ao reiniciar o quiz
             try {
                 if (userDocRef) {
                     await updateDoc(userDocRef, {
@@ -295,14 +287,13 @@
             }
         }
 
-        // 🔹 Inicialização
         async function initializePhase(user) {
             userDocRef = doc(db, "usuarios", user.uid);
             const snap = await getDoc(userDocRef);
 
             if (!snap.exists()) {
                 alert("Usuário não encontrado!");
-                location.href = "/public/gameHTML/index.html";
+                location.href = "../";
                 return;
             }
 
@@ -310,19 +301,18 @@
 
             if (!data.fase3Concluida) {
                 alert("Você precisa concluir a Fase 3 antes!");
-                location.href = "/public/gameHTML/index.html";
+                location.href = "../";
                 return;
             }
 
             if (data.fase4Concluida) {
                 alert("⚠️ Você já concluiu esta fase.");
-                location.href = "/public/gameHTML/index.html";
+                location.href = "../";
                 return;
             }
 
             xpTotal = data.xp || 0;
 
-            // 🔹 Carrega o progresso salvo, se existir
             currentQuestionIndex = data.fasesHTML?.fase4?.progresso || 0;
             userScore = data.fasesHTML?.fase4?.pontuacao || 0;
 
@@ -336,10 +326,9 @@
             restartButton.addEventListener('click', restartQuiz);
         }
 
-        // 🔹 Verifica autenticação e inicia a fase
         onAuthStateChanged(auth, user => {
             if (!user) {
-                location.href = "/public/login.html";
+                location.href = "./../";
                 return;
             }
             initializePhase(user);
