@@ -119,7 +119,7 @@
         descricao: "Utilize if e else para tomar decisões simples.",
         teoria: "O if testa uma condição e executa um bloco se for verdadeira. O else executa outro bloco se for falsa.",
         extra: "Exemplo:<br><code>if (idade >= 18) {&nbsp;console.log('Maior de idade');<br>} else {&nbsp;console.log('Menor de idade');<br>}</code>",
-        codigoInicial: "",
+        codigoInicial: "let idade = 17",
         respostaEsperada: /if\s*\([\s\S]*\)\s*\{[\s\S]*\}\s*else\s*\{[\s\S]*\}/i
       },
       {
@@ -127,7 +127,7 @@
         descricao: "Utilize else if para múltiplas condições.",
         teoria: "O else if permite testar várias condições em sequência.",
         extra: "Exemplo:<br><code>if (nota >= 7) {&nbsp;console.log('Aprovado');} else if (nota >= 5) {&nbsp;console.log('Recuperação');} else {&nbsp;console.log('Reprovado');}</code>",
-        codigoInicial: "",
+        codigoInicial: "const nota = 10",
         respostaEsperada: /if\s*\([\s\S]*\)\s*\{[\s\S]*\}\s*else\s*if\s*\([\s\S]*\)\s*\{[\s\S]*\}/i
       },
       {
@@ -135,7 +135,7 @@
         descricao: "Utilize o operador ternário para decisões rápidas.",
         teoria: "O operador ternário é uma forma compacta de if/else: condição ? valor1 : valor2.",
         extra: "Exemplo:<br><code>let status = idade >= 18 ? 'Maior' : 'Menor';</code>",
-        codigoInicial: "",
+        codigoInicial: "const idade = 10",
         respostaEsperada: /\?\s*['"]?[\w\s]+['"]?\s*:\s*['"]?[\w\s]+['"]?/i
       },
       {
@@ -143,15 +143,15 @@
         descricao: "Utilize switch/case para múltiplas escolhas.",
         teoria: "O switch testa um valor contra vários casos. Use break para sair de cada caso.",
         extra: "Exemplo:<br><code>switch (dia) {&nbsp;case 1:&nbsp;console.log('Domingo');break;case 2:&nbsp;console.log('Segunda');break;}</code>",
-        codigoInicial: "",
+        codigoInicial: "let dia = 1",
         respostaEsperada: /switch\s*\([\s\S]*\)\s*\{[\s\S]*case\s+[\s\S]*:/i
       },
       {
         titulo: "Nível 5/5",
         descricao: "Crie uma atividade: peça para o usuário digitar uma idade e responda se pode votar.",
         teoria: "Combine if/else e operadores para criar uma lógica de decisão.",
-        extra: "Exemplo:<br><code>let idade = 16;<br>if (idade >= 18) {<br>console.log('Pode votar');<br>} else {<br>console.log('Não pode votar');<br>}</code>",
-        codigoInicial: "",
+        extra: "Exemplo:<br><code>if (idade >= 18) {<br>console.log('Pode votar');<br>} else {<br>console.log('Não pode votar');<br>}</code>",
+        codigoInicial: "let idade = 16;",
         respostaEsperada: /idade\s*=\s*\d+;[\s\S]*if\s*\([\s\S]*\)\s*\{[\s\S]*\}/i
       }
     ];
@@ -189,7 +189,6 @@
             preview.innerHTML = data.fasesJS.fase4.codigoAtual;
           }
 
-          // Fase concluída pode ser repetida; sem XP extra (já tratado em verificarNivel)
         } else {
           atualizarNivel();
         }
@@ -250,28 +249,37 @@
       }
 
       db.collection("usuarios").doc(auth.currentUser.uid).get().then(docSnap => {
+        const nivel = niveis[nivelJsAtual];
+
         if (docSnap.exists) {
           const dados = docSnap.data();
-          const codigoAtual = dados && dados.fasesJS && dados.fasesJS.fase4 && dados.fasesJS.fase4.codigoAtual;
+          const codigoAtual = dados?.fasesJS?.fase4?.codigoAtual;
+
+          if (nivel.codigoInicial && nivel.codigoInicial.trim() !== "") {
+            entradaCodigo.value = nivel.codigoInicial;
+            mostrarVisualizacao(nivelJsAtual, nivel.codigoInicial);
+            return;
+          }
+
           if (codigoAtual !== undefined && codigoAtual !== null) {
             entradaCodigo.value = codigoAtual;
             mostrarVisualizacao(nivelJsAtual, codigoAtual);
             return;
           }
         }
-        entradaCodigo.value = "";
+
+        entradaCodigo.value = nivel.codigoInicial || "";
         preview.innerHTML = "A visualização aparecerá aqui.";
       });
+
+
 
       barraProgresso.style.width = `${(nivelJsAtual / niveis.length) * 100}%`;
 
       const resultado = document.querySelector('.resultado');
-      if (nivelJsAtual === 0 || nivelJsAtual === 1) {
-        resultado.style.display = 'none';
-      } else {
-        resultado.style.display = 'block';
-      }
+      resultado.style.display = 'block';
     }
+
 
     function mostrarVisualizacao(nivel, codigo) {
       const resultados = [];
@@ -314,30 +322,6 @@
           errors.push(String(e && e.message ? e.message : e));
         }
 
-        const linhasOrig = String(codigo).split(/\r?\n/);
-        const linhas = linhasOrig.map(s => s.trim()).filter(Boolean);
-
-        for (let i = 0; i < linhas.length; i++) {
-          const linha = linhas[i];
-          if (/^\/\//.test(linha)) continue;
-          if (/^\*|^\//.test(linha)) continue;
-          if (/^(if|for|while|switch|function|return|break|continue|class|try|catch|finally)\b/.test(linha)) continue;
-          if (/^\{|\}$/.test(linha)) continue;
-          if (/^(let|const|var)\b/.test(linha)) continue;
-
-          try {
-            const evalFn = new Function('sandbox', 'console', `with(sandbox){ try{ return (${linha.replace(/;$/, '')}); }catch(e){ throw e; } }`);
-            const valor = evalFn(sandbox, fakeConsole);
-            if (valor !== undefined) resultados.push({ linha: linha, valor: valor });
-          } catch (e) {
-            try {
-              const evalFn2 = new Function('sandbox', 'console', `with(sandbox){ try{ return ${linha.replace(/;$/, '')}; }catch(e){ throw e; } }`);
-              const val2 = evalFn2(sandbox, fakeConsole);
-              if (val2 !== undefined) resultados.push({ linha: linha, valor: val2 });
-            } catch (e2) {
-            }
-          }
-        }
 
         if (resultados.length === 0) {
           const porPontoEVirgula = String(codigo).split(';').map(s => s.trim()).filter(Boolean);
