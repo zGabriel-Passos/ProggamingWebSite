@@ -474,6 +474,7 @@ main .main-image img:first-of-type {
     border-bottom: 1px solid #e6e6e6;
     padding-bottom: 12px;
     border: 1px solid #96969659;
+    border-radius: 5px;
 }
 
 .faq-question {
