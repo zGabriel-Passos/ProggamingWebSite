@@ -1016,6 +1016,7 @@ body.loaded .site-content {
   }
 
   .ranking-nickname {
+    font-family: "Roboto";
     font-size: 12px;
   }
 
@@ -1023,4 +1024,8 @@ body.loaded .site-content {
     font-family: "Roboto";
     font-size: 12px;
   }
+}
+
+.footer {
+  text-align: center;
 }
