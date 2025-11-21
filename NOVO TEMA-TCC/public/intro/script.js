@@ -77,10 +77,3 @@ document.addEventListener("DOMContentLoaded", function () {
     }
     typeWriterTextarea();
 });
-
-document.getElementById('openModalGame').onclick = function () {
-    document.getElementById('modal-game').classList.add('active');
-};
-document.getElementById('closeModalGame').onclick = function () {
-    document.getElementById('modal-game').classList.remove('active');
-};
