@@ -3,7 +3,7 @@
 
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0">
   <link rel="stylesheet" href="https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css">
   <link rel="apple-touch-icon" href="./../icon_512x512.png">
   <link rel="icon" type="image/png" href="./../icon_512x512.png">
@@ -14,40 +14,36 @@
 </head>
 
 <body>
-  <div class="navbar">
-    <button onclick="mostrarTela('bloco-teoria')">Teoria</button>
-    <button onclick="mostrarTela('resultado')">Resultado</button>
-    <button onclick="mostrarTela('editor-container')">Editor</button>
-  </div>
-
   <div class="progresso">
     <div class="barra" id="barra-progresso"></div>
   </div>
 
   <div class="container-nivel">
     <div class="bloco-teoria">
-      <div style="display: flex; flex-direction: row; align-items: center; justify-content: space-between;">
+      <div class="teoria-header">
         <h3>Teoria - Fase 1</h3>
-        <button class="botao-som" id="botao-som" onclick="toggleSom()">🔊</button>
+        <button class="botao-som" id="botao-som" onclick="toggleSom()" aria-label="Controle de som">🔊</button>
       </div>
       <p id="texto-teoria"></p>
-      <div id="extra-teoria" style="margin-top:10px; font-weight: 600; font-size:14px; color:#ddd;"></div>
-      <button id="btn-extra-exemplo" class="voltar" style="margin-top:8px; display:none;"
-        onclick="toggleExemplo()">Exibir exemplo</button>
+      <div id="extra-teoria"></div>
+      <button id="btn-extra-exemplo" class="btn-exemplo" onclick="toggleExemplo()">Exibir exemplo</button>
+
       <h2 id="titulo-nivel">Nível 1/5</h2>
-      <p id="descricao-nivel">JavaScript é uma linguagem de programação essencial e a mais popular
-        para o desenvolvimento web, responsável por adicionar interatividade e dinamismo a páginas web,
-        como mapas interativos, animações e atualizações de conteúdo em tempo real. Ele é uma das três tecnologias
-        fundamentais da web, juntamente com HTML (estrutura) e CSS (estilo)</p>
+      <p id="descricao-nivel">JavaScript é uma linguagem de programação essencial e a mais popular para o
+        desenvolvimento web, responsável por adicionar interatividade e dinamismo a páginas web, como mapas interativos,
+        animações e atualizações de conteúdo em tempo real. Ele é uma das três tecnologias fundamentais da web,
+        juntamente com HTML (estrutura) e CSS (estilo)</p>
+
       <hr>
-      <div style="margin: 10px 0px 10px 0px;">
-        <span id="xp-total" style="font-family: 'Press Start 2P', cursive; font-weight: 600; color: #c7860e;">XP:
-          0</span>
+
+      <div class="xp-container">
+        <span id="xp-total">XP: 0</span>
       </div>
-      <a href="../index.html" style="float: right; margin: 10px;">
-        <button class="voltar">
+
+      <a href="../index.html" class="voltar-link">
+        <button class="btn-voltar">
           <i class='bx bx-arrow-back'></i>
-          <span style="font-size: 12px;">Voltar</span>
+          <span>Voltar</span>
         </button>
       </a>
     </div>
@@ -62,10 +58,25 @@
         <span class="editor-title">index.html</span>
       </div>
       <textarea id="entrada-codigo" class="code-editor" spellcheck="false"
-        placeholder="Digite o código JavaScript aqui..." style="height: 90%;"></textarea>
-      <button onclick="verificarNivel()">Testar Código</button>
+        placeholder="Digite o código JavaScript aqui..."></textarea>
+      <button class="btn-testar" onclick="verificarNivel()">Testar Código</button>
     </div>
   </div>
+
+  <nav class="navbar">
+    <button onclick="mostrarTela('bloco-teoria')" class="nav-btn" aria-label="Ver teoria">
+      <i class='bx bx-book'></i>
+      <span>Teoria</span>
+    </button>
+    <button onclick="mostrarTela('resultado')" class="nav-btn" aria-label="Ver resultado">
+      <i class='bx bx-show'></i>
+      <span>Resultado</span>
+    </button>
+    <button onclick="mostrarTela('editor-container')" class="nav-btn" aria-label="Ver editor">
+      <i class='bx bx-code-alt'></i>
+      <span>Editor</span>
+    </button>
+  </nav>
 
   <audio id="audio-sucesso" src="../Green Screen + Efeito Sonoro (Acerto).mp3"></audio>
 
@@ -83,12 +94,11 @@
     }
 
     function mostrarTela(id) {
-      document.querySelectorAll('.bloco-teoria, .resultado, .editor-container')
-        .forEach(el => el.style.display = 'none');
-
-      document.querySelector('.' + id).style.display = 'block';
+      if (window.innerWidth > 1024) return;
+      document.querySelectorAll('.bloco-teoria, .resultado, .editor-container').forEach(el => el.classList.remove('active'));
+      const alvo = document.querySelector('.' + id);
+      if (alvo) alvo.classList.add('active');
     }
-
 
     mostrarTela('bloco-teoria');
 
@@ -161,7 +171,6 @@
       }
     ];
 
-
     auth.onAuthStateChanged(user => {
       if (!user) window.location.href = "./../";
       else carregarProgresso(user);
@@ -175,7 +184,6 @@
           const xp = data.xp || 0;
           nivelJsAtual = (data.fasesJS && data.fasesJS.fase1 && Number.isInteger(data.fasesJS.fase1.nivelAtual)) ? data.fasesJS.fase1.nivelAtual : 0;
           fase1JsJaConcluida = (data.fasesJS && data.fasesJS.fase1 && data.fasesJS.fase1.status === "concluida") || false;
-          // Se a fase já foi concluída e há vestígios de progresso, limpar para repetir do início
           const faseDoc = data.fasesJS && data.fasesJS.fase1 ? data.fasesJS.fase1 : {};
           if (fase1JsJaConcluida && ("codigoAtual" in faseDoc || "nivelAtual" in faseDoc)) {
             db.collection("usuarios").doc(user.uid).set({
@@ -194,7 +202,6 @@
             entradaCodigo.value = data.fasesJS.fase1.codigoAtual;
             preview.innerHTML = data.fasesJS.fase1.codigoAtual;
           }
-
         } else {
           atualizarNivel();
         }
@@ -202,7 +209,7 @@
     }
 
     function atualizarBotaoCorreto(estado) {
-      const botao = document.querySelector('.editor-container button');
+      const botao = document.querySelector('.btn-testar');
       if (estado === 'correto') {
         botao.style.background = '#2ecc40';
         botao.innerHTML = '<i class="bx bx-check"></i> Correto! Clique para avançar';
@@ -226,7 +233,7 @@
         document.querySelector('.resultado').innerHTML = `
       <h2>Parabéns!</h2>
       <p>Você concluiu a Fase 1 de JavaScript! ${fase1JsJaConcluida ? "Pode refazer, mas não ganhará XP extra." : "+50XP"}</p>
-      <button onclick="concluirFase1()">Concluir a fase</button>
+      <button onclick="concluirFase1()" class="btn-concluir">Concluir a fase</button>
     `;
       }
     }
@@ -355,12 +362,10 @@
       }
     }
 
-
     function verificarNivel() {
       const entrada = entradaCodigo.value;
       const audio = document.getElementById("audio-sucesso");
       const resposta = niveis[nivelJsAtual].respostaEsperada;
-      const botao = document.querySelector('.editor-container button');
 
       if (aguardandoAvanco) {
         avancarNivel();
@@ -368,7 +373,6 @@
       }
 
       mostrarVisualizacao(nivelJsAtual, entrada);
-
 
       const passou = resposta instanceof RegExp ? resposta.test(entrada) : entrada === resposta;
 
