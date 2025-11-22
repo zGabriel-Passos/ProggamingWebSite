@@ -1,0 +1,380 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css">
+    <link rel="stylesheet" href="../TelaPrincipal/style.css">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap">
+    <title>Proggaming | Painel Admin</title>
+    <style>
+        /* ==================== ESTILOS GERAIS (BODY E FUNDO) ==================== */
+        body {
+            /* Mantendo o fundo gradiente do seu tema */
+            background: linear-gradient(120deg, #092b61, #09437a, #112a53);
+            color: white;
+            font-family: "Poppins", sans-serif;
+            margin: 0;
+            padding: 0;
+            /* Seus cursores */
+            cursor: url(./../PixelPointer.cur), auto;
+            min-height: 100vh;
+            /* Garante que o fundo cubra toda a tela */
+        }
+
+        /* Reset para links e botões */
+        a,
+        button {
+            cursor: url(./../PixelSelector.cur), pointer !important;
+        }
+
+        /* ==================== ESTILOS ESPECÍFICOS DO LOGIN ==================== */
+        .login-container {
+            max-width: 400px;
+            /* Centraliza verticalmente e horizontalmente */
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+
+            padding: 30px;
+            background: #073a69;
+            /* Bloco de teoria */
+            border: 2px solid #fffff072;
+            /* Borda sutil */
+            border-radius: 8px;
+            text-align: center;
+            box-shadow: 0 0 15px rgba(0, 0, 0, 0.7);
+            /* Sombra mais forte */
+        }
+
+        .login-container h2 {
+            font-family: 'Press Start 2P', cursive;
+            margin-bottom: 25px;
+            font-size: 16px;
+            color: #c7860e;
+            /* Cor de destaque (XP) */
+        }
+
+        .login-container input {
+            width: calc(100% - 24px);
+            padding: 12px;
+            margin-bottom: 15px;
+            border: 1px solid #1A3D63;
+            background: #092b61;
+            /* Cor escura de fundo */
+            color: #d4d4d4;
+            /* Cor do texto no editor */
+            border-radius: 4px;
+            font-size: 16px;
+            font-family: "Roboto", sans-serif;
+        }
+
+        .login-container input::placeholder {
+            color: #aaa;
+        }
+
+        .login-container button {
+            width: 100%;
+            padding: 12px;
+            /* Cor de Sucesso (Barra de Progresso) */
+            background: linear-gradient(140deg, #4CAF50, #077010);
+            border: none;
+            color: white;
+            font-family: 'Press Start 2P', cursive;
+            font-size: 14px;
+            cursor: pointer;
+            border-radius: 4px;
+            transition: opacity 0.3s;
+        }
+
+        .login-container button:hover {
+            opacity: 0.8;
+        }
+
+        #login-error-message {
+            color: #ff5f56;
+            /* Cor do ponto vermelho do editor */
+            font-family: 'Roboto', sans-serif;
+            font-size: 14px;
+        }
+
+
+        /* ==================== ESTILOS DO DASHBOARD (MANTIDOS E ADAPTADOS) ==================== */
+        .dashboard-container {
+            max-width: 1200px;
+            margin: 20px auto;
+            padding: 20px;
+            background: #073a69;
+            border-radius: 8px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.5);
+            /* Importante para desktop */
+        }
+
+        .dashboard-header {
+            text-align: center;
+            margin-bottom: 30px;
+            font-family: 'Press Start 2P', cursive;
+        }
+
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 20px;
+            margin-bottom: 40px;
+        }
+
+        .stat-card {
+            background: #1A3D63;
+            padding: 20px;
+            border-radius: 8px;
+            text-align: center;
+        }
+
+        .stat-card h3 {
+            margin: 0 0 10px 0;
+            font-size: 14px;
+            font-family: 'Poppins', sans-serif;
+            font-weight: 500;
+        }
+
+        .stat-card p {
+            font-size: 36px;
+            font-family: 'Press Start 2P', cursive;
+            color: #c7860e;
+            margin: 0;
+        }
+
+        .users-table-container {
+            overflow-x: auto;
+            background: #092b61;
+            padding: 15px;
+            border-radius: 8px;
+        }
+
+        .users-table {
+            width: 100%;
+            border-collapse: collapse;
+            font-family: 'Roboto', sans-serif;
+        }
+
+        .users-table th,
+        .users-table td {
+            padding: 12px 15px;
+            text-align: left;
+            border-bottom: 1px solid #1A3D63;
+        }
+
+        .users-table th {
+            background-color: #073a69;
+            font-family: 'Press Start 2P', cursive;
+            font-size: 10px;
+            color: #ddd;
+        }
+
+        .users-table tr:hover {
+            background-color: #112a53;
+        }
+    </style>
+</head>
+
+<body>
+
+    <div id="login-container" class="login-container">
+        <h2>Acesso de Auditoria</h2>
+        <input type="email" id="admin-email" placeholder="E-mail" value="" />
+        <input type="password" id="admin-password" placeholder="Senha" />
+        <button onclick="handleLogin()">Entrar</button>
+        <p id="login-error-message"></p>
+    </div>
+
+    <div id="dashboard-content" class="dashboard-container" style="display: none;">
+        <div class="dashboard-header">
+            <h2>Painel de Controle 📊</h2>
+            <button onclick="auth.signOut()">
+                <i class='bx bx-log-out'></i> Sair
+            </button>
+        </div>
+
+        <div class="stats-grid">
+            <div class="stat-card">
+                <h3>Total de Usuários Cadastrados</h3>
+                <p id="total-users">...</p>
+            </div>
+            <div class="stat-card">
+                <h3>Usuários Com XP > 100</h3>
+                <p id="high-xp-users">...</p>
+            </div>
+            <div class="stat-card">
+                <h3>Informação Adicional</h3>
+                <p>...</p>
+            </div>
+        </div>
+
+        <div class="users-table-container">
+            <h3>Informações Detalhadas dos Usuários</h3>
+            <table class="users-table">
+                <thead>
+                    <tr>
+                        <th>Apelido</th>
+                        <th>XP Total</th>
+                        <th>Nível</th>
+                        <th>E-mail</th>
+                        <th>UID</th>
+                    </tr>
+                </thead>
+                <tbody id="users-data-body">
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+    <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-auth-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore-compat.js"></script>
+
+    <script>
+        // Use a sua configuração do Firebase aqui
+        const firebaseConfig = {
+            apiKey: "AIzaSyClRHfJuTSogkbWLaaUKsSBGN1KiT5xuUc",
+            authDomain: "proggamingpage.firebaseapp.com",
+            projectId: "proggamingpage",
+            storageBucket: "proggamingpage.firebasestorage.app",
+            messagingSenderId: "911283259283",
+            appId: "1:911283259283:web:0b9be83ed5e07391360a66",
+            measurementId: "G-TQP4LNPYQ1"
+        };
+        firebase.initializeApp(firebaseConfig);
+        const auth = firebase.auth();
+        const db = firebase.firestore();
+
+        // E-MAIL DE ADMINISTRADOR (CRÍTICO)
+        const ADMIN_EMAIL = "proggamingcontato@gmail.com";
+
+        // ========================================================
+        // FUNÇÃO DE LOGIN
+        // ========================================================
+        async function handleLogin() {
+            const email = document.getElementById('admin-email').value;
+            const password = document.getElementById('admin-password').value;
+            const errorMsg = document.getElementById('login-error-message');
+
+            errorMsg.textContent = '';
+
+            if (email !== ADMIN_EMAIL) {
+                errorMsg.textContent = "Erro: Acesso restrito ao e-mail de administrador.";
+                return;
+            }
+
+            try {
+                await auth.signInWithEmailAndPassword(email, password);
+                // O onAuthStateChanged tratará o restante (mostrando o dashboard)
+            } catch (error) {
+                let message = "Erro de Login. Credenciais inválidas.";
+                if (error.code === 'auth/wrong-password') {
+                    message = "Senha incorreta.";
+                } else if (error.code === 'auth/user-not-found') {
+                    message = "Usuário não encontrado.";
+                }
+                errorMsg.textContent = message;
+            }
+        }
+
+
+        // ========================================================
+        // CONTROLE DE ACESSO E CARREGAMENTO DE DADOS
+        // ========================================================
+        auth.onAuthStateChanged(user => {
+            const loginContainer = document.getElementById('login-container');
+            const dashboardContent = document.getElementById('dashboard-content');
+
+            if (user) {
+                // Usuário está logado
+                if (user.email === ADMIN_EMAIL) {
+                    // É o ADMIN: Oculta o Login, Mostra o Dashboard, e Carrega os dados
+                    loginContainer.style.display = 'none';
+                    dashboardContent.style.display = 'block';
+                    carregarDadosAdmin();
+                } else {
+                    // Não é o ADMIN: Nega acesso e desloga
+                    alert("Acesso negado. Você não tem permissão de administrador.");
+                    auth.signOut();
+                    window.location.href = "./../"; // Redireciona
+                }
+            } else {
+                // Usuário NÃO está logado: Mostra o formulário de login
+                dashboardContent.style.display = 'none';
+                loginContainer.style.display = 'block';
+            }
+        });
+
+        // ========================================================
+        // FUNÇÕES DE CARREGAMENTO E PREENCHIMENTO
+        // ========================================================
+        async function carregarDadosAdmin() {
+            try {
+                const usuariosRef = db.collection("usuarios");
+                // Ordena por XP (o ranking mais importante)
+                const snapshot = await usuariosRef.orderBy("xp", "desc").get();
+                const usuarios = [];
+
+                let highXpCount = 0;
+
+                snapshot.forEach(doc => {
+                    const data = doc.data();
+                    const xp = data.xp || 0;
+
+                    if (xp > 100) {
+                        highXpCount++;
+                    }
+
+                    usuarios.push({
+                        uid: doc.id,
+                        apelido: data.apelido || "N/A",
+                        xp: xp,
+                        nivel: data.nivelAtual || 0,
+                        email: data.email || doc.id // Em caso de e-mail não preenchido
+                    });
+                });
+
+                // Atualiza os cards de estatísticas
+                document.getElementById('total-users').textContent = snapshot.size;
+                document.getElementById('high-xp-users').textContent = highXpCount;
+
+                // Preenche a tabela
+                preencherTabelaUsuarios(usuarios);
+
+            } catch (error) {
+                console.error("Erro ao carregar dados dos usuários:", error);
+                alert("Erro ao carregar dados. Verifique suas Regras de Segurança do Firestore. Você precisa de permissão de leitura total na coleção 'usuarios'.");
+            }
+        }
+
+        function preencherTabelaUsuarios(usuarios) {
+            const tableBody = document.getElementById('users-data-body');
+            tableBody.innerHTML = '';
+
+            usuarios.forEach(user => {
+                const row = tableBody.insertRow();
+
+                // Apelido
+                row.insertCell().textContent = user.apelido;
+
+                // XP Total
+                row.insertCell().textContent = user.xp;
+
+                // Nível
+                row.insertCell().textContent = user.nivel;
+
+                // E-mail
+                row.insertCell().textContent = user.email;
+
+                // UID (Para referência)
+                row.insertCell().textContent = user.uid;
+            });
+        }
+    </script>
+</body>
+
+</html>

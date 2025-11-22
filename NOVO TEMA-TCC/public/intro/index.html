@@ -13,7 +13,7 @@
 </head>
 
 <body>
-    <main>
+    <main id="main">
         <section>
             <div class="main-header">
                 <div class="header">
@@ -125,6 +125,24 @@
             </div>
         </section>
         <section>
+            <h2 class="h2-imaagens">Demonstrações</h2>
+            <div class="imagens">
+                <img src="./images/background.jpeg" alt="">
+                <img src="./images/background (5).jpeg" alt="">
+                <img src="./images/background (4).jpeg" alt="">
+                <img src="./images/background (3).jpeg" alt="">
+                <img src="./images/background (2).jpeg" alt="">
+                <img src="./images/background (1).jpeg" alt="">
+            </div>
+            <div id="imageModal" class="modal">
+                <span class="close">&times;</span>
+
+                <img class="modal-content" id="img01" src="" alt="">
+
+                <div id="caption"></div>
+            </div>
+        </section>
+        <section>
             <div class="introducao">
                 <div class="faq-cards">
                     <h2>Introdução - Perguntas</h2>
@@ -162,7 +180,6 @@
                 </div>
             </div>
         </section>
-        <section></section>
         <section>
             <h2 style="text-align: center;">Já que chegou até aqui, custa nada conhecer e participar do
                 <span style="color: #0099ff;">Proggaming</span>
@@ -186,19 +203,35 @@
                 <a href="https://www.instagram.com/proggaming_/" target="_blank"><i
                         class='bx bxl-instagram-alt'></i></a>
                 <a href="https://www.youtube.com/@ProggamingPage" target="_blank"><i class='bx bxl-youtube'></i></a>
+                <a href="https://discord.gg/eNJhxNDB" target="_blank"><i class='bx bxl-discord'></i></a>
             </div>
         </div>
         <img src="../logo-menor-removebg-preview.png" alt="Logo Proggaming" draggable="false">
-        <div class="direitos"><a href="../Termos_de_uso.pdf" target="_blank" style="color: white;">Termos de Uso</a> e
-            <a href="../politica_privacidade.pdf" target="_blank" style="color: white;">Privacidade.</a>
+        <div class="direitos"><a href="../Termos_de_uso.pdf" target="_blank" style="color: rgb(0, 0, 0);">Termos de
+                Uso</a> e
+            <a href="../politica_privacidade.pdf" target="_blank" style="color: rgb(0, 0, 0);">Privacidade.</a>
         </div>
         <span>Copyright <strong>&copy; <span id="anoAtual"></span> Proggaming.</strong> All rights reserved.</span>
     </footer>
 
-    <button class="icon-chat">
+    <button class="icon-chat" id="btn-chat" onclick="modalChat()">
         <i class='bx bxs-message-square-detail'></i>
     </button>
 
+    <div class="modal-chat" id="modal-chat">
+        <div class="modal-title">
+            <img src="../avatares/prota.jpg" draggable="false">
+            <span>Olá, em que podemos te ajudar?</span>
+        </div>
+        <div class="modal-forms" id="modal-forms"></div>
+        <span style="font-size: 14px; padding: 10px;">Você pode entrar em suporte pelo o <a
+                href="https://discord.gg/eNJhxNDB" target="_blank" style="color: #4e00a7;">Discord</a>
+        </span>
+    </div>
+
+    <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-firestore-compat.js"></script>
+    <script src="config.js"></script>
     <script src="script.js"></script>
     <script>
         document.querySelectorAll('.faq-question').forEach(function (btn) {
@@ -219,36 +252,6 @@
         const dataAtual = new Date();
         const ano = dataAtual.getFullYear();
         elementoAno.innerHTML = ano;
-
-        async function aplicarCSS() {
-            const input = document.getElementById("cssInput").value;
-            const wrapper = document.getElementById("playerWrapper");
-            const sleep = ms => new Promise(resolve => setTimeout(resolve, ms));
-
-            wrapper.style.cssText = `display: flex; align-items: stretch; ${input}`;
-
-            const player = document.getElementById("player");
-            const target = document.getElementById("target");
-
-            const playerRect = player.getBoundingClientRect();
-            const targetRect = target.getBoundingClientRect();
-
-            const feedback = document.getElementById("feedback");
-
-            const closeEnough =
-                Math.abs(playerRect.left - targetRect.left) < 5 &&
-                Math.abs(playerRect.top - targetRect.top) < 5;
-
-            if (closeEnough) {
-                feedback.textContent = "✅ Acertou!";
-                feedback.style.color = "green";
-                await sleep(1500);
-                document.getElementById('modal-game').classList.remove('active');
-            } else {
-                feedback.textContent = "❌ Ainda não está certo...";
-                feedback.style.color = "red";
-            }
-        }
     </script>
 </body>
 

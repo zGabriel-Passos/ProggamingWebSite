@@ -12,6 +12,11 @@ body {
     cursor: url(../Academy/cursors/Normal.cur), auto;
 }
 
+.body-efeito {
+    filter: blur(3px);
+
+}
+
 a,
 button {
     cursor: url(../Academy/cursors/Link.cur), pointer !important;
@@ -21,6 +26,7 @@ main {
     width: 100%;
     display: flex;
     flex-direction: column;
+    transition: all 0.3s;
 }
 
 main section {
@@ -182,7 +188,7 @@ main .conteudo-header span:last-of-type {
 }
 
 .tabs-section {
-    margin: 0 auto;
+    margin: 20px auto;
     display: flex;
     width: 100%;
     align-items: center;
@@ -399,6 +405,11 @@ main .main-image img:first-of-type {
     display: flex;
     flex-direction: column;
     align-items: center;
+    transition: 0.3s;
+}
+
+.others div:hover {
+    transform: scale(1.02);
 }
 
 .others svg {
@@ -418,7 +429,7 @@ main .main-image img:first-of-type {
     border-radius: 50%;
     background-color: #0c72d1;
     border: none;
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.425);
     color: white;
     font-size: 30px;
     display: flex;
@@ -431,6 +442,130 @@ main .main-image img:first-of-type {
 .icon-chat:hover {
     box-shadow: 0 4px 18px rgba(0, 0, 0, 0.705);
 }
+
+#modal-chat {
+    display: none;
+    position: fixed;
+    z-index: 10;
+    padding: 10px;
+    border: 2px solid #00000054;
+    left: 33%;
+    top: 20%;
+    width: 30%;
+    height: 60%;
+    overflow: auto;
+    background-color: #ffffff;
+    color: black;
+    border-radius: 20px;
+    box-shadow: 0 4px 28px rgba(0, 0, 0, 0.295);
+    animation: fadeIn 0.3s ease-in-out;
+    text-align: center;
+    overflow-y: hidden;
+}
+
+#modal-chat img {
+    width: 15%;
+    border-radius: 50%;
+    border: 2px solid #002a5296;
+}
+
+#modal-chat.active {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.modal-title {
+    display: flex;
+    align-items: center;
+    justify-content: space-evenly;
+    flex-direction: row;
+    background-color: rgba(255, 255, 255, 0.473);
+}
+
+.modal-title span {
+    font-weight: 600;
+    font-size: 14px;
+}
+
+#mandar-msg-user {
+    padding: 5px 11px;
+    background-color: #0267ff;
+    border: 2px solid black;
+    border-bottom: 4px solid black;
+    border-radius: 10px;
+    font-family: 'Poppins';
+    margin: 10px;
+    color: white;
+}
+
+#mandar-msg-user:hover {
+    border-bottom: 2px solid black;
+}
+
+.modal-forms {
+    display: flex;
+    justify-content: center;
+    width: 60%;
+    padding: 30px;
+    align-items: center;
+    overflow-y: auto;
+}
+
+.modal-forms #feedback-form {
+    display: flex;
+    width: 100%;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    margin-top: 50px;
+}
+
+.modal-forms #feedback-form input {
+    padding: 5px;
+    font-family: 'Roboto';
+    border-radius: 5px;
+    margin: 5px;
+    border: 2px solid rgba(0, 0, 0, 0.24);
+}
+
+.modal-forms #feedback-form textarea {
+    color: black;
+    max-width: 100%;
+    width: 400px;
+    height: 60px;
+    resize: none;
+    padding: 5px;
+    border-radius: 5px;
+    font-size: 14px;
+    font-family: 'Roboto';
+    border: 2px solid rgba(0, 0, 0, 0.24);
+    overflow-y: hidden;
+}
+
+.modal-forms #feedback-form textarea:focus,
+.modal-forms #feedback-form input:focus {
+    border-color: #0267ff;
+    outline: none;
+}
+
+.modal-forms #feedback-form input:hover,
+.modal-forms #feedback-form textarea:hover {
+    border-color: #0267ff91;
+}
+
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+        transform: scale(0.9);
+    }
+
+    to {
+        opacity: 1;
+        transform: scale(1);
+    }
+}
+
 
 ::-webkit-scrollbar {
     width: 7px;
@@ -451,6 +586,7 @@ main .main-image img:first-of-type {
     padding: 10px;
 }
 
+.h2-imaagens,
 .introducao h2 {
     font-size: 26px;
     text-align: center;
@@ -473,7 +609,8 @@ main .main-image img:first-of-type {
 .faq-item {
     border-bottom: 1px solid #e6e6e6;
     padding-bottom: 12px;
-    border: 1px solid #96969659;
+    border: 2px solid #96969659;
+    border-bottom: 4px solid #96969659;
     border-radius: 5px;
 }
 
@@ -532,6 +669,108 @@ main .main-image img:first-of-type {
     }
 }
 
+.imagens {
+    display: flex;
+    flex-direction: row;
+    overflow-x: auto;
+    gap: 10px;
+    margin: 20px 20px 0px 20px;
+    background-color: lightgray;
+    padding: 10px;
+    border-radius: 10px;
+    box-shadow: 0 0 30px #0000001a;
+}
+
+.imagens img {
+    width: 70%;
+    border-radius: 20px;
+    border: 3px solid black;
+    border-bottom: 5px solid black;
+    transition: all 0.3s;
+    cursor: pointer;
+}
+
+.imagens img:hover {
+    opacity: 0.9;
+    transform: scale(1.01);
+}
+
+.imagens::-webkit-scrollbar {
+    height: 12px;
+}
+
+.imagens::-webkit-scrollbar-thumb {
+    cursor: e-resize;
+}
+
+.modal {
+    display: none;
+    position: fixed;
+    z-index: 10;
+    padding-top: 50px;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    overflow: auto;
+    background-color: rgb(0, 0, 0);
+    background-color: rgba(0, 0, 0, 0.9);
+}
+
+.modal-content {
+    margin: 20px auto;
+    display: block;
+    width: 100%;
+    max-width: 900px;
+    transition: transform 0.3s ease-out;
+    transform-origin: center center;
+}
+
+#caption {
+    margin: auto;
+    display: block;
+    width: 80%;
+    max-width: 700px;
+    text-align: center;
+    color: #ccc;
+    padding: 10px 0;
+    height: 150px;
+}
+
+.close {
+    position: absolute;
+    top: 15px;
+    right: 35px;
+    color: #ff0000;
+    font-size: 40px;
+    font-weight: bold;
+    transition: 0.3s;
+    cursor: pointer;
+    z-index: 11;
+}
+
+.close:hover,
+.close:focus {
+    color: #8b0000;
+    text-decoration: none;
+    cursor: pointer;
+}
+
+@keyframes zoom {
+    from {
+        transform: scale(0)
+    }
+
+    to {
+        transform: scale(1)
+    }
+}
+
+.modal-content {
+    animation-name: zoom;
+    animation-duration: 0.6s;
+}
+
 .final {
     display: flex;
     height: 200px;
@@ -540,6 +779,7 @@ main .main-image img:first-of-type {
     align-items: center;
     font-size: 28px;
     text-align: center;
+    padding: 10px;
 }
 
 .final span:first-of-type {
@@ -558,8 +798,8 @@ main .main-image img:first-of-type {
 footer {
     position: relative;
     bottom: 0;
-    background: linear-gradient(340deg, #6fa6ff, #a1c9f0);
-    color: white;
+    background: linear-gradient(340deg, #ffffff, #a1c9f0);
+    color: rgb(0, 0, 0);
     border-top: 4px solid #80808073;
     padding: 20px;
     display: flex;
@@ -590,7 +830,7 @@ footer img {
 }
 
 .navbar-footer a {
-    color: white;
+    color: rgb(0, 0, 0);
     text-decoration: none;
     transition: 0.3s;
 }
@@ -602,7 +842,7 @@ footer img {
 .midias {
     font-size: 26px;
     margin-top: 5px;
-    color: white;
+    color: rgb(0, 0, 0);
     margin-right: 5px;
 }
 
@@ -614,6 +854,29 @@ footer img {
 
 .midias a:hover {
     opacity: 0.6;
+}
+
+@media (min-width: 3068px) {
+    .others {
+        display: flex;
+        flex-direction: row;
+    }
+
+    .others div {
+        width: 20%;
+        padding: 10px;
+        border-radius: 20px;
+        font-size: 30px;
+        border: 1px solid black;
+    }
+
+    .tabs-section {
+        width: 70%;
+    }
+
+    .imagens::-webkit-scrollbar {
+        height: 32px;
+    }
 }
 
 @media (max-width: 1168px) {
@@ -643,6 +906,14 @@ footer img {
     main .conteudo-header span:last-of-type {
         margin-top: 20px;
     }
+
+    .imagens::-webkit-scrollbar {
+        height: 10px;
+    }
+
+    #feedback-form {
+        margin-top: 90px;
+    }
 }
 
 @media (max-width: 968px) {
@@ -657,6 +928,36 @@ footer img {
 
     .academy p {
         font-size: 16px;
+    }
+
+    .imagens img {
+        border: none;
+        border-radius: 0px;
+        border-bottom: none;
+    }
+
+    #modal-chat {
+        display: none;
+        position: fixed;
+        z-index: 10;
+        padding: 10px;
+        border: 2px solid #00000054;
+        left: 0%;
+        top: 0%;
+        width: 95%;
+        height: 80%;
+        overflow: auto;
+        background-color: #ffffff;
+        color: black;
+        border-radius: 20px;
+        box-shadow: 0 4px 28px rgba(0, 0, 0, 0.295);
+        animation: fadeIn 0.3s ease-in-out;
+        text-align: center;
+        overflow-y: hidden;
+    }
+
+    #feedback-form {
+        margin-top: 50px;
     }
 }
 
@@ -686,6 +987,11 @@ footer img {
         display: flex;
         flex-direction: column;
     }
+
+    .modal-title {
+        font-size: 14px;
+        padding: 10px;
+    }
 }
 
 @media (max-width: 403px) {
@@ -713,6 +1019,10 @@ footer img {
     }
 
     .text a span {
+        display: none;
+    }
+
+    #modal-chat img {
         display: none;
     }
 }
