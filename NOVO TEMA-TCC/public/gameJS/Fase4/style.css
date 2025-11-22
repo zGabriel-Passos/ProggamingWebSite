@@ -254,4 +254,16 @@ button:hover {
     .navbar button:hover {
         background: #073A69;
     }
+
+    .bloco-teoria,
+    .resultado,
+    .editor-container {
+        display: none !important;
+    }
+
+    .bloco-teoria.active,
+    .resultado.active,
+    .editor-container.active {
+        display: block !important;
+    }
 }
