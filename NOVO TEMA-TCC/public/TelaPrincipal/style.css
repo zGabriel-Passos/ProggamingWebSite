@@ -1030,3 +1030,17 @@ body.loaded .site-content {
 .footer {
   text-align: center;
 }
+
+.avatar-locked {
+  filter: grayscale(100%);
+  cursor: default;
+  border: 2px solid red;
+}
+
+#status {
+  font-family: "Roboto";
+  font-size: 12px;
+  margin: 10px;
+  font-weight: 600;
+  color: #ff1e00;
+}

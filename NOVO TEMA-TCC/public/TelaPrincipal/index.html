@@ -29,6 +29,7 @@
                     <h2>Escolha seu Avatar</h2>
                     <div id="avatar-list" class="avatar-list">
                     </div>
+                    <p id="status"></p>
                     <button id="save-avatar-button">Salvar Avatar</button>
                 </div>
 
@@ -208,24 +209,39 @@
         const rankingList = document.getElementById("ranking-list");
 
         const availableAvatars = [
-            "../assets/avatars/avatar.jpg",
-            "../assets/avatars/avatar2.jpg",
-            "../assets/avatars/avatar3.jpg",
-            "../assets/avatars/avatar4.jpg",
-            "../assets/avatars/avatar5.jpg",
+            { path: "../assets/avatars/avatar.jpg", requiredXp: 0 },
+            { path: "../assets/avatars/avatar2.jpg", requiredXp: 0 },
+            { path: "../assets/avatars/avatar3.jpg", requiredXp: 0 },
+            { path: "../assets/avatars/avatar4.jpg", requiredXp: 0 },
+            { path: "../assets/avatars/avatar5.jpg", requiredXp: 0 },
+            { path: "../assets/avatars/avatar6.jpg", requiredXp: 0 },
+            { path: "../assets/avatars/avatar7.jpg", requiredXp: 0 },
+            { path: "../assets/avatars/avatar8.jpg", requiredXp: 0 },
+            { path: "../assets/avatars/avatar9.jpg", requiredXp: 1000 },
+            { path: "../assets/avatars/avatar10.jpg", requiredXp: 2000 },
         ];
 
         let userDocRef;
         let selectedAvatarPath = "";
+        let currentUserXP = 0;
 
         function renderAvatars() {
             avatarList.innerHTML = '';
-            availableAvatars.forEach(path => {
+            availableAvatars.forEach(avatar => {
                 const img = document.createElement("img");
-                img.src = path;
+                const status = document.getElementById('status');
+                img.src = avatar.path;
                 img.alt = "Avatar";
                 img.classList.add("avatar-option");
-                img.dataset.path = path;
+                img.dataset.path = avatar.path;
+                img.dataset.requiredXp = avatar.requiredXp;
+                status.innerHTML = "";
+
+                if (currentUserXP < avatar.requiredXp) {
+                    img.classList.add("avatar-locked");
+                    img.title = `Necessário ${avatar.requiredXp} XP`;
+                }
+
                 avatarList.appendChild(img);
             });
         }
@@ -281,10 +297,20 @@
             });
             if (avatarList) {
                 avatarList.addEventListener("click", (e) => {
-                    if (e.target.classList.contains("avatar-option")) {
+                    const clickedAvatar = e.target;
+                    if (clickedAvatar.classList.contains("avatar-option")) {
+                        const requiredXp = parseInt(clickedAvatar.dataset.requiredXp, 10);
+                        const status = document.getElementById('status');
+                        if (currentUserXP < requiredXp) {
+                            status.innerHTML = `Você precisa de ${requiredXp} XP para desbloquea-lo.`;
+                            return;
+                        } else {
+                            status.innerHTML = "";
+                        }
+
                         document.querySelectorAll(".avatar-option").forEach(img => img.classList.remove("selected"));
-                        e.target.classList.add("selected");
-                        selectedAvatarPath = e.target.dataset.path;
+                        clickedAvatar.classList.add("selected");
+                        selectedAvatarPath = clickedAvatar.dataset.path;
                     }
                 });
             }
@@ -312,7 +338,8 @@
             perfilSpan.innerText = dados.apelido || dados.email.split('@')[0];
             perfilSpan.dataset.email = dados.email;
             xpSpan.textContent = `XP: ${dados.xp || 0}`;
-            const savedAvatarUrl = dados.avatarUrl || availableAvatars[0];
+            currentUserXP = dados.xp || 0; // Atualiza a XP do usuário logado
+            const savedAvatarUrl = dados.avatarUrl || availableAvatars[0].path; // Use availableAvatars[0] for default
             userAvatar.src = savedAvatarUrl;
             userAvatar.dataset.path = savedAvatarUrl;
         }
@@ -346,9 +373,10 @@
                 onSnapshot(userDocRef, async (docSnap) => {
                     if (docSnap.exists()) {
                         updateProfileUI(docSnap.data());
+                        renderAvatars(); // Renderiza os avatares após carregar os dados do usuário, incluindo a XP
                     } else {
                         const apelidoAleatorio = "user" + Math.floor(Math.random() * 10000);
-                        const defaultAvatar = availableAvatars[0];
+                        const defaultAvatar = availableAvatars[0].path;
                         await setDoc(userDocRef, {
                             apelido: apelidoAleatorio,
                             email: user.email,
@@ -361,6 +389,7 @@
                             xp: 0,
                             avatarUrl: defaultAvatar
                         });
+                        renderAvatars(); // Renderiza os avatares também na criação de novo usuário
                     }
                 });
 
