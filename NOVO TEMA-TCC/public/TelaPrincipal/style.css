@@ -155,6 +155,7 @@ main {
   padding: 5px;
   font-family: 'Roboto';
   border-radius: 5px;
+  width: 100%;
   margin: 5px;
   border: 2px solid rgba(0, 0, 0, 0.24);
 }
@@ -162,7 +163,7 @@ main {
 .modal-forms #feedback-form textarea {
   color: black;
   max-width: 100%;
-  width: 400px;
+  width: 100%;
   height: 60px;
   resize: none;
   padding: 5px;
