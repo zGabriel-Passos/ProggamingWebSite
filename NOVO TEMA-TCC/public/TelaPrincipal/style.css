@@ -35,11 +35,165 @@ body.tema-escuro .esquerda {
   background: linear-gradient(90deg, #3f658e, #3b648b, #335c9e);
 }
 
+.body-efeito {
+  filter: blur(3px);
+}
+
 main {
   display: flex;
   flex-direction: row;
   height: 100%;
   width: 100%;
+}
+
+.icon-chat {
+  position: fixed;
+  bottom: 15px;
+  right: 20px;
+  width: 55px;
+  height: 55px;
+  border-radius: 50%;
+  background-color: #0c72d1;
+  border: none;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.425);
+  color: white;
+  font-size: 30px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  cursor: pointer;
+  transition: background-color 0.3s, box-shadow 0.3s;
+}
+
+.icon-chat i {
+  font-size: 24px;
+}
+
+.icon-chat:hover {
+  box-shadow: 0 4px 18px rgba(0, 0, 0, 0.705);
+}
+
+#modal-chat {
+  display: none;
+  position: fixed;
+  z-index: 10;
+  padding: 10px;
+  border: 2px solid #00000054;
+  left: 33%;
+  top: 20%;
+  width: 30%;
+  height: 60%;
+  overflow: auto;
+  background-color: #ffffff;
+  color: black;
+  border-radius: 20px;
+  box-shadow: 0 4px 28px rgba(0, 0, 0, 0.295);
+  animation: fadeIn 0.3s ease-in-out;
+  text-align: center;
+  overflow-y: hidden;
+}
+
+#modal-chat img {
+  width: 15%;
+  border-radius: 50%;
+  border: 2px solid #002a5296;
+}
+
+#modal-chat.active {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.modal-title {
+  display: flex;
+  align-items: center;
+  justify-content: space-evenly;
+  flex-direction: row;
+  background-color: rgba(255, 255, 255, 0.473);
+}
+
+.modal-title span {
+  font-weight: 600;
+  font-size: 14px;
+}
+
+#mandar-msg-user {
+  padding: 5px 11px;
+  background-color: #0267ff;
+  border: 2px solid black;
+  border-bottom: 4px solid black;
+  border-radius: 10px;
+  font-family: 'Poppins';
+  margin: 10px;
+  color: white;
+}
+
+#mandar-msg-user:hover {
+  border-bottom: 2px solid black;
+}
+
+.modal-forms {
+  display: flex;
+  justify-content: center;
+  width: 60%;
+  padding: 30px;
+  align-items: center;
+  overflow-y: auto;
+}
+
+.modal-forms #feedback-form {
+  display: flex;
+  width: 100%;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  margin-top: 50px;
+}
+
+.modal-forms #feedback-form input {
+  padding: 5px;
+  font-family: 'Roboto';
+  border-radius: 5px;
+  margin: 5px;
+  border: 2px solid rgba(0, 0, 0, 0.24);
+}
+
+.modal-forms #feedback-form textarea {
+  color: black;
+  max-width: 100%;
+  width: 400px;
+  height: 60px;
+  resize: none;
+  padding: 5px;
+  border-radius: 5px;
+  font-size: 14px;
+  font-family: 'Roboto';
+  border: 2px solid rgba(0, 0, 0, 0.24);
+  overflow-y: hidden;
+}
+
+.modal-forms #feedback-form textarea:focus,
+.modal-forms #feedback-form input:focus {
+  border-color: #0267ff;
+  outline: none;
+}
+
+.modal-forms #feedback-form input:hover,
+.modal-forms #feedback-form textarea:hover {
+  border-color: #0267ff91;
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: scale(0.9);
+  }
+
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
 }
 
 .esquerda {
@@ -984,7 +1138,69 @@ body.loaded .site-content {
   text-shadow: 1px 1px #000;
 }
 
+@media (max-width: 1068px) {
+  #feedback-form {
+    margin-top: 90px;
+  }
+}
+
+@media (max-width: 968px) {
+  #modal-chat {
+    display: none;
+    position: fixed;
+    z-index: 10;
+    padding: 10px;
+    border: 2px solid #00000054;
+    left: 33%;
+    top: 20%;
+    width: 40%;
+    height: 60%;
+    overflow: auto;
+    background-color: #ffffff;
+    color: black;
+    border-radius: 20px;
+    box-shadow: 0 4px 28px rgba(0, 0, 0, 0.295);
+    animation: fadeIn 0.3s ease-in-out;
+    text-align: center;
+    overflow-y: hidden;
+  }
+
+  #feedback-form {
+    margin-top: 50px;
+  }
+}
+
 @media (max-width: 768px) {
+  #modal-chat {
+    display: none;
+    position: fixed;
+    z-index: 10;
+    padding: 10px;
+    border: 2px solid #00000054;
+    left: 0%;
+    top: 0%;
+    width: 95%;
+    height: 80%;
+    overflow: auto;
+    background-color: #ffffff;
+    color: black;
+    border-radius: 20px;
+    box-shadow: 0 4px 28px rgba(0, 0, 0, 0.295);
+    animation: fadeIn 0.3s ease-in-out;
+    text-align: center;
+    overflow-y: hidden;
+  }
+
+  .icon-chat {
+    bottom: 50px;
+    width: 50px;
+    height: 50px;
+  }
+
+  .icon-chat i {
+    font-size: 20px;
+  }
+
   .blog .welcome {
     font-family: "Poppins";
     font-size: 13px;
@@ -1024,6 +1240,12 @@ body.loaded .site-content {
   .ranking-xp {
     font-family: "Roboto";
     font-size: 12px;
+  }
+}
+
+@media (max-width: 403px) {
+  #modal-chat img {
+    display: none;
   }
 }
 
