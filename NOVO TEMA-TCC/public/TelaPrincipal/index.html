@@ -51,7 +51,7 @@
         <div class="esquerda">
             <div class="menu">
                 <div class="logo">
-                    <img src="../logo-menor-removebg-preview.png">
+                    <img src="../logo-menor-removebg-preview.png" draggable="false">
                 </div>
                 <hr>
                 <a href="#/Início" onclick="mostrarSecao('home')"><span>Início</span> <i class='bx bx-home'></i></a>
@@ -84,13 +84,13 @@
                 <section id="home" class="page active">
                     <div class="blog">
                         <div class="welcome">
-                            <img src="../avatares/prota.gif">
+                            <img src="../avatares/prota.gif" draggable="false">
                             <span id="welcome"></span>
                         </div>
                         <div class="containerText">
                             <div class="conta">
                                 <div style="display: flex; align-items: center;">
-                                    <img id="user-avatar" src="../assets/avatars/avatar.jpg">
+                                    <img id="user-avatar" src="../assets/avatars/avatar.jpg" draggable="false">
                                     <span id="perfil" class="span-perfil"></span>
                                 </div>
                                 <div>
@@ -108,7 +108,7 @@
                         </div>
                         <div class="containerText">
                             <div class="section">
-                                <img src="../logo-menor.png">
+                                <img src="../logo-menor.png" draggable="false">
                                 <div class="text-content">
                                     <h2>Acesse o Academy do Proggaming</h2>
                                     <p>
@@ -126,7 +126,8 @@
                             <div
                                 style="display: flex; flex-direction: column; align-items: center; text-align: center;">
                                 <img src="../avatares/prota-login.gif"
-                                    style="width: 70px; margin-bottom: 10px; border-radius: 50%; border: 2px solid #fffff034;">
+                                    style="width: 70px; margin-bottom: 10px; border-radius: 50%; border: 2px solid #fffff034;"
+                                    draggable="false">
                                 <span style="font-family:'Roboto';">Quer ter o nosso site como um app? Instale e
                                     tenha
                                     ele
@@ -378,7 +379,7 @@
 
                 const avatarSrc = userData.avatarUrl || '../assets/avatars/avatar.jpg';
                 rankingItem.innerHTML = `
-            <img src="${avatarSrc}" alt="Avatar do usuário" class="ranking-avatar">
+            <img src="${avatarSrc}" alt="Avatar do usuário" class="ranking-avatar" draggable="false">
             <span class="ranking-nickname">${userData.apelido || userData.email}</span>
             <span class="ranking-xp">${userData.xp || 0} XP</span>
         `;

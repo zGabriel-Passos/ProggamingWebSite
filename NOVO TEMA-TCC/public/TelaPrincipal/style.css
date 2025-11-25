@@ -983,7 +983,7 @@ body.loaded .site-content {
   height: 80px;
   border-radius: 50%;
   border: 3px solid transparent;
-  cursor: pointer;
+  cursor: url(../PixelSelector.cur), pointer !important;
   transition: transform 0.2s, border-color 0.2s;
 }
 
