@@ -91,16 +91,26 @@ document.addEventListener('DOMContentLoaded', function () {
 
                 if (isModalOpen) {
                     btnChat.innerHTML = "<i class='bx bx-x'></i>";
-                    main.classList.add('body-efeito')
+                    main.classList.add('body-efeito');
                 } else {
                     btnChat.innerHTML = "<i class='bx bxs-message-square-detail'></i>";
-                    main.classList.remove('body-efeito')
+                    main.classList.remove('body-efeito');
                 }
             });
         }
+
+        window.addEventListener("keydown", function (event) {
+            if (event.key === "Escape") {
+                modalChat.classList.remove("active");
+                btnChat.classList.remove("modal-open");
+                btnChat.innerHTML = "<i class='bx bxs-message-square-detail'></i>";
+                main.classList.remove('body-efeito');
+            }
+        });
     }
     modalChat();
 });
+
 
 document.addEventListener("DOMContentLoaded", function () {
     const typingTextElement = document.getElementById("typing-text");

@@ -42,8 +42,8 @@ function gerarResposta(pergunta) {
     if (pergunta.includes("o que vou aprender em js") || pergunta.includes("o que vou aprender em javascript") || pergunta.includes("js") || pergunta.includes("javascript")) {
         return "Em JavaScript, o foco é na interatividade e lógica: você aprenderá a manipular o DOM, adicionar funcionalidades dinâmicas, validar entradas e implementar sistemas avançados como a gamificação e a ofensiva diária.";
     }
-    if (pergunta.includes("objetivo deste tcc") || pergunta.includes("sobre o projeto") || pergunta.includes("tcc")) {
-        return "O objetivo principal deste TCC é desenvolver o 'Proggaming', uma plataforma de ensino de programação gamificada. Nosso foco é usar elementos de jogos (XP, níveis, ofensiva) para aumentar a motivação e a retenção do aprendizado de desenvolvimento web.";
+    if (pergunta.includes("objetivo deste projeto") || pergunta.includes("sobre o projeto")) {
+        return "O objetivo principal do Proggaming, é ser uma plataforma de ensino de programação gamificada. Nosso foco é usar elementos de jogos (XP, níveis, ofensiva) para aumentar a motivação e a retenção do aprendizado de desenvolvimento web.";
     }
     if (pergunta.includes("gamificação") || pergunta.includes("como funciona a gamificação")) {
         return "A gamificação funciona através de XP por fase, níveis de usuário e o sistema de ofensiva diária (streak) que incentiva a consistência. Isso transforma o aprendizado em um jogo, motivando o usuário a progredir.";
@@ -70,7 +70,7 @@ function gerarResposta(pergunta) {
         const agora = new Date().toLocaleTimeString();
         return `Agora são ${agora}.`;
     }
-    return "Desculpe, não tenho dados suficientes para responder essa pergunta. Tente digitar: 'O que vou aprender em HTML no Proggaming?', 'Qual é o objetivo deste TCC?', ou 'Como funciona a gamificação?'.";
+    return "Desculpe, não tenho dados suficientes para responder essa pergunta. Tente digitar: 'O que vou aprender em HTML no Proggaming?', 'Qual é o objetivo deste projeto?', ou 'Como funciona a gamificação?'.";
 }
 
 document.addEventListener('DOMContentLoaded', () => {
