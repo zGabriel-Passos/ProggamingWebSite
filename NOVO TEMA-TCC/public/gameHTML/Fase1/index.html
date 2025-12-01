@@ -70,25 +70,15 @@
   <script>
     let somAtivo = true;
 
-    // ----------------------------------------------------
-    // FUNÇÃO AUXILIAR DE NORMALIZAÇÃO
-    // Adicionada para ignorar quebras de linha, tabulações e excesso de espaços
-    // ----------------------------------------------------
     function normalizeCode(code) {
-      // 1. Substitui todas as quebras de linha, tabulações e retornos de carro por um único espaço
       let normalized = code.replace(/[\n\r\t]/g, ' ');
 
-      // 2. Remove espaços extras ao redor de chaves e tags (crucial para o HTML)
       normalized = normalized.replace(/\s*([<>{}()\[\];:])\s*/g, '$1');
 
-      // 3. Substitui múltiplos espaços por um único espaço
       normalized = normalized.replace(/\s+/g, ' ');
 
-      // 4. Remove espaços no início e no fim da string
       return normalized.trim();
     }
-    // ----------------------------------------------------
-
 
     function toggleSom() {
       somAtivo = !somAtivo;
